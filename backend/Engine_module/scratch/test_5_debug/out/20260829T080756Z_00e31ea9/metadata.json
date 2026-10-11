@@ -1,0 +1,36 @@
+{
+    "run_id": "20260829T080756Z_00e31ea9",
+    "software_version": "1.0.0",
+    "git_commit": "cb917cfb5578c0cf2bb1802a10ec7e20b1758971",
+    "execution_timestamp_utc": "2026-08-29T08:08:05.711112+00:00",
+    "python_version": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+    "os": "Windows-11-10.0.26200-SP0",
+    "model_path": "scratch\\test_5_debug\\t1\\green.tif",
+    "model_sha256": "9b4003b890f6319b02daa49f0031ae4eafcde44960bd79b71a8301def48e235c",
+    "configuration_hash": "88a78406dd312b837275cc07be4da75ce471ec737a7fbeb7b0e668d48f046a93",
+    "config_snapshot": "scratch\\test_5_debug\\out\\20260829T080756Z_00e31ea9\\config_used.json",
+    "input_t1": {
+        "path": "scratch\\test_5_debug\\t1",
+        "exists": true,
+        "size_bytes": null,
+        "sha256": null
+    },
+    "input_t2": {
+        "path": "scratch\\test_5_debug\\t2",
+        "exists": true,
+        "size_bytes": null,
+        "sha256": null
+    },
+    "t1_date": "2023-08-14",
+    "t2_date": "2023-08-28",
+    "crs": "EPSG:32632",
+    "resolution": [
+        10.0,
+        10.0
+    ],
+    "dimensions": [
+        32,
+        32
+    ],
+    "total_runtime_seconds": 9.384436000007554
+}

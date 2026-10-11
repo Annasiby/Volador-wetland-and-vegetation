@@ -1,0 +1,81 @@
+{
+    "analysis_mode": "vegetation",
+    "model": {
+        "path": "audit_veg_run\\t1\\scene_G.tif",
+        "in_channels": 5,
+        "num_classes": 4,
+        "channel_order": [
+            "ndvi",
+            "gndvi",
+            "ndre",
+            "nir",
+            "rededge"
+        ]
+    },
+    "preprocessing": {
+        "mode": "inference",
+        "band_scaling_factor": 10000.0,
+        "require_crs": true,
+        "epsilon": 1e-06,
+        "min_denominator": 0.05,
+        "min_band_value": 0.01,
+        "gaussian_sigma": 1.0,
+        "normalize": true
+    },
+    "ingestion": {
+        "band_mapping": {
+            "green": [
+                "*_G.tif"
+            ],
+            "red": [
+                "*_R.tif"
+            ],
+            "rededge": [
+                "*_RE.tif"
+            ],
+            "nir": [
+                "*_NIR.tif"
+            ]
+        }
+    },
+    "water": {
+        "ndwi_threshold": 0.0,
+        "epsilon": 1e-06
+    },
+    "metrics": {
+        "severity_weights": {
+            "healthy": 0.0,
+            "moderate": 0.35,
+            "severe": 0.8,
+            "background": 1.0
+        }
+    },
+    "output": {
+        "colormap": {
+            "0": [
+                128,
+                128,
+                128,
+                255
+            ],
+            "1": [
+                255,
+                0,
+                0,
+                255
+            ],
+            "2": [
+                255,
+                165,
+                0,
+                255
+            ],
+            "3": [
+                0,
+                170,
+                0,
+                255
+            ]
+        }
+    }
+}

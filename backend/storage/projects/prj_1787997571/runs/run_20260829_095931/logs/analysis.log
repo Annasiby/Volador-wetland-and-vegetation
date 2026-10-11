@@ -1,0 +1,14 @@
+[INFO] [run_20260829_095931] gis_engine.pipeline — Phase 13 — Production pipeline START. run_id=run_20260829_095931
+[INFO] [run_20260829_095931] gis_engine.pipeline — Step 1 — Loading configuration: C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\Engine_module\configs\config.json
+[INFO] [run_20260829_095931] gis_engine.pipeline — Step 1 — Configuration loaded. hash=f055de6ec85144ca…
+[INFO] [run_20260829_095931] gis_engine.pipeline — Step 2 — Validating inputs
+[INFO] [run_20260829_095931] gis_engine.pipeline — Step 2 — Inputs valid. T1=2023-08-14 T2=2023-08-28 interval=14 days
+[INFO] [run_20260829_095931] gis_engine.pipeline — Step 3 — Spatial/temporal alignment
+[INFO] [run_20260829_095931] gis_engine.pipeline — Step 3 — Alignment complete. overlap=100.00%
+[INFO] [run_20260829_095931] gis_engine.pipeline — Step 4 — Vegetation inference
+[INFO] [run_20260829_095931] gis_engine.inference.onnx — [onnx] GPU provider (CUDA) unavailable. Using CPUExecutionProvider.
+[INFO] [run_20260829_095931] gis_engine.pipeline — Step 4 — Inference complete
+[INFO] [run_20260829_095931] gis_engine.pipeline — Step 5 — Transition analysis
+[INFO] [run_20260829_095931] gis_engine.pipeline — Step 5 — Transitions complete
+[INFO] [run_20260829_095931] gis_engine.pipeline — Step 6 — Change Vector Analysis (CVA)
+[INFO] [run_20260829_095931] gis_engine.api.service — [service] analyze_wetland called: t1=C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\storage\projects\prj_1787997571\datasets\t1 t2=C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\storage\projects\prj_1787997571\datasets\t2 t1_date=2023-08-14 t2_date=2023-08-28

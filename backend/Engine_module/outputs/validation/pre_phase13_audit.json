@@ -1,0 +1,145 @@
+{
+    "audit_version": "1.0",
+    "timestamp": "2026-08-12T12:46:50+05:30",
+    "audit_decision": "CLEAR_FOR_PHASE_13",
+    "investigations": {
+        "vegetation_hydro_eco_area_consistency": {
+            "issue": "Vegetation / Hydro-Eco Area Inconsistency",
+            "observed_value": {
+                "pre_fix": {
+                    "vegetation_degradation_area_ha": 0.0,
+                    "vegetation_recovery_area_ha": 0.0,
+                    "hydro_ecological_degradation_area_ha": 16.3866,
+                    "hydro_ecological_recovery_area_ha": 1.6236
+                },
+                "post_fix": {
+                    "vegetation_degradation_area_ha": 26.3415,
+                    "vegetation_recovery_area_ha": 5.7260,
+                    "hydro_ecological_degradation_area_ha": 16.3866,
+                    "hydro_ecological_recovery_area_ha": 1.6236
+                }
+            },
+            "expected_relationship": "hydro_ecological_degradation_area <= vegetation_degradation_area AND hydro_ecological_recovery_area <= vegetation_recovery_area",
+            "root_cause": "Wrong metric field / schema mismatch in the Phase 12 validation script (scripts/run_phase12_final_validation.py). The validation script queried dg.statistics for 'degradation_area_ha' and 'recovery_area_ha', but the Phase 6 degradation analysis engine output schema only contains pixel counts and percentages. As a result, the queries returned the default fallback value of 0, while the core Fusion engine in Phase 11 correctly calculated and verified the correct physical areas as 26.3415 ha and 5.7260 ha.",
+            "severity": "LOW",
+            "fix_required": "Modify the validation script (scripts/run_phase12_final_validation.py) to calculate the degradation and recovery areas in hectares using the project's standard ellipsoidal area methodology instead of reading the non-existent statistics keys.",
+            "fix_applied": "Imported calculate_pixel_areas from src.gis_engine.metrics.area and modified scripts/run_phase12_final_validation.py to compute degradation and recovery areas by summing the ellipsoidal pixel area arrays under the respective mask, matching the methodology used across the engine.",
+            "validation_result": "PASS"
+        },
+        "valid_overlap_area": {
+            "issue": "Valid Overlap Area is 0.0000 ha with 5,029,128 pixels",
+            "observed_value": {
+                "pre_fix": {
+                    "valid_overlap_pixels": 5029128,
+                    "valid_overlap_area_ha": 0.0
+                },
+                "post_fix": {
+                    "valid_overlap_pixels": 5029128,
+                    "valid_overlap_area_ha": 609.8984
+                }
+            },
+            "expected_relationship": "valid_overlap_area_ha > 0 AND equal to the sum of the ellipsoidal areas of all valid pixels",
+            "root_cause": "Unit conversion / incorrect coordinate system calculation in the validation script. The script multiplied the resolution in degrees (1e-5 * 1e-5 = 1e-10) directly by the pixel count and divided by 10000.0, treating degrees as meters. This resulted in an area of ~5.0291e-8 ha, which formatted to 0.0000 ha under a 4-decimal-place limit.",
+            "severity": "LOW",
+            "fix_required": "Compute the valid overlap area using the project's standard ellipsoidal area methodology on the geographic coordinate reference system (EPSG:4326).",
+            "fix_applied": "Modified the valid overlap area calculation in scripts/run_phase12_final_validation.py to use calculate_pixel_areas, correctly accounting for geographic coordinates on the WGS84 ellipsoid.",
+            "validation_result": "PASS"
+        },
+        "water_area_reconciliation": {
+            "issue": "Water Area Reconciliation",
+            "observed_value": {
+                "water_area_t1_ha": 216.96351782339812,
+                "water_area_t2_ha": 195.88080628365492,
+                "water_gain_ha": 122.23928285123091,
+                "water_loss_ha": 143.32199439097414,
+                "balance_error_ha": 2.842170943040401e-14
+            },
+            "expected_relationship": "T1 water area + water gain - water loss = T2 water area",
+            "root_cause": "None. The water balance is perfectly consistent using raw values before rounding, with a negligible error of 2.84e-14 ha due to standard floating-point precision limits.",
+            "severity": "NONE",
+            "fix_required": "None",
+            "fix_applied": "None",
+            "validation_result": "PASS"
+        },
+        "fusion_area_reconciliation": {
+            "issue": "Fusion Area Reconciliation",
+            "observed_value": {
+                "categories": [
+                    {
+                        "interpretation": "stable",
+                        "pixel_count": 2713082,
+                        "area_m2": 3290235.9173591475,
+                        "area_ha": 329.02359173591475
+                    },
+                    {
+                        "interpretation": "vegetation_degradation",
+                        "pixel_count": 69879,
+                        "area_m2": 84744.71620364236,
+                        "area_ha": 8.474471620364236
+                    },
+                    {
+                        "interpretation": "vegetation_recovery",
+                        "pixel_count": 27059,
+                        "area_m2": 32815.59142634637,
+                        "area_ha": 3.281559142634637
+                    },
+                    {
+                        "interpretation": "surface_water_gain",
+                        "pixel_count": 932570,
+                        "area_m2": 1130958.2334012638,
+                        "area_ha": 113.09582334012638
+                    },
+                    {
+                        "interpretation": "surface_water_loss",
+                        "pixel_count": 1033820,
+                        "area_m2": 1253749.1895873786,
+                        "area_ha": 125.37491895873786
+                    },
+                    {
+                        "interpretation": "hydro_ecological_degradation",
+                        "pixel_count": 135122,
+                        "area_m2": 163866.3464382919,
+                        "area_ha": 16.38663464382919
+                    },
+                    {
+                        "interpretation": "hydro_ecological_recovery",
+                        "pixel_count": 13388,
+                        "area_m2": 16236.098104912437,
+                        "area_ha": 1.6236098104912438
+                    },
+                    {
+                        "interpretation": "vegetation_to_background",
+                        "pixel_count": 85233,
+                        "area_m2": 103365.7658271576,
+                        "area_ha": 10.33657658271576
+                    },
+                    {
+                        "interpretation": "ambiguous_mixed_evidence",
+                        "pixel_count": 18975,
+                        "area_m2": 23011.71998013847,
+                        "area_ha": 2.301171998013847
+                    }
+                ],
+                "total_reconciliation": {
+                    "pixel_count": 5029128,
+                    "area_m2": 6098983.51832828,
+                    "area_ha": 609.898351832828
+                }
+            },
+            "expected_relationship": "hydro-eco degradation <= vegetation degradation AND hydro-eco degradation <= water loss AND hydro-eco recovery <= vegetation recovery AND hydro-eco recovery <= water gain",
+            "root_cause": "None. All conversions and invariants hold perfectly.",
+            "severity": "NONE",
+            "fix_required": "None",
+            "fix_applied": "None",
+            "validation_result": "PASS"
+        }
+    },
+    "warnings_retained": [
+        "authoritative wetland boundary unavailable",
+        "provisional NDWI threshold",
+        "phenology uncertainty",
+        "probability calibration unavailable",
+        "Olofsson unavailable",
+        "physical depletion not assessed"
+    ]
+}

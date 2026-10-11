@@ -1,0 +1,48 @@
+[INFO] [run_20260829_075016] gis_engine.pipeline — Phase 13 — Production pipeline START. run_id=run_20260829_075016
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 1 — Loading configuration: C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\Engine_module\configs\config.json
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 1 — Configuration loaded. hash=f055de6ec85144ca…
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 2 — Validating inputs
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 2 — Inputs valid. T1=2023-08-14 T2=2023-08-28 interval=14 days
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 3 — Spatial/temporal alignment
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 3 — Alignment complete. overlap=100.00%
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 4 — Vegetation inference
+[INFO] [run_20260829_075016] gis_engine.inference.onnx — [onnx] GPU provider (CUDA) unavailable. Using CPUExecutionProvider.
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 4 — Inference complete
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 5 — Transition analysis
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 5 — Transitions complete
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 6 — Change Vector Analysis (CVA)
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 6 — CVA complete
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 7 — Degradation & Recovery analysis
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 7 — Degradation complete
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 8 — Wetland context
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 8 — Wetland context: WETLAND_BOUNDARY_AVAILABLE
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 9 — NDWI hydrology
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 9 — Hydrology complete
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 10 — Multi-evidence fusion
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 10 — Fusion complete
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 11 — Metrics calculation
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 11 — Metrics complete
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 12 — Quality assurance
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 12 — QA: WARN
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 13 — Assembling result package
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 14 — Generating analysis reports
+[INFO] [run_20260829_075016] gis_engine.output.report — [report] Analysis report written: C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\storage\projects\prj_1787989816\runs\run_20260829_075016\run_20260829_075016\reports\analysis_report.md
+[INFO] [run_20260829_075016] gis_engine.output.cartography — Rendered categorical map: C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\storage\projects\prj_1787989816\runs\run_20260829_075016\run_20260829_075016\reports\figures\health_t1.png
+[INFO] [run_20260829_075016] gis_engine.output.cartography — Rendered categorical map: C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\storage\projects\prj_1787989816\runs\run_20260829_075016\run_20260829_075016\reports\figures\health_t2.png
+[INFO] [run_20260829_075016] gis_engine.output.cartography — Rendered categorical map: C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\storage\projects\prj_1787989816\runs\run_20260829_075016\run_20260829_075016\reports\figures\transition.png
+[INFO] [run_20260829_075016] gis_engine.output.cartography — Rendered categorical map: C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\storage\projects\prj_1787989816\runs\run_20260829_075016\run_20260829_075016\reports\figures\degradation.png
+[INFO] [run_20260829_075016] gis_engine.output.cartography — Rendered categorical map: C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\storage\projects\prj_1787989816\runs\run_20260829_075016\run_20260829_075016\reports\figures\recovery.png
+[INFO] [run_20260829_075016] gis_engine.output.cartography — Rendered categorical map: C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\storage\projects\prj_1787989816\runs\run_20260829_075016\run_20260829_075016\reports\figures\canopy_loss.png
+[INFO] [run_20260829_075016] gis_engine.output.cartography — Rendered continuous map: C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\storage\projects\prj_1787989816\runs\run_20260829_075016\run_20260829_075016\reports\figures\cva_magnitude.png
+[INFO] [run_20260829_075016] gis_engine.output.cartography — Rendered continuous map: C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\storage\projects\prj_1787989816\runs\run_20260829_075016\run_20260829_075016\reports\figures\delta_ndvi.png
+[INFO] [run_20260829_075016] gis_engine.output.cartography — Rendered continuous map: C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\storage\projects\prj_1787989816\runs\run_20260829_075016\run_20260829_075016\reports\figures\delta_gndvi.png
+[INFO] [run_20260829_075016] gis_engine.output.cartography — Rendered continuous map: C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\storage\projects\prj_1787989816\runs\run_20260829_075016\run_20260829_075016\reports\figures\delta_ndre.png
+[INFO] [run_20260829_075016] gis_engine.output.cartography — Rendered continuous map: C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\storage\projects\prj_1787989816\runs\run_20260829_075016\run_20260829_075016\reports\figures\ndwi_t1.png
+[INFO] [run_20260829_075016] gis_engine.output.cartography — Rendered continuous map: C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\storage\projects\prj_1787989816\runs\run_20260829_075016\run_20260829_075016\reports\figures\ndwi_t2.png
+[INFO] [run_20260829_075016] gis_engine.output.cartography — Rendered categorical map: C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\storage\projects\prj_1787989816\runs\run_20260829_075016\run_20260829_075016\reports\figures\water_change.png
+[INFO] [run_20260829_075016] gis_engine.output.cartography — Rendered categorical map: C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\storage\projects\prj_1787989816\runs\run_20260829_075016\run_20260829_075016\reports\figures\evidence_fusion.png
+[INFO] [run_20260829_075016] gis_engine.output.cartography — Generated 14 cartographic map plates in C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\storage\projects\prj_1787989816\runs\run_20260829_075016\run_20260829_075016\reports\figures
+[INFO] [run_20260829_075016] gis_engine.output.pdf — Successfully compiled master PDF report: C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\storage\projects\prj_1787989816\runs\run_20260829_075016\run_20260829_075016\reports\FINAL_ANALYSIS_REPORT.pdf
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 15 — Writing provenance metadata
+[INFO] [run_20260829_075016] gis_engine.pipeline — Step 16 — Writing output manifest
+[INFO] [run_20260829_075016] gis_engine.pipeline — Phase 13 — Pipeline COMPLETE. status=SUCCESS run_id=run_20260829_075016 runtime=8.8s

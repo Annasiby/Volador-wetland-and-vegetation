@@ -1,0 +1,27 @@
+{
+    "status": "PASS",
+    "index": "NDWI",
+    "provisional_threshold": 0.0,
+    "real_data_test": {
+        "pair": "2023-08-14_2023-08-28",
+        "valid_pixels": 5029128,
+        "nodata_pixels": 9720,
+        "water_area_t1_ha": 216.9635,
+        "water_area_t2_ha": 195.8808,
+        "water_gain_ha": 122.2393,
+        "water_loss_ha": 143.3220,
+        "net_water_change_ha": -21.0827,
+        "wetland_restricted": {
+            "water_area_t1_ha": 173.9667,
+            "water_area_t2_ha": 150.0740,
+            "water_gain_ha": 82.2792,
+            "water_loss_ha": 106.1719,
+            "net_water_change_ha": -23.8928
+        }
+    },
+    "synthetic_tests": "PASS",
+    "reproducibility": "PASS",
+    "regression_tests": "PASS",
+    "scientific_safeguards": "PASS",
+    "final_scientific_status": "Phase 10 detects surface-water spectral change using NDWI derived from Green and NIR observations. Phase 10 does not independently establish physical wetland depletion. Physical wetland depletion requires independent temporal wetland, hydrological, or other appropriate evidence."
+}

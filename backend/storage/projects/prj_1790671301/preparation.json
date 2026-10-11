@@ -1,0 +1,79 @@
+{
+  "project_id": "prj_1790671301",
+  "status": "COMMITTED",
+  "is_locked": true,
+  "committed_at": "2026-09-29T08:41:41Z",
+  "updated_at": "2026-09-29T08:41:41Z",
+  "inclusion": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          10.0,
+          10.0
+        ],
+        [
+          70.0,
+          10.0
+        ],
+        [
+          70.0,
+          70.0
+        ],
+        [
+          10.0,
+          70.0
+        ],
+        [
+          10.0,
+          10.0
+        ]
+      ]
+    ]
+  },
+  "manual_exclusions": [
+    {
+      "id": "excl-1",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              20.0,
+              20.0
+            ],
+            [
+              30.0,
+              20.0
+            ],
+            [
+              30.0,
+              30.0
+            ],
+            [
+              20.0,
+              30.0
+            ],
+            [
+              20.0,
+              20.0
+            ]
+          ]
+        ]
+      },
+      "category": "Built Infrastructure",
+      "comment": "Farm building excluded from wetland analysis"
+    }
+  ],
+  "metrics": {
+    "source_pixels": 10000,
+    "inclusion_pixels": 3600,
+    "excluded_pixels": 100,
+    "effective_pixels": 3500,
+    "source_ha": 100.0,
+    "inclusion_ha": 36.0,
+    "excluded_ha": 1.0,
+    "effective_ha": 35.0,
+    "area_basis": "RASTER_CRS_AND_TRANSFORM"
+  }
+}

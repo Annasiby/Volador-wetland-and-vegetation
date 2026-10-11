@@ -1,0 +1,284 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Dict
+
+import numpy as np
+import rasterio
+
+from ..core.constants import NODATA_CATEGORICAL
+from ..core.exceptions import GISProcessingError, InferenceError
+from ..core.pair import analyze_pair
+from ..change.transition import calculate_transitions
+from ..change.cva import calculate_cva
+from ..change.degradation import analyze_degradation
+
+
+@dataclass
+class VegetationAnalysisResult:
+    """
+    Result container for the reusable vegetation-analysis pipeline.
+
+    This class contains the scientific results produced by the common
+    vegetation workflow. Wetland-specific processing is intentionally
+    excluded.
+    """
+
+    pair_result: Any
+    transition_result: Any
+    cva_result: Any
+    degradation_result: Any
+
+    t1_health: np.ndarray
+    t2_health: np.ndarray
+    transition_map: np.ndarray
+
+    delta_ndvi: np.ndarray
+    delta_gndvi: np.ndarray
+    delta_ndre: np.ndarray
+    cva_magnitude: np.ndarray
+
+    performance: Dict[str, Any]
+
+
+class VegetationAnalysisPipeline:
+    """
+    Reusable vegetation-analysis orchestration layer.
+
+    Scientific algorithms remain in their existing modules:
+        - core.pair
+        - change.transition
+        - change.cva
+        - change.degradation
+
+    This class only orchestrates those existing components and preserves
+    the output files expected by the current production pipeline.
+    """
+
+    def run(
+        self,
+        *,
+        t1_aligned_out: Path,
+        t2_aligned_out: Path,
+        t1_scene: Path,
+        t2_scene: Path,
+        model_path: Path,
+        veg_dir: Path,
+        change_dir: Path,
+        deg_dir: Path,
+        ref_grid: Any,
+        overlap_mask: np.ndarray,
+        effective_overlap_mask: np.ndarray,
+        config: Dict[str, Any],
+        t1_date: str,
+        t2_date: str,
+        outputs: Dict[str, str],
+        run_logger: Any,
+    ) -> VegetationAnalysisResult:
+
+        veg_dir = Path(veg_dir)
+        change_dir = Path(change_dir)
+        deg_dir = Path(deg_dir)
+
+        veg_dir.mkdir(parents=True, exist_ok=True)
+        change_dir.mkdir(parents=True, exist_ok=True)
+        deg_dir.mkdir(parents=True, exist_ok=True)
+
+        # ==============================================================
+        # STEP 4 — Vegetation Inference
+        # ==============================================================
+
+        run_logger.info("Vegetation analysis — inference")
+
+        try:
+            pair_result = analyze_pair(
+                t1_scene=t1_aligned_out,
+                t2_scene=t2_aligned_out,
+                model_path=model_path,
+                output_dir=veg_dir,
+                config=config,
+            )
+        except Exception as exc:
+            raise InferenceError(
+                f"Vegetation inference failed: {exc}"
+            ) from exc
+
+        t1_health = pair_result.t1_health_map
+        t2_health = pair_result.t2_health_map
+        performance = pair_result.performance
+
+        # Preserve the existing production raster-writing behavior.
+        veg_profile = {
+            "driver": "GTiff",
+            "dtype": "uint8",
+            "nodata": NODATA_CATEGORICAL,
+            "width": ref_grid.width,
+            "height": ref_grid.height,
+            "count": 1,
+            "crs": ref_grid.crs,
+            "transform": ref_grid.transform,
+            "compress": "lzw",
+        }
+
+        with rasterio.open(
+            veg_dir / "t1_health.tif",
+            "w",
+            **veg_profile,
+        ) as dst:
+            dst.write(t1_health, 1)
+
+        with rasterio.open(
+            veg_dir / "t2_health.tif",
+            "w",
+            **veg_profile,
+        ) as dst:
+            dst.write(t2_health, 1)
+
+        # Preserve the overlap mask used by downstream hydrology.
+        mask_profile = {
+            **veg_profile,
+            "nodata": 0,
+        }
+
+        with rasterio.open(
+            veg_dir / "overlap_mask.tif",
+            "w",
+            **mask_profile,
+        ) as dst:
+            dst.write(
+                overlap_mask.astype(np.uint8),
+                1,
+            )
+
+        outputs["vegetation/t1_health.tif"] = (
+            "vegetation/t1_health.tif"
+        )
+        outputs["vegetation/t2_health.tif"] = (
+            "vegetation/t2_health.tif"
+        )
+
+        run_logger.info("Vegetation analysis — inference complete")
+
+        # ==============================================================
+        # STEP 5 — Transition Analysis
+        # ==============================================================
+
+        run_logger.info("Vegetation analysis — transition analysis")
+
+        try:
+            transition_result = calculate_transitions(
+                t1_health_map=t1_health,
+                t2_health_map=t2_health,
+                valid_overlap_mask=effective_overlap_mask.astype(np.uint8),
+                reference_grid=ref_grid,
+                output_dir=change_dir,
+                pair_name=f"{t1_date}_{t2_date}",
+            )
+        except Exception as exc:
+            raise GISProcessingError(
+                f"Transition analysis failed: {exc}"
+            ) from exc
+
+        transition_map = transition_result.transition_map
+
+        outputs["change/transition_map.tif"] = (
+            "change/transition_map.tif"
+        )
+
+        run_logger.info(
+            "Vegetation analysis — transition analysis complete"
+        )
+
+        # ==============================================================
+        # STEP 6 — Change Vector Analysis
+        # ==============================================================
+
+        run_logger.info("Vegetation analysis — CVA")
+
+        try:
+            cva_result = calculate_cva(
+                t1_indices=t1_scene,
+                t2_indices=t2_scene,
+                valid_overlap_mask=effective_overlap_mask,
+                reference_grid=ref_grid,
+                output_dir=change_dir,
+                pair_name=f"{t1_date}_{t2_date}",
+                transition_map=transition_map,
+                config=config,
+            )
+        except Exception as exc:
+            raise GISProcessingError(
+                f"CVA failed: {exc}"
+            ) from exc
+
+        delta_ndvi = cva_result.delta_ndvi
+        delta_gndvi = cva_result.delta_gndvi
+        delta_ndre = cva_result.delta_ndre
+        cva_magnitude = cva_result.cva_magnitude
+
+        for fname in (
+            "cva_magnitude.tif",
+            "delta_ndvi.tif",
+            "delta_gndvi.tif",
+            "delta_ndre.tif",
+        ):
+            if (change_dir / fname).is_file():
+                outputs[f"change/{fname}"] = f"change/{fname}"
+
+        run_logger.info("Vegetation analysis — CVA complete")
+
+        # ==============================================================
+        # STEP 7 — Degradation & Recovery
+        # ==============================================================
+
+        run_logger.info(
+            "Vegetation analysis — degradation and recovery"
+        )
+
+        try:
+            degradation_result = analyze_degradation(
+                transition_map=transition_map,
+                cva_magnitude=cva_magnitude,
+                delta_ndvi=delta_ndvi,
+                delta_gndvi=delta_gndvi,
+                delta_ndre=delta_ndre,
+                valid_mask=effective_overlap_mask.astype(np.uint8),
+                config=config,
+                output_dir=deg_dir,
+                reference_grid=ref_grid,
+            )
+        except Exception as exc:
+            raise GISProcessingError(
+                f"Degradation analysis failed: {exc}"
+            ) from exc
+
+        for fname in (
+            "degradation_map.tif",
+            "recovery_map.tif",
+            "canopy_loss_map.tif",
+            "residual_stress.tif",
+        ):
+            if (deg_dir / fname).is_file():
+                outputs[f"degradation/{fname}"] = (
+                    f"degradation/{fname}"
+                )
+
+        run_logger.info(
+            "Vegetation analysis — degradation and recovery complete"
+        )
+
+        return VegetationAnalysisResult(
+            pair_result=pair_result,
+            transition_result=transition_result,
+            cva_result=cva_result,
+            degradation_result=degradation_result,
+            t1_health=t1_health,
+            t2_health=t2_health,
+            transition_map=transition_map,
+            delta_ndvi=delta_ndvi,
+            delta_gndvi=delta_gndvi,
+            delta_ndre=delta_ndre,
+            cva_magnitude=cva_magnitude,
+            performance=performance,
+        )

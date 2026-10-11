@@ -1,0 +1,202 @@
+{
+    "transitions": {
+        "0": {
+            "name": "B_to_B",
+            "from_class": "Background",
+            "to_class": "Background",
+            "category": "STABLE",
+            "count": 10000,
+            "area_m2": 1000000.0,
+            "area_ha": 100.0,
+            "percentage": 100.0
+        },
+        "1": {
+            "name": "B_to_S",
+            "from_class": "Background",
+            "to_class": "Severe",
+            "category": "BACKGROUND_TO_VEGETATION",
+            "count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage": 0.0
+        },
+        "2": {
+            "name": "B_to_M",
+            "from_class": "Background",
+            "to_class": "Moderate",
+            "category": "BACKGROUND_TO_VEGETATION",
+            "count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage": 0.0
+        },
+        "3": {
+            "name": "B_to_H",
+            "from_class": "Background",
+            "to_class": "Healthy",
+            "category": "BACKGROUND_TO_VEGETATION",
+            "count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage": 0.0
+        },
+        "4": {
+            "name": "S_to_B",
+            "from_class": "Severe",
+            "to_class": "Background",
+            "category": "VEGETATION_TO_BACKGROUND",
+            "count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage": 0.0
+        },
+        "5": {
+            "name": "S_to_S",
+            "from_class": "Severe",
+            "to_class": "Severe",
+            "category": "STABLE",
+            "count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage": 0.0
+        },
+        "6": {
+            "name": "S_to_M",
+            "from_class": "Severe",
+            "to_class": "Moderate",
+            "category": "RECOVERY",
+            "count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage": 0.0
+        },
+        "7": {
+            "name": "S_to_H",
+            "from_class": "Severe",
+            "to_class": "Healthy",
+            "category": "RECOVERY",
+            "count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage": 0.0
+        },
+        "8": {
+            "name": "M_to_B",
+            "from_class": "Moderate",
+            "to_class": "Background",
+            "category": "VEGETATION_TO_BACKGROUND",
+            "count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage": 0.0
+        },
+        "9": {
+            "name": "M_to_S",
+            "from_class": "Moderate",
+            "to_class": "Severe",
+            "category": "DEGRADATION",
+            "count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage": 0.0
+        },
+        "10": {
+            "name": "M_to_M",
+            "from_class": "Moderate",
+            "to_class": "Moderate",
+            "category": "STABLE",
+            "count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage": 0.0
+        },
+        "11": {
+            "name": "M_to_H",
+            "from_class": "Moderate",
+            "to_class": "Healthy",
+            "category": "RECOVERY",
+            "count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage": 0.0
+        },
+        "12": {
+            "name": "H_to_B",
+            "from_class": "Healthy",
+            "to_class": "Background",
+            "category": "VEGETATION_TO_BACKGROUND",
+            "count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage": 0.0
+        },
+        "13": {
+            "name": "H_to_S",
+            "from_class": "Healthy",
+            "to_class": "Severe",
+            "category": "DEGRADATION",
+            "count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage": 0.0
+        },
+        "14": {
+            "name": "H_to_M",
+            "from_class": "Healthy",
+            "to_class": "Moderate",
+            "category": "DEGRADATION",
+            "count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage": 0.0
+        },
+        "15": {
+            "name": "H_to_H",
+            "from_class": "Healthy",
+            "to_class": "Healthy",
+            "category": "STABLE",
+            "count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage": 0.0
+        }
+    },
+    "categories": {
+        "DEGRADATION": {
+            "count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage": 0.0
+        },
+        "RECOVERY": {
+            "count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage": 0.0
+        },
+        "VEGETATION_TO_BACKGROUND": {
+            "count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage": 0.0
+        },
+        "BACKGROUND_TO_VEGETATION": {
+            "count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage": 0.0
+        },
+        "STABLE": {
+            "count": 10000,
+            "area_m2": 1000000.0,
+            "area_ha": 100.0,
+            "percentage": 100.0
+        }
+    },
+    "summary": {
+        "total_valid_pixels": 10000,
+        "total_valid_area_m2": 1000000.0,
+        "total_valid_area_ha": 100.0,
+        "nodata_pixels": 0
+    }
+}

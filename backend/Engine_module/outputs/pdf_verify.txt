@@ -1,0 +1,32 @@
+﻿Total pages: 10
+
+--- PAGE 1 ---
+GIS Wetland Degradation Assessment ┬╖ Executive Summary WETLAND DEGRADATION ASSESSMENT Assessment of ecological change within the selected analysis area OBSERVATION PERIOD 2023-08-14 ΓåÆ 2023-08-28 INTERVAL 14 days WETLAND CONTEXT Project-provided wetland boundary RUN ID run_20260922_082400 ANALYSIS FOOTPRINT 100.00% active area (35.00 ha) SPATIAL REFERENCE EPSG:32633 OVERALL WETLAND ASSESSMENT NO MEASURABLE WETLAND DEGRADATION DETECTED Available multi-stream remote-sensing evidence demonstrates no
+
+--- PAGE 2 ---
+1. THE AREA WE ANALYZED This assessment examines changes within the area selected for analysis. Vegetation condition, spectral indicators and surface-water evidence are compared between the two observation dates. The selected area defines where the assessment is performed. It should not automatically be interpreted as a legal or statutory wetland boundary. The analysis is spatially bounded by the configured wetland boundary. All ecological condition indicators are evaluated within this defined a
+
+--- PAGE 3 ---
+2. WETLAND CONDITION Wetland condition is evaluated by integrating multiple independent evidence streams. Vegetation condition, continuous spectral dynamics, and surface-water presence are each assessed across the active analysis footprint. The table below outlines how each evidence stream informs the integrated wetland assessment. EVIDENCE STREAM OBSERVED FINDING ROLE IN ASSESSMENT Vegetation condition Stable canopy state (100.00% persistent) Tracks canopy structure and foliar condition class s
+
+--- PAGE 4 ---
+3. VEGETATION EVIDENCE Vegetation condition serves as an essential line of evidence in the wetland assessment. Canopy condition is classified at baseline (T1) and present (T2) into four discrete states: Healthy Vegetation, Moderate Stress, Severe Stress, and Background / Non-Vegetated. All proportions are reported as percentages of the effective analysis footprint. CONDITION CLASS BASELINE (T1) % PRESENT (T2) % NET CHANGE (%) Healthy vegetation 0.00% 0.00% 0.00% Moderate stress 0.00% 0.00% 0.00%
+
+--- PAGE 5 ---
+4. SPECTRAL EVIDENCE Continuous spectral indices provide independent evidence of foliar and physiological condition shifts. Change Vector Analysis (CVA) integrates ╬öNDVI, ╬öGNDVI, and ╬öNDRE in a multi-dimensional feature space to capture subtle canopy adjustments that occur within or across categorical classification boundaries. These metrics represent continuous radiometric evidence rather than standalone wetland degradation measures. SPECTRAL INDICATOR MEAN MEDIAN P95 CVA Magnitude (||╬öV||) 0.6
+
+--- PAGE 6 ---
+5. SURFACE-WATER EVIDENCE Surface-water presence and moisture dynamics provide an essential hydrological line of evidence. Water presence is evaluated from the Normalized Difference Water Index (NDWI) using a calibrated threshold of 0.00. Where quantitative water extent cannot be derived from available observations, metrics are reported as 'Not available' to prevent misleading zero-loss assumptions. HYDROLOGICAL METRIC FOOTPRINT PROPORTION PHYSICAL EXTENT DEFINITION Baseline Water Extent (T1) 0.
+
+--- PAGE 7 ---
+6. WETLAND DEGRADATION ASSESSMENT This section presents the primary analytical synthesis of the assessment. The evaluation synthesizes all available independent evidence streamsΓÇövegetation condition, continuous spectral shifts, and surface-water dynamicsΓÇöto determine whether wetland degradation occurred within the selected analysis area between observation dates. Distinction between Vegetation Degradation and Wetland Degradation: Vegetation stress alone does not establish wetland degradation. A 
+
+--- PAGE 8 ---
+7. EVIDENCE FUSION Evidence fusion cross-references vegetation transition pathways with surface-water dynamics. A composite hydro-ecological degradation signal requires concurrent evidence of both vegetation stress and surface-water loss, preventing single-sensor optical artifacts from triggering false alarms. EVIDENCE CLASS FOOTPRINT PROPORTION PHYSICAL AREA DEFINITION & MEANING Stable landscape 100.00% 35.00 ha Persistent classified condition state across both observation dates Hydro-ecologica
+
+--- PAGE 9 ---
+8. DATA QUALITY & SPATIAL ACCOUNTING Spatial accounting verifies that every spatial component is traceable from source imagery through the inclusion boundary and manual exclusions to the effective analysis footprint. QUALITY CONTROL CHECK STATUS FINDING Spatial grid alignment PASS T1 and T2 rasters verified on a common analysis grid without spatial distortion. Footprint reconciliation PASS Selected analysis area fully reconciled with manual exclusions (100.00% accounted for). Independent ground 
+
+--- PAGE 10 ---
+9. TECHNICAL PROVENANCE & LIMITATIONS Every metric reported in this assessment is derived directly from verifiable raster artifacts produced during the processing pipeline. No analytical values are interpolated or inferred without evidence. INDICATOR OBSERVED VALUE SPATIAL UNIT PIPELINE ARTIFACT / METHOD Wetland source PROJECT_BOUNDAR Y class Wetland mask source selected by wetland context stage Wetland context status WETLAND_BOUNDA RY_AVAILABLE status Wetland mask evaluation result Effective an
+

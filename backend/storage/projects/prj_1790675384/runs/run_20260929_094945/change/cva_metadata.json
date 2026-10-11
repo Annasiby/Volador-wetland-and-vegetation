@@ -1,0 +1,156 @@
+{
+    "pair_name": "2023-08-14_2023-08-28",
+    "t1_source": "C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\backend\\storage\\projects\\prj_1790675384\\runs\\run_20260929_094945\\alignment\\t1_aligned",
+    "t2_source": "C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\backend\\storage\\projects\\prj_1790675384\\runs\\run_20260929_094945\\alignment\\t2_aligned",
+    "feature_vector": [
+        "NDVI",
+        "GNDVI",
+        "NDRE"
+    ],
+    "delta_definition": "T2 - T1 (increase is positive, decrease is negative)",
+    "cva_formula": "sqrt(delta_ndvi^2 + delta_gndvi^2 + delta_ndre^2)",
+    "standardization": {
+        "method": "z-score divide by index standard deviation",
+        "scales": {
+            "std_ndvi": 0.41622620820999146,
+            "std_gndvi": 0.35055652260780334,
+            "std_ndre": 0.2047417163848877
+        }
+    },
+    "mathematical_reconciliation": {
+        "max_absolute_error_cva_squared": 2.384185791015625e-07,
+        "mean_absolute_error_cva_squared": 2.917860264517458e-08
+    },
+    "spatial_metadata": {
+        "crs": "EPSG:32633",
+        "transform": [
+            10.0,
+            0.0,
+            500000.0,
+            0.0,
+            -10.0,
+            5000000.0
+        ],
+        "width": 100,
+        "height": 100,
+        "resolution": [
+            10.0,
+            10.0
+        ],
+        "bounds": [
+            500000.0,
+            4999000.0,
+            501000.0,
+            5000000.0
+        ]
+    },
+    "overlap_information": {
+        "valid_pixel_count": 3500,
+        "nodata_pixel_count": 6500,
+        "nodata_value": -9999.0
+    },
+    "statistics": {
+        "delta_ndvi": {
+            "count": 3500,
+            "min": -1.610651969909668,
+            "max": 1.380190134048462,
+            "mean": 0.49444299936294556,
+            "median": 0.2950921654701233,
+            "std": 0.41622620820999146,
+            "p95": 1.0850002765655518,
+            "pct_positive": 87.11428571428571,
+            "pct_negative": 5.428571428571429,
+            "pct_zero": 7.457142857142856
+        },
+        "delta_gndvi": {
+            "count": 3500,
+            "min": -0.6174275875091553,
+            "max": 1.1153171062469482,
+            "mean": 0.2689082622528076,
+            "median": 0.005098062567412853,
+            "std": 0.35055652260780334,
+            "p95": 0.8085185289382935,
+            "pct_positive": 84.37142857142858,
+            "pct_negative": 7.8,
+            "pct_zero": 7.828571428571429
+        },
+        "delta_ndre": {
+            "count": 3500,
+            "min": -0.7541770339012146,
+            "max": 0.7691230773925781,
+            "mean": -0.03338579460978508,
+            "median": -0.004621836356818676,
+            "std": 0.2047417163848877,
+            "p95": 0.3493586778640747,
+            "pct_positive": 28.599999999999998,
+            "pct_negative": 68.14285714285714,
+            "pct_zero": 3.257142857142857
+        },
+        "cva_magnitude": {
+            "count": 3500,
+            "min": 0.0,
+            "max": 1.7328321933746338,
+            "mean": 0.6969130039215088,
+            "median": 0.6719367504119873,
+            "std": 0.41263261437416077,
+            "p95": 1.3386027812957764
+        },
+        "cva_standardized": {
+            "count": 3500,
+            "min": 0.0,
+            "max": 5.10407018661499,
+            "mean": 1.916892170906067,
+            "median": 2.0076744556427,
+            "std": 1.1626228094100952,
+            "p95": 3.725698471069336
+        }
+    },
+    "software_version": "1.0.0",
+    "transition_map_statistics": {
+        "DEGRADATION": {
+            "pixel_count": 0,
+            "min": 0.0,
+            "max": 0.0,
+            "mean": 0.0,
+            "median": 0.0,
+            "std": 0.0,
+            "p95": 0.0
+        },
+        "RECOVERY": {
+            "pixel_count": 0,
+            "min": 0.0,
+            "max": 0.0,
+            "mean": 0.0,
+            "median": 0.0,
+            "std": 0.0,
+            "p95": 0.0
+        },
+        "VEGETATION_TO_BACKGROUND": {
+            "pixel_count": 0,
+            "min": 0.0,
+            "max": 0.0,
+            "mean": 0.0,
+            "median": 0.0,
+            "std": 0.0,
+            "p95": 0.0
+        },
+        "BACKGROUND_TO_VEGETATION": {
+            "pixel_count": 0,
+            "min": 0.0,
+            "max": 0.0,
+            "mean": 0.0,
+            "median": 0.0,
+            "std": 0.0,
+            "p95": 0.0
+        },
+        "STABLE": {
+            "pixel_count": 3500,
+            "min": 0.0,
+            "max": 1.7328321933746338,
+            "mean": 0.6969130039215088,
+            "median": 0.6719367504119873,
+            "std": 0.41263261437416077,
+            "p95": 1.3386027812957764
+        }
+    }
+}

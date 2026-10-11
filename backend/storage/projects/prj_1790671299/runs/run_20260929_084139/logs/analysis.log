@@ -1,0 +1,20 @@
+[INFO] [run_20260929_084139] gis_engine.pipeline — Phase 13 — Production pipeline START. run_id=run_20260929_084139
+[INFO] [run_20260929_084139] gis_engine.pipeline — Step 1 — Loading configuration: C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\Engine_module\configs\config.json
+[INFO] [run_20260929_084139] gis_engine.pipeline — Analysis mode: wetland
+[INFO] [run_20260929_084139] gis_engine.output.pdf — Generated wetland degradation assessment PDF report: C:\Users\HP\AppData\Local\Temp\pytest-of-HP\pytest-119\test_pdf_report_data_fidelity0\FINAL_ANALYSIS_REPORT.pdf
+[INFO] [run_20260929_084139] gis_engine.pipeline — Step 1 — Configuration loaded. hash=f055de6ec85144ca…
+[INFO] [run_20260929_084139] gis_engine.pipeline — Step 2 — Validating inputs
+[INFO] [run_20260929_084139] gis_engine.pipeline — Step 2 — Wetland inputs valid. T1=2023-08-14 T2=2023-08-28 interval=14 days
+[INFO] [run_20260929_084139] gis_engine.pipeline — Step 3 — Spatial/temporal alignment
+[INFO] [run_20260929_084139] gis_engine.pipeline — Step 3 — Alignment complete. overlap=100.00%
+[INFO] [run_20260929_084139] gis_engine.output.report — [report] Analysis report written: C:\Users\HP\AppData\Local\Temp\pytest-of-HP\pytest-119\test_markdown_report_data_fide0\analysis_report.md
+[INFO] [run_20260929_084139] gis_engine.pipeline — Step 3A — Building authoritative preparation mask
+[INFO] [run_20260929_084139] gis_engine.pipeline — [EXCLUSION TRACE] reference grid: crs=EPSG:32633, transform=| 10.00, 0.00, 500000.00|
+| 0.00,-10.00, 5000000.00|
+| 0.00, 0.00, 1.00|, width=100, height=100, bounds=(500000.0, 4999000.0, 501000.0, 5000000.0)
+[INFO] [run_20260929_084139] gis_engine.pipeline — [EXCLUSION TRACE] inclusion geometry: Full Grid
+[INFO] [run_20260929_084139] gis_engine.pipeline — [EXCLUSION TRACE] manual exclusions: 0 exclusions
+[INFO] [run_20260929_084139] gis_engine.pipeline — Step 3A — Analysis footprint: total_overlap=100.0000 ha, inclusion=100.0000 ha, excluded=0.0000 ha, effective=100.0000 ha
+[INFO] [run_20260929_084139] gis_engine.pipeline — Step 3A — Preparation complete: inclusion=full, 0 exclusions, excluded_pixels=0, effective_pixels=10000
+[INFO] [run_20260929_084139] gis_engine.pipeline — Steps 4–7 — Vegetation analysis
+[ERROR] [run_20260929_084139] gis_engine.pipeline — Phase 13 — Pipeline FAILED: Vegetation analysis failed: VegetationAnalysisPipeline.run() got an unexpected keyword argument 't1_aligned_out'

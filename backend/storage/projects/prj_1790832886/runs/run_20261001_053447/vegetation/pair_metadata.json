@@ -1,0 +1,69 @@
+{
+    "pair_name": "2023-08-14_2023-08-28",
+    "t1_date": "2023-08-14",
+    "t2_date": "2023-08-28",
+    "class_statistics_t1": {
+        "total_valid_pixels": 3500,
+        "classes": {
+            "0": {
+                "name": "Background",
+                "count": 3500,
+                "percentage": 100.0
+            },
+            "1": {
+                "name": "Severe",
+                "count": 0,
+                "percentage": 0.0
+            },
+            "2": {
+                "name": "Moderate",
+                "count": 0,
+                "percentage": 0.0
+            },
+            "3": {
+                "name": "Healthy",
+                "count": 0,
+                "percentage": 0.0
+            }
+        }
+    },
+    "class_statistics_t2": {
+        "total_valid_pixels": 3500,
+        "classes": {
+            "0": {
+                "name": "Background",
+                "count": 3500,
+                "percentage": 100.0
+            },
+            "1": {
+                "name": "Severe",
+                "count": 0,
+                "percentage": 0.0
+            },
+            "2": {
+                "name": "Moderate",
+                "count": 0,
+                "percentage": 0.0
+            },
+            "3": {
+                "name": "Healthy",
+                "count": 0,
+                "percentage": 0.0
+            }
+        }
+    },
+    "performance": {
+        "t1_inference": {
+            "inference_time_ms": 22.776099998736754,
+            "tensor_creation_time_ms": 1.9450999971013516,
+            "model_loading_time_ms": 299.6446000033757,
+            "execution_provider": "CPUExecutionProvider"
+        },
+        "t2_inference": {
+            "inference_time_ms": 15.19969999208115,
+            "tensor_creation_time_ms": 3.8856999890413135,
+            "model_loading_time_ms": 294.9347999965539,
+            "execution_provider": "CPUExecutionProvider"
+        }
+    }
+}

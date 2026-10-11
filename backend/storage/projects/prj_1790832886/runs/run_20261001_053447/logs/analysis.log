@@ -1,0 +1,15 @@
+[INFO] [run_20261001_053447] gis_engine.pipeline — Phase 13 — Production pipeline START. run_id=run_20261001_053447
+[INFO] [run_20261001_053447] gis_engine.pipeline — Step 1 — Loading configuration: C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\storage\projects\prj_1790832886\runs\.run_20261001_053447_run_config.json
+[INFO] [run_20261001_053447] gis_engine.pipeline — Analysis mode: wetland
+[INFO] [run_20261001_053447] gis_engine.pipeline — Step 1 — Configuration loaded. hash=e7358e4c5ca3cc86…
+[INFO] [run_20261001_053447] gis_engine.pipeline — Step 2 — Validating inputs
+[INFO] [run_20261001_053447] gis_engine.pipeline — Step 2 — Wetland inputs valid. T1=2023-08-14 T2=2023-08-28 interval=14 days
+[INFO] [run_20261001_053447] gis_engine.pipeline — Step 3 — Spatial/temporal alignment
+[INFO] [run_20261001_053447] gis_engine.pipeline — Step 3 — Alignment complete. overlap=100.00%
+[INFO] [run_20261001_053447] gis_engine.pipeline — Step 3A — Building authoritative preparation mask
+[INFO] [run_20261001_053447] gis_engine.pipeline — [EXCLUSION TRACE] reference grid: crs=EPSG:32633, transform=| 10.00, 0.00, 500000.00|
+| 0.00,-10.00, 5000000.00|
+| 0.00, 0.00, 1.00|, width=100, height=100, bounds=(500000.0, 4999000.0, 501000.0, 5000000.0)
+[INFO] [run_20261001_053447] gis_engine.pipeline — [EXCLUSION TRACE] inclusion geometry: Provided
+[INFO] [run_20261001_053447] gis_engine.pipeline — [EXCLUSION TRACE] manual exclusions: 1 exclusions
+[INFO] [run_20261001_053447] gis_engine.api.service — [service] analyze_wetland called: t1=C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\Engine_module\data\sample_scene\t1 t2=C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\Engine_module\data\sample_scene\t2 t1_date=2023-08-14 t2_date=2023-08-28

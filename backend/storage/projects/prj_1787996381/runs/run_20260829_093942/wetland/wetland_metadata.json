@@ -1,0 +1,50 @@
+{
+    "source_type": "UNAVAILABLE",
+    "source_name": "None",
+    "source_version": "1.0",
+    "source_date": "2023-08-14",
+    "source_authority": "None",
+    "original_crs": "None",
+    "target_crs": "None",
+    "rasterization_method": "rasterio.features.rasterize",
+    "all_touched_setting": false,
+    "feature_selection_rule": [],
+    "aoi_information": {
+        "has_aoi": false,
+        "aoi_source": null
+    },
+    "reference_grid": {
+        "crs": null,
+        "transform": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+        ],
+        "width": 2592,
+        "height": 1944,
+        "resolution": [
+            1.0,
+            1.0
+        ],
+        "bounds": [
+            0.0,
+            1944.0,
+            2592.0,
+            0.0
+        ]
+    },
+    "wetland_pixel_count": 5038848,
+    "wetland_area_m2": 5038848.0,
+    "wetland_area_ha": 503.8848,
+    "valid_wetland_analysis_pixel_count": 5038848,
+    "valid_wetland_analysis_area_m2": 5038848.0,
+    "valid_wetland_analysis_area_ha": 503.8848,
+    "confidence_status": "WETLAND_BOUNDARY_UNAVAILABLE",
+    "physical_wetland_depletion_enabled": false,
+    "source_metadata": {
+        "status": "No reliable wetland boundary or water context available."
+    }
+}

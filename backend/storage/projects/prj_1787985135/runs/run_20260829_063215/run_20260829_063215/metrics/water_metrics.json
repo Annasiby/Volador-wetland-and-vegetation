@@ -1,0 +1,32 @@
+{
+    "index": "NDWI",
+    "t1_date": "T1",
+    "t2_date": "T2",
+    "threshold": 0.0,
+    "epsilon": 1e-06,
+    "valid_pixel_count": 10000,
+    "nodata_pixel_count": 0,
+    "wetland_boundary_used": true,
+    "water_area_t1_m2": 3100.0,
+    "water_area_t2_m2": 70300.0,
+    "water_area_t1_ha": 0.31,
+    "water_area_t2_ha": 7.03,
+    "water_gain_m2": 67200.0,
+    "water_loss_m2": 0.0,
+    "water_gain_ha": 6.72,
+    "water_loss_ha": 0.0,
+    "net_water_change_m2": 67200.0,
+    "net_water_change_ha": 6.72,
+    "wetland_restricted_metrics": {
+        "water_area_t1_m2": 3100.0,
+        "water_area_t2_m2": 70300.0,
+        "water_area_t1_ha": 0.31,
+        "water_area_t2_ha": 7.03,
+        "water_gain_m2": 67200.0,
+        "water_loss_m2": 0.0,
+        "water_gain_ha": 6.72,
+        "water_loss_ha": 0.0,
+        "net_water_change_m2": 67200.0,
+        "net_water_change_ha": 6.72
+    }
+}

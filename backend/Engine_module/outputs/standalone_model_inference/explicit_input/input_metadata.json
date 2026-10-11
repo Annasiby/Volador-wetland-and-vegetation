@@ -1,0 +1,43 @@
+{
+  "shape": [
+    1944,
+    2592
+  ],
+  "width": 2592,
+  "height": 1944,
+  "crs": "None",
+  "resolution": [
+    1.0,
+    1.0
+  ],
+  "source_files": {
+    "green": "C:\\Users\\HP\\Desktop\\DJI_20230814123320_0001_MS_G.TIF",
+    "red": "C:\\Users\\HP\\Desktop\\DJI_20230814123320_0001_MS_R.TIF",
+    "rededge": "C:\\Users\\HP\\Desktop\\DJI_20230814123320_0001_MS_RE.TIF",
+    "nir": "C:\\Users\\HP\\Desktop\\DJI_20230814123320_0001_MS_NIR.TIF"
+  },
+  "channel_order": [
+    "ndvi",
+    "gndvi",
+    "ndre",
+    "nir",
+    "rededge"
+  ],
+  "tensor_shape": [
+    1,
+    5,
+    1944,
+    2592
+  ],
+  "tensor_dtype": "float32",
+  "logits_shape": [
+    1,
+    4,
+    1944,
+    2592
+  ],
+  "class_map_shape": [
+    1944,
+    2592
+  ]
+}

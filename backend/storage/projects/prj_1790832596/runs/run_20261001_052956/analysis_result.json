@@ -1,0 +1,219 @@
+{
+    "run_id": "run_20261001_052956",
+    "software_version": "1.0.0",
+    "analysis_mode": "vegetation",
+    "status": "SUCCESS",
+    "inputs": {
+        "scene_path": "C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\backend\\storage\\projects\\prj_1790832596\\datasets\\t1",
+        "model_path": "C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\backend\\Engine_module\\models\\best_finetuned_model.onnx",
+        "band_statistics": {
+            "scene": {
+                "green": {
+                    "valid_count": 400,
+                    "min": 0.5,
+                    "max": 0.5,
+                    "mean": 0.5,
+                    "median": 0.5,
+                    "std": 0.0,
+                    "p95": 0.5
+                },
+                "red": {
+                    "valid_count": 400,
+                    "min": 0.5,
+                    "max": 0.5,
+                    "mean": 0.5,
+                    "median": 0.5,
+                    "std": 0.0,
+                    "p95": 0.5
+                },
+                "rededge": {
+                    "valid_count": 400,
+                    "min": 0.5,
+                    "max": 0.5,
+                    "mean": 0.5,
+                    "median": 0.5,
+                    "std": 0.0,
+                    "p95": 0.5
+                },
+                "nir": {
+                    "valid_count": 400,
+                    "min": 0.5,
+                    "max": 0.5,
+                    "mean": 0.5,
+                    "median": 0.5,
+                    "std": 0.0,
+                    "p95": 0.5
+                }
+            }
+        }
+    },
+    "temporal": {
+        "date": "single-date"
+    },
+    "spectral_indices": {
+        "ndvi": {
+            "formula": "(NIR - Red) / (NIR + Red)",
+            "mean": 0.0,
+            "median": 0.0,
+            "std": 0.0,
+            "p95": 0.0
+        },
+        "gndvi": {
+            "formula": "(NIR - Green) / (NIR + Green)",
+            "mean": 0.0,
+            "median": 0.0,
+            "std": 0.0,
+            "p95": 0.0
+        },
+        "ndre": {
+            "formula": "(NIR - RedEdge) / (NIR + RedEdge)",
+            "mean": 0.0,
+            "median": 0.0,
+            "std": 0.0,
+            "p95": 0.0
+        }
+    },
+    "spatial": {
+        "crs": "EPSG:32633",
+        "dimensions": [
+            20,
+            20
+        ],
+        "resolution": [
+            10.0,
+            10.0
+        ],
+        "extent": [
+            500000.0,
+            4999800.0,
+            500200.0,
+            5000000.0
+        ],
+        "total_area_ha": 4.0,
+        "effective_analysis_area_ha": 4.0,
+        "physical_area_available": true,
+        "area_basis": "RASTER_CRS_AND_TRANSFORM",
+        "total_pixels": 400,
+        "valid_pixels": 400
+    },
+    "vegetation": {
+        "total_valid_pixels": 400,
+        "classes": {
+            "0": {
+                "name": "Background",
+                "count": 400,
+                "percentage": 100.0
+            },
+            "1": {
+                "name": "Severe",
+                "count": 0,
+                "percentage": 0.0
+            },
+            "2": {
+                "name": "Moderate",
+                "count": 0,
+                "percentage": 0.0
+            },
+            "3": {
+                "name": "Healthy",
+                "count": 0,
+                "percentage": 0.0
+            }
+        }
+    },
+    "metrics": {
+        "class_distribution": {
+            "total_valid_pixels": 400,
+            "classes": {
+                "0": {
+                    "name": "Background",
+                    "count": 400,
+                    "percentage": 100.0
+                },
+                "1": {
+                    "name": "Severe",
+                    "count": 0,
+                    "percentage": 0.0
+                },
+                "2": {
+                    "name": "Moderate",
+                    "count": 0,
+                    "percentage": 0.0
+                },
+                "3": {
+                    "name": "Healthy",
+                    "count": 0,
+                    "percentage": 0.0
+                }
+            }
+        },
+        "healthy_vegetation_percentage": 0.0,
+        "moderate_stress_percentage": 0.0,
+        "severe_stress_percentage": 0.0,
+        "background_percentage": 100.0,
+        "vegetation_coverage_percentage": 0.0,
+        "mean_confidence": 0.9984261989593506,
+        "analysis_extent": {
+            "valid_analysis_area_ha": 4.0
+        }
+    },
+    "validation": {
+        "overall_status": "WARN",
+        "categories": {
+            "input": "PASS",
+            "model": "PASS",
+            "spatial": "PASS",
+            "temporal": "PASS",
+            "change": "PASS",
+            "wetland": "WARN",
+            "metrics": "PASS",
+            "uncertainty": "PASS"
+        },
+        "flags": [
+            {
+                "code": "QA-011",
+                "severity": "LOW",
+                "message": "Wetland boundary is inferred or unavailable",
+                "phase": "Uncertainty QA",
+                "status": "WARN",
+                "recommended_action": "Use authoritative datasets to reduce wetland boundary uncertainty."
+            },
+            {
+                "code": "QA-012",
+                "severity": "INFO",
+                "message": "Independent reference samples unavailable. Area-estimation uncertainty unavailable.",
+                "phase": "Uncertainty QA",
+                "status": "NOT_AVAILABLE",
+                "recommended_action": "Collect reference validation samples for V2."
+            },
+            {
+                "code": "QA-014",
+                "severity": "INFO",
+                "message": "Olofsson area-error correction unavailable.",
+                "phase": "Uncertainty QA",
+                "status": "NOT_AVAILABLE",
+                "recommended_action": "Olofsson validation requires independent reference data."
+            }
+        ]
+    },
+    "uncertainty": {
+        "mean_confidence": 0.9984261989593506
+    },
+    "warnings": [],
+    "errors": [],
+    "outputs": {
+        "vegetation/health.tif": "vegetation/health.tif",
+        "vegetation/confidence.tif": "vegetation/confidence.tif",
+        "vegetation/statistics.json": "vegetation/statistics.json",
+        "validation/qa_report.json": "validation/qa_report.json"
+    },
+    "performance": {
+        "total_runtime_seconds": 0.8215578999952413,
+        "inference": {
+            "inference_time_ms": 12.045800001942553,
+            "tensor_creation_time_ms": 0.3941000031773001,
+            "model_loading_time_ms": 667.9997000028379,
+            "execution_provider": "CPUExecutionProvider"
+        }
+    }
+}

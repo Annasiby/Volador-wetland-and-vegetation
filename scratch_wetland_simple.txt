@@ -1,0 +1,173 @@
+--- Page 1 ---
+GIS Wetland Degradation Assessment · Executive Summary
+WETLAND DEGRADATION ASSESSMENT
+Executive Summary of Ecological & Hydrological Change Between Two Satellite Observations
+OBSERVATION PERIOD
+2023-08-14 → 2023-08-28
+INTERVAL
+14 days
+WETLAND CONTEXT
+Project-provided wetland boundary
+RUN ID
+run_20260929_094945
+ANALYSIS FOOTPRINT
+100.00% (36.00 ha)
+SPATIAL REFERENCE
+EPSG:32633
+PRIMARY WETLAND ASSESSMENT
+NO MEASURABLE WETLAND DEGRADATION DETECTED
+Available multi-stream remote-sensing evidence demonstrates no systemic wetland degradation within the selected analysis area across the
+observation window.
+INDICATOR
+ RESULT
+ AREA
+PLAIN LANGUAGE INTERPRETATION
+Hydro-Ecological Degradation
+ 0.00%
+ 0.00 ha
+Concurrent canopy stress and surface water decline.
+Vegetation Degradation
+ 0.00%
+ 0.00 ha
+Vegetation canopy moving from healthier to more stressed tiers.
+Vegetation Recovery / Regrowth
+ 0.00%
+ 0.00 ha
+Vegetation canopy showing positive physiological recovery.
+Surface Water Dynamics
+ N/A
+ 0.00 ha
+Net change in open surface moisture and water bodies.
+Physical Wetland Loss
+ Not established
+ —
+Conservative criterion: only claimed if verified by independent boundary
+evidence.
+1. ANALYSIS OVERVIEW & METHODOLOGICAL FRAMEWORK
+This study compares two satellite observations taken on 2023-08-14 (baseline) and 2023-08-28 (present), spanning an interval of 14 days.
+The objective is to identify whether measurable ecological degradation or surface water decline has occurred within the selected analysis area.
+The evaluation examines three independent evidence streams: canopy health classification, continuous spectral change, and surface water
+dynamics.
+All multi-spectral imagery is aligned to a common spatial reference grid. Radiometric normalization is applied to ensure cross-date reflectance
+comparability before computing spectral difference vectors and surface water boundaries across the effective analysis footprint (36.00 ha).
+GIS Remote Sensing Engine  ·  2026-09-29 09:50 UTC
+Page 1 of 5
+
+--- Page 2 ---
+2. VEGETATION CONDITION AT T1 & T2
+Vegetation canopy condition was classified independently at both observation dates into Healthy, Moderate Stress, Severe Stress, and
+Non-Vegetated Background:
+CONDITION CATEGORY
+ T1 (2023-08-14)
+ T2 (2023-08-28)
+ NET SHIFT
+PLAIN LANGUAGE INTERPRETATION
+Healthy Vegetation
+ 0.00%
+ 0.00%
+ +0.0%
+Dense, vigorous green canopy with high chlorophyll
+absorption.
+Moderate Stress
+ 0.00%
+ 0.00%
+ +0.0%
+Mild foliar moisture deficiency, early stress, or sparse cover.
+Severe Stress
+ 0.00%
+ 0.00%
+ +0.0%
+Marked foliage loss, dieback, or severe physiological stress.
+Background / Non-Veg
+ 100.00%
+ 100.00%
+ +0.0%
+Open water, bare soil, rock, or non-vegetated surfaces.
+ Baseline Vegetation Condition (T1: 2023-08-14)
+ Present Vegetation Condition (T2: 2023-08-28)
+3. WHAT CHANGED? (VEGETATION TRANSITIONS)
+Comparing T1 and T2 pixel-by-pixel reveals specific canopy trajectories: 0.0% of the area showed degradation (canopy moving to a more
+stressed tier), 0.0% demonstrated recovery, and the remainder remained stable.
+ Figure 2: Vegetation Change Transitions Across the Analysis Area
+WETLAND DEGRADATION REPORT
+TEMPORAL ASSESSMENT
+GIS Remote Sensing Engine  ·  2026-09-29 09:50 UTC
+Page 2 of 5
+
+--- Page 3 ---
+4. SPECTRAL CHANGE (CONTINUOUS RADIOMETRIC SHIFTS)
+Change Vector Analysis (CVA) measures the total magnitude of spectral shift across multiple wavelengths simultaneously. Unlike categorical
+classes, CVA captures subtle, continuous radiometric alterations. The average spectral displacement across the area was 0.6859. Higher
+displacement indicates stronger physical alterations in canopy moisture or structure.
+SPECTRAL INDICATOR
+ VALUE
+DESCRIPTION
+CVA Magnitude
+ 0.6859
+Overall Euclidean spectral displacement across Green, Red, RedEdge, NIR
+Mean ΔNDVI
+ +0.4889
+Difference in normalized vegetation greenness index
+Mean ΔGNDVI
+ +0.2618
+Difference in green chlorophyll absorption index
+Mean ΔNDRE
+ -0.0326
+Difference in red-edge foliar health index
+ Figure 3: Change Vector Analysis (CVA) Magnitude Plate
+5. HYDROLOGICAL EVIDENCE (SURFACE WATER DYNAMICS)
+Surface-water dynamics indicate 10.50% expansion across the analyzed area. Scientific Principle: Vegetation condition change alone does
+NOT constitute physical wetland loss. A decline in greenness can stem from normal seasonal cycles or dry weather. True wetland degradation
+requires concurrent evidence of persistent surface water reduction or documented boundary loss.
+HYDROLOGICAL METRIC
+ AREA (HA)
+HYDROLOGICAL STATE DEFINITION
+Baseline Water Extent (T1)
+ 0.27 ha
+Surface water area classified above NDWI threshold at T1 (2023-08-14)
+Present Water Extent (T2)
+ 4.05 ha
+Surface water area classified above NDWI threshold at T2 (2023-08-28)
+Surface Water Expansion (Gain)
+ 3.78 ha
+NDWI shifted above threshold (flooding / wetting)
+Surface Water Contraction (Loss)
+ 0.00 ha
+NDWI shifted below threshold (drying / receding)
+WETLAND DEGRADATION REPORT
+TEMPORAL ASSESSMENT
+GIS Remote Sensing Engine  ·  2026-09-29 09:50 UTC
+Page 3 of 5
+
+--- Page 4 ---
+Figure 4: Surface Water Dynamics & Moisture Shifts
+6. COMBINED EVIDENCE & MULTI-STREAM FUSION
+The analysis is spatially bounded by the configured wetland boundary. All ecological condition indicators are evaluated within this defined area.
+To reach an objective conclusion, the GIS engine fuses vegetation transitions, continuous spectral displacement, and surface water dynamics
+into an integrated assessment:
+ Figure 5: Multi-Evidence Fusion Map Combining Vegetation & Hydrological Data
+7. FINAL WETLAND ASSESSMENT & KEY FINDINGS
+Multi-evidence synthesis does not identify concurrent vegetation and hydrological decline sufficient to establish wetland degradation.
+Physical wetland loss is not established. In accordance with strict scientific safeguards, optical vegetation change alone is not interpreted as
+permanent physical wetland loss.
+WETLAND DEGRADATION REPORT
+TEMPORAL ASSESSMENT
+GIS Remote Sensing Engine  ·  2026-09-29 09:50 UTC
+Page 4 of 5
+
+--- Page 5 ---
+   Vegetation canopy decline was observed across 0.0% of the analysis area.
+   Vegetation recovery/regrowth was detected across 0.0% of the area.
+   Surface-water dynamics: Surface-water dynamics indicate 10.50% expansion across the analyzed area.
+   Multi-evidence synthesis: Available multi-stream remote-sensing evidence demonstrates no systemic wetland degradation within the
+selected analysis area across the observation window.
+   Physical wetland depletion status: Not established.
+8. LIMITATIONS & REPORT NOTES
+Temporal Resolution: Analysis is based on two discrete overpass dates. Intermediate rainfall, flooding, or harvesting events between these dates cannot be directly
+captured.
+Seasonal Phenology: Changes in vegetation vigor between different seasons may represent natural dormancy rather than anthropogenic degradation.
+Ground Truth: High-priority degraded zones should be verified with field inspection before initiating statutory or enforcement actions.
+WETLAND DEGRADATION REPORT
+TEMPORAL ASSESSMENT
+GIS Remote Sensing Engine  ·  2026-09-29 09:50 UTC
+Page 5 of 5

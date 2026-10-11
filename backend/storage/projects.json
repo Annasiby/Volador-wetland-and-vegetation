@@ -1,0 +1,38 @@
+{
+  "prj_1790921535755": {
+    "id": "prj_1790921535755",
+    "name": "Wetland Degradation Study",
+    "description": "Sentinel-2 5-channel temporal degradation analysis",
+    "aoi_name": "Central Reserve",
+    "created_at": "2026-10-02T06:12:15Z",
+    "analysis_mode": "wetland",
+    "t1_date": null,
+    "t2_date": null,
+    "status": "INVALID",
+    "datasets_ready": false,
+    "t1_dir": "C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\backend\\storage\\projects\\prj_1790921535755\\datasets\\t1",
+    "t2_dir": "C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\backend\\storage\\projects\\prj_1790921535755\\datasets\\t2",
+    "wetland_boundary": null,
+    "latest_run_id": null,
+    "preparation_status": "DRAFT",
+    "is_locked": false
+  },
+  "prj_1790921535777": {
+    "id": "prj_1790921535777",
+    "name": "Wetland Degradation Study",
+    "description": "Sentinel-2 5-channel temporal degradation analysis",
+    "aoi_name": "Central Reserve",
+    "created_at": "2026-10-02T06:12:15Z",
+    "analysis_mode": "wetland",
+    "t1_date": null,
+    "t2_date": null,
+    "status": "STAGED",
+    "datasets_ready": true,
+    "t1_dir": "C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\backend\\storage\\projects\\prj_1790921535777\\datasets\\t1",
+    "t2_dir": "C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\backend\\storage\\projects\\prj_1790921535777\\datasets\\t2",
+    "wetland_boundary": null,
+    "latest_run_id": null,
+    "preparation_status": "NOT_PREPARED",
+    "is_locked": false
+  }
+}

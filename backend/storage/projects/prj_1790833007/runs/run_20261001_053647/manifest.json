@@ -1,0 +1,397 @@
+{
+    "run_id": "run_20261001_053647",
+    "generated_utc": "2026-10-01T05:37:21.138734+00:00",
+    "total_outputs": 65,
+    "outputs": [
+        {
+            "path": "alignment/t1_aligned/green.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 40683,
+            "sha256": "10e18c17fb64ced4828f4add61bc94336ae2241fa03809d00ce54919857b0f31"
+        },
+        {
+            "path": "alignment/t1_aligned/red.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 41583,
+            "sha256": "23a0967646cb2c462f93fd6305ca3b1f6b2d06ce97fbda6e2a3baee551d52bf5"
+        },
+        {
+            "path": "alignment/t1_aligned/rededge.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 40469,
+            "sha256": "2a0607546e93a74cc2e05d6dd9ed3d69d1db8ea794e185e82f89a5f094e27273"
+        },
+        {
+            "path": "alignment/t1_aligned/nir.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 40324,
+            "sha256": "acde505e62312d58f55f57d6a39f5b1114cdd772a7f185fe5f51cb51fac35314"
+        },
+        {
+            "path": "alignment/t2_aligned/green.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 40683,
+            "sha256": "10e18c17fb64ced4828f4add61bc94336ae2241fa03809d00ce54919857b0f31"
+        },
+        {
+            "path": "alignment/t2_aligned/red.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 41716,
+            "sha256": "0eca9b0e057db9ce9de5cc18ca50d74e3b645aceaa22a44e8b2648cd01d14ff0"
+        },
+        {
+            "path": "alignment/t2_aligned/rededge.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 40657,
+            "sha256": "11e97f28bec38c648793d2e2523393afbc4ef0110f4594ee740a14d3dd0787ec"
+        },
+        {
+            "path": "alignment/t2_aligned/nir.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 40540,
+            "sha256": "28aa280dada2cbea78fa0822f8245d010ad7a74508149fbdb54bb6999276c1f7"
+        },
+        {
+            "path": "alignment/overlap_mask.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 618,
+            "sha256": "22f0666680d8f736feb457c01a535c8bb2b470e63685cf2e29ac271c0e4c5fa4"
+        },
+        {
+            "path": "exclusions/inclusion_mask.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 618,
+            "sha256": "22f0666680d8f736feb457c01a535c8bb2b470e63685cf2e29ac271c0e4c5fa4"
+        },
+        {
+            "path": "exclusions/manual_exclusion_mask.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 618,
+            "sha256": "61cb8837804dffbe5417582a44adccfb2e4a28c740dc3c09730cfe867564a1a0"
+        },
+        {
+            "path": "alignment/effective_analysis_mask.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 618,
+            "sha256": "22f0666680d8f736feb457c01a535c8bb2b470e63685cf2e29ac271c0e4c5fa4"
+        },
+        {
+            "path": "vegetation/t1_health.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 618,
+            "sha256": "be100b46a40b297cdb1bbb719de6f899a8ce9ae867b109f62e9af69ac5386ade"
+        },
+        {
+            "path": "vegetation/t2_health.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 618,
+            "sha256": "be100b46a40b297cdb1bbb719de6f899a8ce9ae867b109f62e9af69ac5386ade"
+        },
+        {
+            "path": "vegetation/T1/confidence.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 24884,
+            "sha256": "5985ba36f3eb0d59cbdfbcfd39302d3300a468280aa1dd3fe4b776c7c356fe3e"
+        },
+        {
+            "path": "vegetation/T2/confidence.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 29456,
+            "sha256": "e1e13897364c0f04c48bc514e8d891b25f90baa70c6de2591c7206435c0cba5b"
+        },
+        {
+            "path": "vegetation/overlap_mask.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 618,
+            "sha256": "22f0666680d8f736feb457c01a535c8bb2b470e63685cf2e29ac271c0e4c5fa4"
+        },
+        {
+            "path": "vegetation/pair_metadata.json",
+            "type": "JSON",
+            "size_bytes": 1993,
+            "sha256": "dca92e1b1671ea7f361d7563ce964e55cc9a808465e9564d47588dea918b7aac"
+        },
+        {
+            "path": "change/transition_map.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 2674,
+            "sha256": "34d56141b490bcac932888a8c0196922e5ea8fec2b89225b67b97c090d081834"
+        },
+        {
+            "path": "change/delta_ndvi.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 40810,
+            "sha256": "ce39fcb6362570abebbc42a10ca3e97ac46df33f9b899e53a062850409fa645c"
+        },
+        {
+            "path": "change/delta_gndvi.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 41452,
+            "sha256": "2a7d8bd8591f0040e61aef32fb75e3d47411e442ab4b4207b08df666c1e5a88d"
+        },
+        {
+            "path": "change/delta_ndre.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 47502,
+            "sha256": "75a963e0072b9263587dd78f7c516f01aa27859a535fba9ab65691f38f93da0c"
+        },
+        {
+            "path": "change/cva_magnitude.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 41566,
+            "sha256": "5b6a454ab5a3463aef355f25a926b13b75731ff3eb98f309202157a03134e68a"
+        },
+        {
+            "path": "degradation/degradation_map.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 618,
+            "sha256": "be100b46a40b297cdb1bbb719de6f899a8ce9ae867b109f62e9af69ac5386ade"
+        },
+        {
+            "path": "degradation/recovery_map.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 618,
+            "sha256": "be100b46a40b297cdb1bbb719de6f899a8ce9ae867b109f62e9af69ac5386ade"
+        },
+        {
+            "path": "degradation/residual_stress.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 618,
+            "sha256": "be100b46a40b297cdb1bbb719de6f899a8ce9ae867b109f62e9af69ac5386ade"
+        },
+        {
+            "path": "degradation/canopy_loss_map.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 618,
+            "sha256": "be100b46a40b297cdb1bbb719de6f899a8ce9ae867b109f62e9af69ac5386ade"
+        },
+        {
+            "path": "wetland/wetland_mask.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 740,
+            "sha256": "567fb8a4f7f4cb405313fb48c36f9fc1ea6d9fcf664195902c97c1a0753f33a9"
+        },
+        {
+            "path": "hydrology/ndwi_t1.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 41509,
+            "sha256": "643ea8ce004615030c55578a7c9e6543bfb8eeedde27736ce6042b47f2ba6d0d"
+        },
+        {
+            "path": "hydrology/ndwi_t2.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 41627,
+            "sha256": "c5b46d10ade8dc91850aa66e599aafe8b05fc34db420ee98a7de0049b4cd8304"
+        },
+        {
+            "path": "hydrology/delta_ndwi.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 3646,
+            "sha256": "347a387178db482a5f89a43e2c7cd29911ee28a95f435da839a56d94282dedb8"
+        },
+        {
+            "path": "hydrology/water_mask_t1.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 665,
+            "sha256": "5c1ca56252b0a18bd855ebbb6386594196818e1286c8549efe8610d189b4c61f"
+        },
+        {
+            "path": "hydrology/water_mask_t2.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 732,
+            "sha256": "b6ccbf658b740362cf05f7719923ae7d100142e76d62097d160f1f895919cda1"
+        },
+        {
+            "path": "hydrology/water_change.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 742,
+            "sha256": "c2fd68b9df6f7be7a9a436c737a165c3fd88e72344603b5944cb7f834a78b193"
+        },
+        {
+            "path": "metrics/fusion_metrics.json",
+            "type": "JSON",
+            "size_bytes": 1746,
+            "sha256": "fb8d00adc5e242350a382cee0229ae8923ed49c614f7ff8504246c6d86d6bac1"
+        },
+        {
+            "path": "metrics/evidence_matrix.csv",
+            "type": "CSV",
+            "size_bytes": 229,
+            "sha256": "4ee147fb5a93af93d77585ea705b07665fc4c00e3792c670da8201cac92098dc"
+        },
+        {
+            "path": "fusion/evidence_fusion.tif",
+            "type": "GeoTIFF",
+            "size_bytes": 827,
+            "sha256": "2d03674b0371d1cbdf0f7eef1ecadaaebe7f160fa9b8e86337b1acc34d9b297b"
+        },
+        {
+            "path": "metrics/metrics.json",
+            "type": "JSON",
+            "size_bytes": 12104,
+            "sha256": "d9243e6217d1be474f11c9da766607e1b09578f2a67b40db5ba4ca2173476ebb"
+        },
+        {
+            "path": "metrics/transition_matrix.csv",
+            "type": "CSV",
+            "size_bytes": 1018,
+            "sha256": "7cf640dd81e8b1bea32093a50d828b5d1258ed0e26cf3a8fc5857f599f6a0f1a"
+        },
+        {
+            "path": "metrics/water_metrics.json",
+            "type": "JSON",
+            "size_bytes": 1370,
+            "sha256": "85ae43bbc2eb2445f287b9ab248488e4621dcc3c974b874e4cef551539584613"
+        },
+        {
+            "path": "validation/qa_report.json",
+            "type": "JSON",
+            "size_bytes": 1333,
+            "sha256": "6af2043e05662c4d0ac5a2d87665aad535ea4457765116b84acb8c02144add84"
+        },
+        {
+            "path": "analysis_result.json",
+            "type": "JSON",
+            "size_bytes": 19193,
+            "sha256": "2eea749e4d2453593d1d6a9dbe6ed391170e3f4face75b3c4c4c42cddfead28f"
+        },
+        {
+            "path": "reports/analysis_report.md",
+            "type": "Markdown",
+            "size_bytes": 8557,
+            "sha256": "d72dfbca0a97bae7313baa1038799c523584eab561b659d646bdf01328bc75eb"
+        },
+        {
+            "path": "reports/figures/source_t1.png",
+            "type": "PNG",
+            "size_bytes": 1469282,
+            "sha256": "535a0a5771cc2ff264161886b4b6242d792fd2b9cb4cad5f0017186fcda66e41"
+        },
+        {
+            "path": "reports/figures/source_t2.png",
+            "type": "PNG",
+            "size_bytes": 1363177,
+            "sha256": "a856dd087debf39dd06266457c391126a3ea9c588424f711e7d1b5bfb7595064"
+        },
+        {
+            "path": "reports/figures/manual_exclusions.png",
+            "type": "PNG",
+            "size_bytes": 1342227,
+            "sha256": "af8936c59d86b305b31041105c3f9d8e5172096b7225e51209755a33132dc63b"
+        },
+        {
+            "path": "reports/figures/effective_analysis.png",
+            "type": "PNG",
+            "size_bytes": 1299093,
+            "sha256": "ce959026ab379c91793a2c30826d59c7f880a291dd53e7530306f57096cb6ed3"
+        },
+        {
+            "path": "reports/figures/health_t1.png",
+            "type": "PNG",
+            "size_bytes": 1152200,
+            "sha256": "7ae8564c3200c5d0f4a9f9467cc8333100a1ce45fca412d10da8612ff6568fe3"
+        },
+        {
+            "path": "reports/figures/health_t2.png",
+            "type": "PNG",
+            "size_bytes": 1054141,
+            "sha256": "72c0d4a219c5c18b82971a8f0286c98613421bc3fbfe29d4d57d11c2a02bf60b"
+        },
+        {
+            "path": "reports/figures/transition.png",
+            "type": "PNG",
+            "size_bytes": 1057599,
+            "sha256": "70e49986c908b3f6730f902ba8570f40687759cb9a519310844899285a05fea2"
+        },
+        {
+            "path": "reports/figures/degradation.png",
+            "type": "PNG",
+            "size_bytes": 1437780,
+            "sha256": "88b2a19158d44feacc3cbc387564b545a923c435b76dded17c1b8482b64ee02a"
+        },
+        {
+            "path": "reports/figures/recovery.png",
+            "type": "PNG",
+            "size_bytes": 1436350,
+            "sha256": "33bc3cd2ff674c00b0071ac6d6d3ed24e4eb95fcc504ed7913a7f88995426dfe"
+        },
+        {
+            "path": "reports/figures/canopy_loss.png",
+            "type": "PNG",
+            "size_bytes": 1440517,
+            "sha256": "281a37cbe2cde3166e59daf470be455b533ffc6afdfc7b6f68145bbeff4ce9e1"
+        },
+        {
+            "path": "reports/figures/cva_magnitude.png",
+            "type": "PNG",
+            "size_bytes": 1426341,
+            "sha256": "5cc6cd5c6bd91af231189c7deb9206828643161ca44bd61ae3efb5bab5eb4e13"
+        },
+        {
+            "path": "reports/figures/delta_ndvi.png",
+            "type": "PNG",
+            "size_bytes": 1417216,
+            "sha256": "b1777b67cb2a4837d6264da6dde2eeb96313306951d29ea2a3c1e90a460093b2"
+        },
+        {
+            "path": "reports/figures/delta_gndvi.png",
+            "type": "PNG",
+            "size_bytes": 1416879,
+            "sha256": "a5eefa3ac610dab38301c6167ffb1f1ba0e46a563b4b37f97e2e0937bf230807"
+        },
+        {
+            "path": "reports/figures/delta_ndre.png",
+            "type": "PNG",
+            "size_bytes": 1467890,
+            "sha256": "86135e6109cf6b5d24601894dc13b2d3243fd503504b1795fc2ece8400586726"
+        },
+        {
+            "path": "reports/figures/ndwi_t1.png",
+            "type": "PNG",
+            "size_bytes": 1270623,
+            "sha256": "6a2aa3c1c66b3b5c8607f087e630443cf9508e2c79e5ba770494946e9fb87b68"
+        },
+        {
+            "path": "reports/figures/ndwi_t2.png",
+            "type": "PNG",
+            "size_bytes": 1174227,
+            "sha256": "aebf92da3ce570b1c85c1e1f30d06f2300e074632edd9945865f2f3791cf76a0"
+        },
+        {
+            "path": "reports/figures/water_change.png",
+            "type": "PNG",
+            "size_bytes": 1057312,
+            "sha256": "15a05755a1d38af3a6bd6060843878d9fe778435c942ceabb4ce59d7b2ee7f7e"
+        },
+        {
+            "path": "reports/figures/evidence_fusion.png",
+            "type": "PNG",
+            "size_bytes": 1263866,
+            "sha256": "3fb7dc9e165835c3e3ec1349cf221e34a27de8e770fc79b71bfe2f5de54ae4f5"
+        },
+        {
+            "path": "reports/wetland_report.pdf",
+            "type": "PDF",
+            "size_bytes": 16562241,
+            "sha256": "f08f7401d2fa5b77505c86e3d44ebada0b3e8e7050d66e6d765074a772ca9cb5"
+        },
+        {
+            "path": "reports/wetland_technical_report.pdf",
+            "type": "PDF",
+            "size_bytes": 5537218,
+            "sha256": "fe3fea6106ab3ebc06e4fb7874cfd9953974e573545b9452ab532f0cd2611b9d"
+        },
+        {
+            "path": "reports/FINAL_ANALYSIS_REPORT.pdf",
+            "type": "PDF",
+            "size_bytes": 16562241,
+            "sha256": "f08f7401d2fa5b77505c86e3d44ebada0b3e8e7050d66e6d765074a772ca9cb5"
+        },
+        {
+            "path": "metadata.json",
+            "type": "JSON",
+            "size_bytes": 1582,
+            "sha256": "78f40dbf9c1a670a5cfc3f607244f618d2d8cb4abbaecf43666c5cb54cb731a5"
+        }
+    ]
+}

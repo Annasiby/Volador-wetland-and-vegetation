@@ -1,0 +1,273 @@
+"""
+Physical raster pixel-area calculations for the GIS Wetland Engine.
+
+Rules:
+- CRS=None is NOT a physical area reference.
+- An identity transform without georeferencing is NOT treated as 1 m²/pixel.
+- Projected CRS areas are converted to m² using the CRS linear-unit factor.
+- Geographic CRS areas are computed on the CRS ellipsoid, row by row for
+  north-up rasters.
+- Unsupported/ambiguous spatial references fail explicitly instead of
+  silently producing fabricated hectares.
+"""
+
+from __future__ import annotations
+
+from typing import Optional, Tuple
+
+import numpy as np
+import rasterio
+from affine import Affine
+from pyproj import CRS as PyProjCRS
+from pyproj import Geod
+
+
+class PhysicalAreaUnavailableError(ValueError):
+    """Raised when a raster cannot support defensible physical area."""
+
+
+def _is_identity_transform(transform: Optional[Affine], tol: float = 1e-12) -> bool:
+    if transform is None:
+        return True
+    identity = Affine.identity()
+    return all(
+        abs(float(a) - float(b)) <= tol
+        for a, b in zip(transform, identity)
+    )
+
+
+def _coerce_crs(crs) -> PyProjCRS:
+    if crs is None:
+        raise PhysicalAreaUnavailableError(
+            "Physical area is unavailable because the raster has no CRS."
+        )
+    try:
+        return PyProjCRS.from_user_input(crs)
+    except Exception as exc:
+        raise PhysicalAreaUnavailableError(
+            f"Unable to interpret raster CRS for physical area: {crs!r}"
+        ) from exc
+
+
+def has_physical_area_reference(
+    transform: Optional[Affine],
+    crs=None,
+) -> bool:
+    """
+    Return True only when CRS + transform provide a defensible physical grid.
+
+    A CRS by itself is insufficient. An identity transform is treated as
+    unreferenced pixel space because it does not encode a real ground sampling
+    distance or geospatial placement.
+    """
+    if crs is None or transform is None:
+        return False
+    return not _is_identity_transform(transform)
+
+
+def _projected_pixel_area_m2(transform: Affine, crs: PyProjCRS) -> float:
+    """
+    Area of one raster pixel in square metres for a projected CRS.
+
+    The affine determinant handles rotation/shear correctly. The CRS linear
+    unit conversion converts feet/us-ft/etc. to metres before squaring.
+    """
+    if transform is None:
+        raise PhysicalAreaUnavailableError("Raster transform is missing.")
+
+    determinant = abs(
+        float(transform.a) * float(transform.e)
+        - float(transform.b) * float(transform.d)
+    )
+    if not np.isfinite(determinant) or determinant <= 0:
+        raise PhysicalAreaUnavailableError(
+            f"Raster transform does not define a positive pixel area: {transform!r}"
+        )
+
+    unit_factor = None
+
+    # Prefer the axis metadata exposed by pyproj.
+    try:
+        if crs.axis_info:
+            factors = [
+                float(axis.unit_conversion_factor)
+                for axis in crs.axis_info
+                if axis.unit_conversion_factor is not None
+            ]
+            if factors:
+                unit_factor = factors[0]
+    except Exception:
+        unit_factor = None
+
+    # Fallback for older CRS metadata.
+    if unit_factor is None:
+        try:
+            unit_name = str(crs.linear_units or "").lower()
+        except Exception:
+            unit_name = ""
+
+        if unit_name in ("metre", "meter", "m"):
+            unit_factor = 1.0
+        elif unit_name in ("foot", "ft"):
+            unit_factor = 0.3048
+        elif "us survey foot" in unit_name or unit_name in ("us_survey_foot", "us-ft"):
+            unit_factor = 1200.0 / 3937.0
+
+    if unit_factor is None or not np.isfinite(unit_factor) or unit_factor <= 0:
+        raise PhysicalAreaUnavailableError(
+            f"Unsupported or unknown projected CRS linear unit: {crs!s}"
+        )
+
+    return determinant * unit_factor * unit_factor
+
+
+def _geographic_row_areas_m2(
+    transform: Affine,
+    height: int,
+    geod: Geod,
+) -> np.ndarray:
+    """
+    Exact ellipsoidal pixel areas for a north-up geographic raster.
+
+    Four corner coordinates are evaluated for each row and passed to PROJ's
+    geodesic polygon-area calculation. This is vectorized over rows conceptually
+    (one polygon calculation per row) and avoids one geodesic operation per
+    pixel.
+    """
+    if abs(float(transform.b)) > 1e-12 or abs(float(transform.d)) > 1e-12:
+        raise PhysicalAreaUnavailableError(
+            "Rotated/sheared geographic rasters are not supported by the "
+            "row-area geodesic calculation. Reproject to a north-up projected CRS."
+        )
+
+    if abs(float(transform.a)) <= 0 or abs(float(transform.e)) <= 0:
+        raise PhysicalAreaUnavailableError(
+            f"Geographic raster has invalid pixel dimensions: {transform!r}"
+        )
+
+    row_areas = np.empty(height, dtype=np.float64)
+
+    for row in range(height):
+        # Pixel boundary coordinates. Raster transform maps pixel corners.
+        left = float(transform.c)
+        right = float(transform.c + transform.a)
+        top = float(transform.f + row * transform.e)
+        bottom = float(transform.f + (row + 1) * transform.e)
+
+        lons = [left, right, right, left]
+        lats = [top, top, bottom, bottom]
+
+        area_m2, _ = geod.polygon_area_perimeter(lons, lats)
+        area_m2 = abs(float(area_m2))
+
+        if not np.isfinite(area_m2) or area_m2 <= 0:
+            raise PhysicalAreaUnavailableError(
+                f"Could not calculate a valid geographic pixel area for row {row}."
+            )
+
+        row_areas[row] = area_m2
+
+    return row_areas
+
+
+def calculate_pixel_areas(
+    transform: rasterio.transform.Affine,
+    shape: Tuple[int, int],
+    crs: Optional[rasterio.crs.CRS] = None,
+) -> np.ndarray:
+    """
+    Calculate physical area of every raster pixel in square metres.
+
+    Parameters
+    ----------
+    transform:
+        Raster affine transform.
+    shape:
+        (height, width).
+    crs:
+        Raster CRS.
+
+    Returns
+    -------
+    np.ndarray
+        Float64 array of physical pixel areas in m².
+
+    Raises
+    ------
+    PhysicalAreaUnavailableError
+        If CRS/transform information is insufficient for physical area.
+
+    Notes
+    -----
+    For CRS=None (including the current unreferenced DJI pixel-space data),
+    this function intentionally does NOT assume that one pixel equals one
+    metre. Use pixel counts for such datasets.
+    """
+    height, width = int(shape[0]), int(shape[1])
+
+    if height <= 0 or width <= 0:
+        raise ValueError(f"Raster shape must be positive, got {shape!r}.")
+
+    if transform is None:
+        raise PhysicalAreaUnavailableError(
+            "Physical area is unavailable because the raster transform is missing."
+        )
+
+    crs_obj = _coerce_crs(crs)
+
+    if _is_identity_transform(transform):
+        raise PhysicalAreaUnavailableError(
+            "Physical area is unavailable because the raster transform is "
+            "identity/unreferenced. A CRS alone does not establish pixel size."
+        )
+
+    if crs_obj.is_projected:
+        pixel_area = _projected_pixel_area_m2(transform, crs_obj)
+        return np.full((height, width), pixel_area, dtype=np.float64)
+
+    if crs_obj.is_geographic:
+        # Build a geodesic using the ellipsoid associated with the actual CRS,
+        # rather than hard-coding WGS84.
+        try:
+            ellipsoid = crs_obj.ellipsoid
+            a = float(ellipsoid.semi_major_metre)
+            b = float(ellipsoid.semi_minor_metre)
+            if not np.isfinite(a) or not np.isfinite(b) or a <= 0 or b <= 0:
+                raise ValueError
+            geod = Geod(a=a, b=b)
+        except Exception as exc:
+            raise PhysicalAreaUnavailableError(
+                f"Could not construct ellipsoid for geographic CRS: {crs_obj!s}"
+            ) from exc
+
+        row_areas = _geographic_row_areas_m2(transform, height, geod)
+        return np.repeat(row_areas[:, np.newaxis], width, axis=1)
+
+    raise PhysicalAreaUnavailableError(
+        f"CRS type is neither projected nor geographic: {crs_obj!s}"
+    )
+
+
+def calculate_constant_pixel_area_m2(
+    transform: rasterio.transform.Affine,
+    crs: Optional[rasterio.crs.CRS] = None,
+) -> float:
+    """
+    Return the constant physical pixel area for projected rasters.
+
+    Geographic rasters have latitude-dependent pixel area and therefore should
+    use calculate_pixel_areas().
+    """
+    crs_obj = _coerce_crs(crs)
+
+    if not crs_obj.is_projected:
+        raise PhysicalAreaUnavailableError(
+            "A single constant physical pixel area is only valid for projected CRSs."
+        )
+
+    if _is_identity_transform(transform):
+        raise PhysicalAreaUnavailableError(
+            "Identity/unreferenced transform cannot provide physical pixel size."
+        )
+
+    return _projected_pixel_area_m2(transform, crs_obj)

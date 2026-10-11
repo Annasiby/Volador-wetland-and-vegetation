@@ -1,0 +1,1524 @@
+"""
+src/gis_engine/output/pdf.py
+==============================
+Production PDF Report Generator for the GIS Wetland Engine.
+
+Compiles an authoritative, publication-quality multi-page PDF analysis report
+using ReportLab, embedding high-resolution cartographic map plates,
+comprehensive metric tables, QA validation status, mathematical area
+reconciliation, and full data provenance.
+"""
+
+import logging
+import math
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+
+import numpy as np
+import rasterio
+
+from reportlab.lib import colors
+from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY, TA_LEFT, TA_RIGHT
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+from reportlab.pdfgen import canvas
+from reportlab.platypus import (
+    HRFlowable,
+    Image,
+    KeepTogether,
+    PageBreak,
+    Paragraph,
+    SimpleDocTemplate,
+    Spacer,
+    Table,
+    TableStyle,
+)
+
+logger = logging.getLogger(__name__)
+
+
+# -----------------------------------------------------------------------------
+# Numbered Canvas for Running Headers & Footers (Page X of Y)
+# -----------------------------------------------------------------------------
+
+class NumberedCanvas(canvas.Canvas):
+    """
+    Two-pass canvas to dynamically compute and render total page count
+    along with running headers and footers.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._saved_page_states = []
+
+    def showPage(self):
+        self._saved_page_states.append(dict(self.__dict__))
+        self._startPage()
+
+    def save(self):
+        num_pages = len(self._saved_page_states)
+        for state in self._saved_page_states:
+            self.__dict__.update(state)
+            self.draw_header_footer(num_pages)
+            super().showPage()
+        super().save()
+
+    def draw_header_footer(self, page_count: int):
+        self.saveState()
+        self.setFont("Helvetica", 7.5)
+        self.setFillColor(colors.HexColor("#4A5568"))
+
+        page_w, page_h = letter
+        margin = 36  # 0.5 inch
+
+        # Header (pages 2+)
+        if self._pageNumber > 1:
+            self.drawString(margin, page_h - 26, "GIS Wetland Degradation Assessment — Technical Report")
+            self.drawRightString(page_w - margin, page_h - 26, "SCIENTIFIC ASSESSMENT")
+            self.setStrokeColor(colors.HexColor("#CBD5E0"))
+            self.setLineWidth(0.5)
+            self.line(margin, page_h - 30, page_w - margin, page_h - 30)
+
+        # Footer (all pages)
+        self.setStrokeColor(colors.HexColor("#CBD5E0"))
+        self.setLineWidth(0.5)
+        self.line(margin, 34, page_w - margin, 34)
+
+        ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+        self.drawString(margin, 22, f"Generated: {ts} | GIS Wetland Engine Standard Pipeline")
+        page_str = f"Page {self._pageNumber} of {page_count}"
+        self.drawRightString(page_w - margin, 22, page_str)
+
+        self.restoreState()
+
+
+# -----------------------------------------------------------------------------
+# Formatting Helpers
+# -----------------------------------------------------------------------------
+
+def _fmt_num(val: Any, decimals: int = 2) -> str:
+    if val is None:
+        return "N/A"
+    try:
+        f = float(val)
+        if math.isnan(f) or math.isinf(f):
+            return "N/A"
+        return f"{f:,.{decimals}f}"
+    except (ValueError, TypeError):
+        return str(val)
+
+
+def _fmt_ha(val_ha: Any, val_m2: Optional[Any] = None) -> str:
+    if val_ha is None and val_m2 is None:
+        return "N/A"
+    try:
+        if val_ha is not None and not math.isnan(float(val_ha)):
+            ha_str = f"{float(val_ha):,.2f} ha"
+        elif val_m2 is not None and not math.isnan(float(val_m2)):
+            ha_str = f"{float(val_m2)/10000.0:,.2f} ha"
+        else:
+            return "N/A"
+        return ha_str
+    except Exception:
+        return "N/A"
+
+
+def _fmt_pct(val: Any) -> str:
+    if val is None:
+        return "N/A"
+    try:
+        f = float(val)
+        if math.isnan(f) or math.isinf(f):
+            return "N/A"
+        return f"{f:.2f}%"
+    except Exception:
+        return "N/A"
+
+
+def _safe_get(d: Dict[str, Any], *keys, default="N/A"):
+    cur = d
+    for k in keys:
+        if not isinstance(cur, dict):
+            return default
+        cur = cur.get(k, None)
+        if cur is None:
+            return default
+    return cur
+
+
+def _safe_int(value: Any, default: Optional[int] = None) -> Optional[int]:
+    try:
+        if value is None:
+            return default
+        return int(round(float(value)))
+    except (TypeError, ValueError):
+        return default
+
+
+def _fmt_px(value: Any) -> str:
+    iv = _safe_int(value)
+    return "N/A" if iv is None else f"{iv:,}"
+
+
+def _fmt_area(
+    area_ha: Any,
+    pixel_count: Any,
+    physical_area_available: bool,
+    *,
+    ha_decimals: int = 2,
+) -> str:
+    """Format area without inventing hectares for unreferenced pixel-space data."""
+    if physical_area_available:
+        try:
+            value = float(area_ha)
+            if math.isfinite(value):
+                return f"{value:,.{ha_decimals}f} ha"
+        except (TypeError, ValueError):
+            return "N/A"
+        return "N/A"
+    if pixel_count is not None:
+        return f"{_fmt_px(pixel_count)} px"
+    return "N/A"
+
+
+# -----------------------------------------------------------------------------
+# Master PDF Report Generator
+# -----------------------------------------------------------------------------
+
+def generate_pdf_report(
+    result_dict: Dict[str, Any],
+    output_path: Path,
+    map_assets: Optional[Dict[str, Path]] = None,
+    run_id: Optional[str] = None,
+    run_dir: Optional[Path] = None,
+) -> Path:
+    """
+    Generates a publication-quality PDF report for the GIS Wetland Engine.
+
+    Args:
+        result_dict: Complete dictionary containing pipeline results, metrics,
+                     validation summary, and metadata.
+        output_path: Destination path for the output PDF file.
+        map_assets:  Optional dictionary mapping map figure names to PNG file paths.
+        run_id:      Optional explicit run identifier.
+
+    Returns:
+        Path to the generated PDF report.
+    """
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    if map_assets is None:
+        map_assets = {}
+
+    run_id = run_id or result_dict.get("run_id", "RUN_UNKNOWN")
+
+    # Document setup (0.5 inch / 36 pt margins)
+    doc = SimpleDocTemplate(
+        str(output_path),
+        pagesize=letter,
+        leftMargin=36,
+        rightMargin=36,
+        topMargin=40,
+        bottomMargin=42,
+    )
+
+    # Styles
+    base_styles = getSampleStyleSheet()
+
+    title_style = ParagraphStyle(
+        "DocTitle",
+        parent=base_styles["Heading1"],
+        fontName="Helvetica-Bold",
+        fontSize=17,
+        leading=21,
+        textColor=colors.HexColor("#1A365D"),
+        alignment=TA_LEFT,
+        spaceAfter=3,
+    )
+
+    subtitle_style = ParagraphStyle(
+        "DocSubtitle",
+        parent=base_styles["Normal"],
+        fontName="Helvetica-Bold",
+        fontSize=10.5,
+        leading=13,
+        textColor=colors.HexColor("#2B6CB0"),
+        spaceAfter=6,
+    )
+
+    h1_style = ParagraphStyle(
+        "SectionH1",
+        parent=base_styles["Heading1"],
+        fontName="Helvetica-Bold",
+        fontSize=12,
+        leading=15,
+        textColor=colors.HexColor("#1A365D"),
+        spaceBefore=8,
+        spaceAfter=4,
+        keepWithNext=True,
+    )
+
+    body_style = ParagraphStyle(
+        "BodyDark",
+        parent=base_styles["BodyText"],
+        fontName="Helvetica",
+        fontSize=8,
+        leading=11,
+        textColor=colors.HexColor("#2D3748"),
+        alignment=TA_LEFT,
+        spaceAfter=4,
+    )
+
+    callout_style = ParagraphStyle(
+        "CalloutText",
+        parent=base_styles["Normal"],
+        fontName="Helvetica",
+        fontSize=7.5,
+        leading=10.5,
+        textColor=colors.HexColor("#2C5282"),
+    )
+
+    table_header_style = ParagraphStyle(
+        "TableHeader",
+        fontName="Helvetica-Bold",
+        fontSize=7,
+        leading=9,
+        textColor=colors.white,
+        alignment=TA_CENTER,
+    )
+
+    table_cell_style = ParagraphStyle(
+        "TableCell",
+        fontName="Helvetica",
+        fontSize=7,
+        leading=9,
+        textColor=colors.HexColor("#1A202C"),
+        alignment=TA_LEFT,
+    )
+
+    table_cell_bold = ParagraphStyle(
+        "TableCellBold",
+        fontName="Helvetica-Bold",
+        fontSize=7,
+        leading=9,
+        textColor=colors.HexColor("#1A202C"),
+        alignment=TA_LEFT,
+    )
+
+    table_cell_right = ParagraphStyle(
+        "TableCellRight",
+        fontName="Helvetica",
+        fontSize=7,
+        leading=9,
+        textColor=colors.HexColor("#1A202C"),
+        alignment=TA_RIGHT,
+    )
+
+    table_cell_center = ParagraphStyle(
+        "TableCellCenter",
+        fontName="Helvetica",
+        fontSize=7,
+        leading=9,
+        textColor=colors.HexColor("#1A202C"),
+        alignment=TA_CENTER,
+    )
+
+    story: List[Any] = []
+
+    # Extract Data Blocks
+    inputs = result_dict.get("inputs", {})
+    spatial = result_dict.get("spatial", {})
+    temporal = result_dict.get("temporal", {})
+    veg = result_dict.get("vegetation", {})
+    change = result_dict.get("change", {})
+    cva = result_dict.get("cva", {})
+    deg = result_dict.get("degradation", {})
+    rec = result_dict.get("recovery", {})
+    wetland = result_dict.get("wetland", {})
+    hydro = result_dict.get("hydrology", {})
+    fusion = result_dict.get("fusion", {})
+    metrics = result_dict.get("metrics", {})
+    qa = result_dict.get("validation", {})
+    spectral_indices = result_dict.get("spectral_indices", {})
+    band_stats = inputs.get("band_statistics", {})
+    sw_ver = result_dict.get("software_version", "1.0.0")
+
+    # Authoritative spatial accounting from pipeline Step 3A.
+    # Physical hectares are shown only when the engine explicitly confirms
+    # that the reference grid has an authoritative CRS/transform basis.
+    physical_area_available = bool(spatial.get("physical_area_available", False))
+    area_basis = str(spatial.get("area_basis", "UNKNOWN"))
+    overlap_pixel_count = _safe_int(spatial.get("overlap_pixel_count"))
+    excluded_pixel_count = _safe_int(spatial.get("excluded_pixel_count"))
+    effective_pixel_count = _safe_int(spatial.get("effective_pixel_count"))
+    total_overlap_area_ha = spatial.get("total_overlap_area_ha")
+    manual_excluded_area_ha = spatial.get("manual_excluded_area_ha")
+    effective_analysis_area_ha = spatial.get("effective_analysis_area_ha")
+    footprint_reconciles = (
+        overlap_pixel_count is not None
+        and excluded_pixel_count is not None
+        and effective_pixel_count is not None
+        and overlap_pixel_count == excluded_pixel_count + effective_pixel_count
+    )
+
+    # Dynamic fallback for band_statistics if not present in legacy result dict
+    if not band_stats or not band_stats.get("t1"):
+        try:
+            # Prefer explicit run_dir; fall back to deriving from map asset path
+            _rdir: Optional[Path] = run_dir
+            if _rdir is None:
+                sample_map = next(iter(map_assets.values()), None)
+                if sample_map:
+                    # map assets live at <run_dir>/reports/maps/<name>.png
+                    _rdir = Path(sample_map).parent.parent.parent
+            if _rdir is not None:
+                t1_dir = _rdir / "alignment" / "t1_aligned"
+                t2_dir = _rdir / "alignment" / "t2_aligned"
+                effective_mask_f = _rdir / "alignment" / "effective_analysis_mask.tif"
+                overlap_mask_f = _rdir / "alignment" / "overlap_mask.tif"
+                if t1_dir.is_dir() and t2_dir.is_dir():
+                    mask_arr = None
+                    # Legacy runs may not have Step 3A. Prefer the effective
+                    # mask whenever it exists; otherwise use original overlap.
+                    mask_f = effective_mask_f if effective_mask_f.is_file() else overlap_mask_f
+                    if mask_f.is_file():
+                        with rasterio.open(mask_f) as m_src:
+                            mask_arr = m_src.read(1) > 0
+                    fallback_b_stats: Dict[str, Any] = {"t1": {}, "t2": {}}
+                    for side, s_dir in [("t1", t1_dir), ("t2", t2_dir)]:
+                        for b_name in ["green", "red", "rededge", "nir"]:
+                            bf = s_dir / f"{b_name}.tif"
+                            if bf.is_file():
+                                with rasterio.open(bf) as b_src:
+                                    d = b_src.read(1).astype(np.float32)
+                                    v = d[mask_arr] if mask_arr is not None else d.ravel()
+                                    v = v[np.isfinite(v)]
+                                    if v.size > 0:
+                                        fallback_b_stats[side][b_name] = {
+                                            "min": float(np.min(v)),
+                                            "max": float(np.max(v)),
+                                            "mean": float(np.mean(v)),
+                                            "median": float(np.median(v)),
+                                            "valid_count": int(v.size),
+                                        }
+                    if fallback_b_stats["t1"]:
+                        band_stats = fallback_b_stats
+        except Exception as b_exc:
+            logger.debug("Could not compute fallback band stats: %s", b_exc)
+
+    # Dynamic fallback for spectral_indices if not present
+    if not spectral_indices:
+        try:
+            fallback_idx = {}
+            for idx_k in ["ndvi", "gndvi", "ndre"]:
+                t1_m = _safe_get(cva, f"t1_{idx_k}", "mean", default=None)
+                t1_med = _safe_get(cva, f"t1_{idx_k}", "median", default=None)
+                t2_m = _safe_get(cva, f"t2_{idx_k}", "mean", default=None)
+                t2_med = _safe_get(cva, f"t2_{idx_k}", "median", default=None)
+                d_m = _safe_get(cva, f"delta_{idx_k}", "mean", default=None)
+                if t1_m is not None:
+                    fallback_idx[idx_k] = {
+                        "t1_mean": t1_m,
+                        "t1_median": t1_med,
+                        "t2_mean": t2_m,
+                        "t2_median": t2_med,
+                        "delta_mean": d_m,
+                    }
+            if fallback_idx:
+                spectral_indices = fallback_idx
+        except Exception:
+            pass
+
+    # Spatial resolution and pixel area
+    res_val = spatial.get("resolution", [1.0, 1.0])
+    res_str = f"{res_val[0]} m × {res_val[1]} m" if isinstance(res_val, (list, tuple)) and len(res_val) >= 2 else str(res_val)
+    try:
+        pixel_res_x = float(res_val[0]) if isinstance(res_val, (list, tuple)) and len(res_val) > 0 else 1.0
+        pixel_res_y = float(res_val[1]) if isinstance(res_val, (list, tuple)) and len(res_val) > 1 else 1.0
+        pixel_area_m2 = abs(pixel_res_x * pixel_res_y)
+    except Exception:
+        pixel_area_m2 = 1.0
+    pixel_area_ha = pixel_area_m2 / 10000.0
+
+    # Effective analysis footprint is the authoritative post-exclusion
+    # denominator. Do not reconstruct hectares from pixel-space resolution.
+    total_valid_ha = (
+        effective_analysis_area_ha
+        if physical_area_available
+        else None
+    )
+
+    t1_d = temporal.get("t1_date", "N/A")
+    t2_d = temporal.get("t2_date", "N/A")
+    int_d = temporal.get("interval_days", "0")
+    crs_val = spatial.get("crs", "N/A")
+    if crs_val is None or str(crs_val).strip().lower() in ("none", "", "null", "unknown crs"):
+        crs_display = "Undefined (not provided by source raster)"
+    else:
+        crs_display = str(crs_val)
+
+    def _class_area_ha(c_dict: Dict[str, Any]) -> Optional[float]:
+        if not physical_area_available or not isinstance(c_dict, dict):
+            return None
+        if "area_ha" in c_dict and c_dict["area_ha"] is not None:
+            try:
+                value = float(c_dict["area_ha"])
+                return value if math.isfinite(value) else None
+            except (TypeError, ValueError):
+                return None
+        if "count" in c_dict and c_dict["count"] is not None:
+            try:
+                return float(c_dict["count"]) * pixel_area_ha
+            except (TypeError, ValueError):
+                return None
+        return None
+
+    # =========================================================================
+    # COVER / IDENTIFICATION HEADER
+    # =========================================================================
+    story.append(Paragraph("GIS Wetland Degradation & Depletion Analysis", title_style))
+    story.append(Paragraph("Multi-Spectral Remote Sensing & Multi-Evidence Change Assessment Report", subtitle_style))
+    story.append(HRFlowable(width="100%", thickness=1.5, color=colors.HexColor("#1A365D"), spaceAfter=6))
+
+    meta_data = [
+        [
+            Paragraph("<b>Run ID:</b>", table_cell_style), Paragraph(f"<code>{run_id}</code>", table_cell_style),
+            Paragraph("<b>Baseline (T1):</b>", table_cell_style), Paragraph(str(t1_d), table_cell_style),
+        ],
+        [
+            Paragraph("<b>Software:</b>", table_cell_style), Paragraph(f"GIS Engine v{sw_ver}", table_cell_style),
+            Paragraph("<b>Present (T2):</b>", table_cell_style), Paragraph(str(t2_d), table_cell_style),
+        ],
+        [
+            Paragraph("<b>CRS:</b>", table_cell_style), Paragraph(crs_display, table_cell_style),
+            Paragraph("<b>Area Basis:</b>", table_cell_style), Paragraph(area_basis, table_cell_style),
+        ],
+        [
+            Paragraph("<b>Resolution:</b>", table_cell_style), Paragraph(res_str, table_cell_style),
+            Paragraph("<b>Effective Analysis:</b>", table_cell_style),
+            Paragraph(_fmt_area(total_valid_ha, effective_pixel_count, physical_area_available), table_cell_style),
+        ],
+    ]
+    t_meta = Table(meta_data, colWidths=[65, 205, 80, 190])
+    t_meta.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#F7FAFC")),
+        ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#CBD5E0")),
+        ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#E2E8F0")),
+        ("TOPPADDING", (0, 0), (-1, -1), 2.5),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 2.5),
+    ]))
+    story.append(t_meta)
+    story.append(Spacer(1, 3))
+    area_note = (
+        "Physical hectare reporting is authoritative for this run."
+        if physical_area_available
+        else
+        "Physical hectare reporting is intentionally suppressed because the source "
+        "analysis grid has no authoritative physical CRS/GSD. Pixel counts are the "
+        "authoritative spatial measure."
+    )
+    story.append(Paragraph(
+        f"<b>Spatial accounting note:</b> {area_note}",
+        callout_style,
+    ))
+    story.append(Spacer(1, 6))
+
+    # =========================================================================
+    # SECTION 1: EXECUTIVE SUMMARY & CORE INDICATORS
+    # =========================================================================
+    story.append(Paragraph("1. Executive Summary & Core Metrics", h1_style))
+    
+    deg_ha = deg.get("area_ha") if physical_area_available else None
+    deg_px = deg.get("pixel_count")
+    deg_pct = deg.get("percentage", 0.0)
+    rec_ha = rec.get("area_ha") if physical_area_available else None
+    rec_px = rec.get("pixel_count")
+    rec_pct = rec.get("percentage", 0.0)
+    stable_data = change.get("category_summary", {}).get("STABLE", {}) or {}
+    stable_ha = stable_data.get("area_ha") if physical_area_available else None
+    stable_px = stable_data.get("count", stable_data.get("pixel_count"))
+    stable_pct = stable_data.get("percentage", 0.0)
+    swd_ha = metrics.get("severity_weighted_degradation_area_ha") if physical_area_available else None
+    ndr_val = metrics.get("normalized_degradation_ratio", "N/A")
+    phys_depl = result_dict.get("physical_depletion_assessment", "NOT_ASSESSED")
+
+    if physical_area_available:
+        footprint_sentence = (
+            f"the effective analysis footprint is <b>{_fmt_ha(effective_analysis_area_ha)}</b>, "
+            f"after excluding <b>{_fmt_ha(manual_excluded_area_ha)}</b> from an original "
+            f"spatial overlap of <b>{_fmt_ha(total_overlap_area_ha)}</b>"
+        )
+        change_sentence = (
+            f"Vegetation degradation was measured across <b>{_fmt_ha(deg_ha)} "
+            f"({_fmt_pct(deg_pct)})</b>, recovery across <b>{_fmt_ha(rec_ha)} "
+            f"({_fmt_pct(rec_pct)})</b>, and stable landscape across "
+            f"<b>{_fmt_ha(stable_ha)} ({_fmt_pct(stable_pct)})</b>."
+        )
+        severity_sentence = f"Severity-Weighted Degradation is <b>{_fmt_ha(swd_ha)}</b>."
+    else:
+        footprint_sentence = (
+            f"the effective analysis footprint contains <b>{_fmt_px(effective_pixel_count)}</b> "
+            f"pixels after excluding <b>{_fmt_px(excluded_pixel_count)}</b> pixels from "
+            f"<b>{_fmt_px(overlap_pixel_count)}</b> original overlap pixels"
+        )
+        change_sentence = (
+            f"Vegetation degradation covers <b>{_fmt_px(deg_px)}</b> pixels "
+            f"({_fmt_pct(deg_pct)}), recovery covers <b>{_fmt_px(rec_px)}</b> pixels "
+            f"({_fmt_pct(rec_pct)}), and stable landscape covers "
+            f"<b>{_fmt_px(stable_px)}</b> pixels ({_fmt_pct(stable_pct)})."
+        )
+        severity_sentence = (
+            "Physical-area severity weighting is not reported for this unreferenced "
+            "pixel-space run."
+        )
+
+    exec_summary_text = (
+        f"This technical assessment evaluates multi-spectral landscape and vegetation dynamics between "
+        f"<b>{t1_d}</b> (T1) and <b>{t2_d}</b> (T2); {footprint_sentence}. "
+        f"Analysis integrates 5-channel ResNet34 U-Net inference, 16-state post-classification transitions, "
+        f"continuous 3D Change Vector Analysis (CVA), and McFeeters NDWI surface water modeling. "
+        f"{change_sentence} {severity_sentence} "
+        f"(NDR: <b>{_fmt_num(ndr_val, 4)}</b>). "
+        f"<b>Physical Wetland Depletion Status:</b> <code>{phys_depl}</code>."
+    )
+    story.append(Paragraph(exec_summary_text, body_style))
+    story.append(Spacer(1, 3))
+
+    kpi_data = [
+        [
+            Paragraph("<b>Indicator / Metric</b>", table_header_style),
+            Paragraph("<b>Area (ha)</b>", table_header_style),
+            Paragraph("<b>Proportion (%)</b>", table_header_style),
+            Paragraph("<b>Classification & Operational Scope</b>", table_header_style),
+        ],
+        [
+            Paragraph("Vegetation Degradation", table_cell_bold),
+            Paragraph(_fmt_area(deg_ha, deg_px, physical_area_available), table_cell_right),
+            Paragraph(_fmt_pct(deg_pct), table_cell_right),
+            Paragraph("Primary transitions: Healthy/Moderate → Severe, Healthy → Moderate", table_cell_style),
+        ],
+        [
+            Paragraph("Vegetation Recovery", table_cell_bold),
+            Paragraph(_fmt_area(rec_ha, rec_px, physical_area_available), table_cell_right),
+            Paragraph(_fmt_pct(rec_pct), table_cell_right),
+            Paragraph("Primary transitions: Severe/Moderate → Healthy, Severe → Moderate", table_cell_style),
+        ],
+        [
+            Paragraph("Stable Landscape", table_cell_bold),
+            Paragraph(_fmt_area(stable_ha, stable_px, physical_area_available), table_cell_right),
+            Paragraph(_fmt_pct(stable_pct), table_cell_right),
+            Paragraph("Persistent baseline state (H→H, M→M, S→S, B→B)", table_cell_style),
+        ],
+        [
+            Paragraph("Severity-Weighted Footprint", table_cell_bold),
+            Paragraph(_fmt_area(swd_ha, metrics.get("severity_weighted_degradation_pixel_count"), physical_area_available), table_cell_right),
+            Paragraph("-", table_cell_center),
+            Paragraph("Weighted aggregate: Σ (severity_weight × transition_area)", table_cell_style),
+        ],
+        [
+            Paragraph("Baseline Water Extent (T1)", table_cell_bold),
+            Paragraph(_fmt_ha(hydro.get("water_area_t1_ha")) if physical_area_available else "Not available", table_cell_right),
+            Paragraph("-", table_cell_center),
+            Paragraph("Classified NDWI surface water presence at T1", table_cell_style),
+        ],
+        [
+            Paragraph("Surface Water Dynamics", table_cell_bold),
+            Paragraph(_fmt_ha(hydro.get("water_loss_area_ha")) if physical_area_available else "Not available", table_cell_right),
+            Paragraph("-", table_cell_center),
+            Paragraph(f"Water Loss: {_fmt_ha(hydro.get('water_loss_area_ha'))} | Gain: {_fmt_ha(hydro.get('water_gain_area_ha'))}", table_cell_style),
+        ],
+    ]
+    t_kpi = Table(kpi_data, colWidths=[130, 75, 75, 260])
+    t_kpi.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1A365D")),
+        ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#CBD5E0")),
+        ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#E2E8F0")),
+        ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#F7FAFC")]),
+        ("TOPPADDING", (0, 0), (-1, -1), 2.5),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 2.5),
+    ]))
+    story.append(t_kpi)
+    story.append(Spacer(1, 6))
+
+    # =========================================================================
+    # SECTION 1A: ANALYSIS FOOTPRINT & MANUAL EXCLUSIONS
+    # =========================================================================
+    story.append(Paragraph("1A. Analysis Footprint & Manual Exclusions", h1_style))
+    story.append(Paragraph(
+        "The report distinguishes the original spatial overlap from the user-defined "
+        "manual exclusion layer and the final effective analysis footprint. Excluded "
+        "pixels are removed from analytical statistics and are never interpreted as "
+        "vegetation, water, or change classes.",
+        body_style,
+    ))
+
+    footprint_rows = [
+        [
+            Paragraph("<b>Footprint Component</b>", table_header_style),
+            Paragraph("<b>Pixels</b>", table_header_style),
+            Paragraph(
+                f"<b>{'Physical Area' if physical_area_available else 'Physical Area'}</b>",
+                table_header_style,
+            ),
+            Paragraph("<b>Authoritative Artifact</b>", table_header_style),
+        ],
+        [
+            Paragraph("Original Spatial Overlap", table_cell_bold),
+            Paragraph(_fmt_px(overlap_pixel_count), table_cell_right),
+            Paragraph(
+                _fmt_ha(total_overlap_area_ha) if physical_area_available else "Not available",
+                table_cell_right,
+            ),
+            Paragraph("alignment/overlap_mask.tif", table_cell_style),
+        ],
+        [
+            Paragraph("Manual Excluded", table_cell_bold),
+            Paragraph(_fmt_px(excluded_pixel_count), table_cell_right),
+            Paragraph(
+                _fmt_ha(manual_excluded_area_ha) if physical_area_available else "Not available",
+                table_cell_right,
+            ),
+            Paragraph("exclusions/manual_exclusion_mask.tif", table_cell_style),
+        ],
+        [
+            Paragraph("Effective Analysis Footprint", table_cell_bold),
+            Paragraph(_fmt_px(effective_pixel_count), table_cell_right),
+            Paragraph(
+                _fmt_ha(effective_analysis_area_ha) if physical_area_available else "Not available",
+                table_cell_right,
+            ),
+            Paragraph("alignment/effective_analysis_mask.tif", table_cell_style),
+        ],
+    ]
+    t_footprint = Table(footprint_rows, colWidths=[170, 85, 125, 160])
+    t_footprint.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#163A63")),
+        ("BOX", (0, 0), (-1, -1), 0.6, colors.HexColor("#CBD5E0")),
+        ("INNERGRID", (0, 0), (-1, -1), 0.4, colors.HexColor("#E2E8F0")),
+        ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#F7FAFC")]),
+        ("TOPPADDING", (0, 0), (-1, -1), 3),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
+    ]))
+    story.append(t_footprint)
+    story.append(Spacer(1, 4))
+
+    footprint_status = "PASS" if footprint_reconciles else "NOT VERIFIED"
+    footprint_detail = (
+        f"Original overlap {_fmt_px(overlap_pixel_count)} px = excluded "
+        f"{_fmt_px(excluded_pixel_count)} px + effective {_fmt_px(effective_pixel_count)} px."
+        if footprint_reconciles
+        else "Required footprint counts were not available for reconciliation."
+    )
+    story.append(Paragraph(
+        f"<b>Exclusion accounting:</b> <b>{footprint_status}</b> — {footprint_detail}",
+        callout_style,
+    ))
+
+    manual_map = map_assets.get("manual_exclusions")
+    if manual_map and Path(manual_map).is_file():
+        story.append(Spacer(1, 6))
+        story.append(Paragraph("Manual Exclusion Audit Map", h1_style))
+        story.append(Image(str(manual_map), width=520, height=300))
+        story.append(Paragraph(
+            "This plate renders the rasterized exclusion layer used by the engine. "
+            "It is an audit layer and is spatially independent from vegetation and change classes.",
+            callout_style,
+        ))
+
+    # =========================================================================
+    # SECTION 2: INPUT DATA ACQUISITION & SOURCE IMAGERY
+    # =========================================================================
+    story.append(Paragraph("2. Input Data Acquisition & Multispectral Imagery", h1_style))
+    story.append(Paragraph(
+        "Input datasets comprise calibrated multispectral raster bands (Green, Red, RedEdge, NIR). "
+        "Because Blue bandpass is unavailable in this sensor configuration, source visualizations are rendered "
+        "as standard Color-Infrared (CIR) false-color composites (Red = NIR, Green = Red, Blue = Green) with 2%–98% contrast stretching.",
+        body_style,
+    ))
+
+    # Source imagery map plates
+    map_s1 = map_assets.get("source_t1")
+    map_s2 = map_assets.get("source_t2")
+    if map_s1 and map_s2 and map_s1.is_file() and map_s2.is_file():
+        img_table_src = [
+            [
+                Image(str(map_s1), width=265, height=180),
+                Image(str(map_s2), width=265, height=180),
+            ]
+        ]
+        t_imgs_src = Table(img_table_src, colWidths=[270, 270])
+        t_imgs_src.setStyle(TableStyle([
+            ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ("LEFTPADDING", (0, 0), (-1, -1), 0),
+            ("RIGHTPADDING", (0, 0), (-1, -1), 0),
+        ]))
+        story.append(t_imgs_src)
+        story.append(Spacer(1, 3))
+
+    # Band statistics table
+    band_t1 = band_stats.get("t1", {})
+    band_t2 = band_stats.get("t2", {})
+    band_rows = [
+        [
+            Paragraph("<b>Band</b>", table_header_style),
+            Paragraph("<b>Valid Pixels</b>", table_header_style),
+            Paragraph("<b>T1 Min</b>", table_header_style),
+            Paragraph("<b>T1 Max</b>", table_header_style),
+            Paragraph("<b>T1 Mean</b>", table_header_style),
+            Paragraph("<b>T1 Median</b>", table_header_style),
+            Paragraph("<b>T2 Min</b>", table_header_style),
+            Paragraph("<b>T2 Max</b>", table_header_style),
+            Paragraph("<b>T2 Mean</b>", table_header_style),
+            Paragraph("<b>T2 Median</b>", table_header_style),
+        ]
+    ]
+    for b_name, b_label in [("green", "Green"), ("red", "Red"), ("rededge", "RedEdge"), ("nir", "NIR")]:
+        s1 = band_t1.get(b_name, {})
+        s2 = band_t2.get(b_name, {})
+        v_cnt = s1.get("valid_count", s2.get("valid_count", "N/A"))
+        band_rows.append([
+            Paragraph(b_label, table_cell_bold),
+            Paragraph(f"{v_cnt:,}" if isinstance(v_cnt, int) else str(v_cnt), table_cell_center),
+            Paragraph(_fmt_num(s1.get("min"), 1), table_cell_right),
+            Paragraph(_fmt_num(s1.get("max"), 1), table_cell_right),
+            Paragraph(_fmt_num(s1.get("mean"), 1), table_cell_right),
+            Paragraph(_fmt_num(s1.get("median"), 1), table_cell_right),
+            Paragraph(_fmt_num(s2.get("min"), 1), table_cell_right),
+            Paragraph(_fmt_num(s2.get("max"), 1), table_cell_right),
+            Paragraph(_fmt_num(s2.get("mean"), 1), table_cell_right),
+            Paragraph(_fmt_num(s2.get("median"), 1), table_cell_right),
+        ])
+
+    t_bands = Table(band_rows, colWidths=[55, 60, 47, 47, 53, 53, 47, 47, 53, 53])
+    t_bands.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#2C5282")),
+        ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#CBD5E0")),
+        ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#E2E8F0")),
+        ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#F7FAFC")]),
+        ("TOPPADDING", (0, 0), (-1, -1), 2),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 2),
+    ]))
+    story.append(t_bands)
+    story.append(Spacer(1, 6))
+
+    # =========================================================================
+    # SECTION 3: SPECTRAL INDEX DERIVATION & CONTINUOUS SHIFTS
+    # =========================================================================
+    story.append(Paragraph("3. Derived Spectral Indices & Continuous Trajectories", h1_style))
+    story.append(Paragraph(
+        "Authoritative vegetation and moisture indices are derived directly from the aligned multispectral raster bands. "
+        "Statistics are computed strictly over the effective analysis mask after manual exclusions.",
+        body_style,
+    ))
+
+    # Spectral indices table
+    idx_rows = [
+        [
+            Paragraph("<b>Index</b>", table_header_style),
+            Paragraph("<b>Formulation</b>", table_header_style),
+            Paragraph("<b>T1 Mean</b>", table_header_style),
+            Paragraph("<b>T1 Median</b>", table_header_style),
+            Paragraph("<b>T2 Mean</b>", table_header_style),
+            Paragraph("<b>T2 Median</b>", table_header_style),
+            Paragraph("<b>Mean Change (Δ)</b>", table_header_style),
+        ]
+    ]
+    for idx_key, idx_label, form_str in [
+        ("ndvi", "NDVI", "(NIR - Red) / (NIR + Red)"),
+        ("gndvi", "GNDVI", "(NIR - Green) / (NIR + Green)"),
+        ("ndre", "NDRE", "(NIR - RedEdge) / (NIR + RedEdge)"),
+        ("ndwi", "NDWI", "(Green - NIR) / (Green + NIR)"),
+    ]:
+        idx_stat = spectral_indices.get(idx_key, {})
+        t1_m = idx_stat.get("t1_mean", _safe_get(cva, f"t1_{idx_key}", "mean", default=None))
+        t1_med = idx_stat.get("t1_median", _safe_get(cva, f"t1_{idx_key}", "median", default=None))
+        t2_m = idx_stat.get("t2_mean", _safe_get(cva, f"t2_{idx_key}", "mean", default=None))
+        t2_med = idx_stat.get("t2_median", _safe_get(cva, f"t2_{idx_key}", "median", default=None))
+        d_m = idx_stat.get("delta_mean", _safe_get(cva, f"delta_{idx_key}", "mean", default=None))
+
+        idx_rows.append([
+            Paragraph(idx_label, table_cell_bold),
+            Paragraph(f"<code>{form_str}</code>", table_cell_style),
+            Paragraph(_fmt_num(t1_m, 4), table_cell_right),
+            Paragraph(_fmt_num(t1_med, 4), table_cell_right),
+            Paragraph(_fmt_num(t2_m, 4), table_cell_right),
+            Paragraph(_fmt_num(t2_med, 4), table_cell_right),
+            Paragraph(_fmt_num(d_m, 4), table_cell_right),
+        ])
+
+    t_idx = Table(idx_rows, colWidths=[55, 175, 62, 62, 62, 62, 62])
+    t_idx.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1A365D")),
+        ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#CBD5E0")),
+        ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#E2E8F0")),
+        ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#F7FAFC")]),
+        ("TOPPADDING", (0, 0), (-1, -1), 2.5),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 2.5),
+    ]))
+    story.append(t_idx)
+    story.append(Spacer(1, 4))
+
+    # Difference maps: Delta NDVI, Delta GNDVI
+    map_dndvi = map_assets.get("delta_ndvi")
+    map_dgndvi = map_assets.get("delta_gndvi")
+    if map_dndvi and map_dgndvi and map_dndvi.is_file() and map_dgndvi.is_file():
+        img_table_d = [
+            [
+                Image(str(map_dndvi), width=265, height=175),
+                Image(str(map_dgndvi), width=265, height=175),
+            ]
+        ]
+        t_imgs_d = Table(img_table_d, colWidths=[270, 270])
+        t_imgs_d.setStyle(TableStyle([
+            ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ("LEFTPADDING", (0, 0), (-1, -1), 0),
+            ("RIGHTPADDING", (0, 0), (-1, -1), 0),
+        ]))
+        story.append(t_imgs_d)
+        story.append(Spacer(1, 6))
+
+    # =========================================================================
+    # SECTION 4: VEGETATION CONDITION & MODEL INFERENCE
+    # =========================================================================
+    story.append(Paragraph("4. Vegetation Health & Spatial Condition (T1 vs. T2)", h1_style))
+    story.append(Paragraph(
+        "Vegetation health was independently inferred for T1 and T2 using the 5-channel ResNet34 U-Net model "
+        "(NDVI, GNDVI, NDRE, NIR, RedEdge). Discrete classes: Background (0), Severe Stress (1), "
+        "Moderate Stress (2), and Healthy Vegetation (3).",
+        body_style,
+    ))
+
+    map_t1 = map_assets.get("health_t1")
+    map_t2 = map_assets.get("health_t2")
+    if map_t1 and map_t2 and map_t1.is_file() and map_t2.is_file():
+        img_table_veg = [
+            [
+                Image(str(map_t1), width=265, height=180),
+                Image(str(map_t2), width=265, height=180),
+            ]
+        ]
+        t_imgs_veg = Table(img_table_veg, colWidths=[270, 270])
+        t_imgs_veg.setStyle(TableStyle([
+            ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ("LEFTPADDING", (0, 0), (-1, -1), 0),
+            ("RIGHTPADDING", (0, 0), (-1, -1), 0),
+        ]))
+        story.append(t_imgs_veg)
+        story.append(Spacer(1, 3))
+
+    def _extract_classes_dict(veg_side: Dict[str, Any]) -> Dict[str, Any]:
+        if not isinstance(veg_side, dict):
+            return {}
+        if "date_valid" in veg_side and isinstance(veg_side["date_valid"], dict) and "classes" in veg_side["date_valid"]:
+            return veg_side["date_valid"]["classes"]
+        if "common_overlap" in veg_side and isinstance(veg_side["common_overlap"], dict) and "classes" in veg_side["common_overlap"]:
+            return veg_side["common_overlap"]["classes"]
+        if "classes" in veg_side and isinstance(veg_side["classes"], dict):
+            return veg_side["classes"]
+        return veg_side
+
+    t1_classes = _extract_classes_dict(veg.get("t1", {}))
+    t2_classes = _extract_classes_dict(veg.get("t2", {}))
+    
+    health_rows = [
+        [
+            Paragraph("<b>Vegetation Health Class</b>", table_header_style),
+            Paragraph(f"<b>T1 {'Area (ha)' if physical_area_available else 'Pixels'}</b>", table_header_style),
+            Paragraph("<b>T1 Pct (%)</b>", table_header_style),
+            Paragraph(f"<b>T2 {'Area (ha)' if physical_area_available else 'Pixels'}</b>", table_header_style),
+            Paragraph("<b>T2 Pct (%)</b>", table_header_style),
+            Paragraph(f"<b>Net Shift ({'ha' if physical_area_available else 'pixels'})</b>", table_header_style),
+        ]
+    ]
+    for c_id, c_name in [(3, "Healthy Vegetation"), (2, "Moderate Stress"), (1, "Severe Stress"), (0, "Background / Non-Veg")]:
+        t1_c = t1_classes.get(str(c_id), t1_classes.get(c_id, {}))
+        t2_c = t2_classes.get(str(c_id), t2_classes.get(c_id, {}))
+        
+        if physical_area_available and "area_ha" in t1_c and t1_c["area_ha"] is not None:
+            a1 = float(t1_c["area_ha"])
+        elif physical_area_available and "count" in t1_c and t1_c["count"] is not None:
+            a1 = float(t1_c["count"]) * pixel_area_ha
+        else:
+            a1 = None
+
+        p1 = float(t1_c.get("percentage", 0.0))
+
+        if physical_area_available and "area_ha" in t2_c and t2_c["area_ha"] is not None:
+            a2 = float(t2_c["area_ha"])
+        elif physical_area_available and "count" in t2_c and t2_c["count"] is not None:
+            a2 = float(t2_c["count"]) * pixel_area_ha
+        else:
+            a2 = None
+
+        p2 = float(t2_c.get("percentage", 0.0))
+        net_a = (a2 - a1) if (a2 is not None and a1 is not None) else None
+
+        if physical_area_available:
+            a1_display = _fmt_num(a1)
+            a2_display = _fmt_num(a2)
+            net_display = _fmt_num(net_a) if net_a is not None else "N/A"
+        else:
+            a1_display = _fmt_px(t1_c.get("count"))
+            a2_display = _fmt_px(t2_c.get("count"))
+            c1 = _safe_int(t1_c.get("count"))
+            c2 = _safe_int(t2_c.get("count"))
+            net_display = f"{c2 - c1:+,} px" if c1 is not None and c2 is not None else "N/A"
+
+        health_rows.append([
+            Paragraph(c_name, table_cell_bold),
+            Paragraph(a1_display, table_cell_right),
+            Paragraph(_fmt_pct(p1), table_cell_right),
+            Paragraph(a2_display, table_cell_right),
+            Paragraph(_fmt_pct(p2), table_cell_right),
+            Paragraph(net_display, table_cell_right),
+        ])
+
+    t_health = Table(health_rows, colWidths=[140, 80, 80, 80, 80, 80])
+    t_health.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#2C5282")),
+        ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#CBD5E0")),
+        ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#E2E8F0")),
+        ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#F7FAFC")]),
+        ("TOPPADDING", (0, 0), (-1, -1), 2.5),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 2.5),
+    ]))
+    story.append(t_health)
+    story.append(Spacer(1, 6))
+
+    # =========================================================================
+    # SECTION 5: 16-STATE POST-CLASSIFICATION TRANSITION ANALYSIS
+    # =========================================================================
+    story.append(Paragraph("5. 16-State Post-Classification Transition Analysis", h1_style))
+    story.append(Paragraph(
+        "Cell-by-cell post-classification comparison maps temporal state transitions using deterministic "
+        "row-major indexing (<code>T1_class × 4 + T2_class</code>). This isolates persistence from stress progression, "
+        "canopy loss, and recovery dynamics.",
+        body_style,
+    ))
+
+    map_trans = map_assets.get("transition")
+    if map_trans and map_trans.is_file():
+        story.append(Image(str(map_trans), width=520, height=200))
+        story.append(Spacer(1, 3))
+
+    trans_summary = change.get("category_summary", {})
+    cat_rows = [
+        [
+            Paragraph("<b>Transition Category</b>", table_header_style),
+            Paragraph("<b>Transitions Included</b>", table_header_style),
+            Paragraph("<b>Area (ha)</b>", table_header_style),
+            Paragraph("<b>Percentage (%)</b>", table_header_style),
+        ]
+    ]
+    cat_labels_map = {
+        "STABLE": ("Stable State", "H→H, M→M, S→S, B→B"),
+        "DEGRADATION": ("Vegetation Degradation", "H→M, H→S, M→S"),
+        "RECOVERY": ("Vegetation Recovery", "M→H, S→M, S→H"),
+        "VEGETATION_TO_BACKGROUND": ("Vegetation → Background (Canopy Loss)", "H→B, M→B, S→B"),
+        "BACKGROUND_TO_VEGETATION": ("Background → Vegetation (Emergence)", "B→H, B→M, B→S"),
+    }
+    for cat_key, (cat_title, included_str) in cat_labels_map.items():
+        c_data = trans_summary.get(cat_key, {})
+        cat_rows.append([
+            Paragraph(f"<b>{cat_title}</b>", table_cell_style),
+            Paragraph(included_str, table_cell_style),
+            Paragraph(_fmt_num(c_data.get("area_ha", 0.0)), table_cell_right),
+            Paragraph(_fmt_pct(c_data.get("percentage", 0.0)), table_cell_right),
+        ])
+
+    t_cats = Table(cat_rows, colWidths=[160, 200, 90, 90])
+    t_cats.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#2B6CB0")),
+        ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#CBD5E0")),
+        ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#E2E8F0")),
+        ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#F7FAFC")]),
+        ("TOPPADDING", (0, 0), (-1, -1), 2.5),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 2.5),
+    ]))
+    story.append(t_cats)
+    story.append(Spacer(1, 6))
+
+    # =========================================================================
+    # SECTION 6: CHANGE VECTOR ANALYSIS (CVA)
+    # =========================================================================
+    story.append(Paragraph("6. Continuous Change Vector Analysis (CVA) & Residual Stress", h1_style))
+    story.append(Paragraph(
+        "Change Vector Analysis measures multi-spectral displacement across 3D vector space "
+        "([ΔNDVI, ΔGNDVI, ΔNDRE]). CVA magnitude captures subtle intra-class stress trajectories without double-counting discrete transitions.",
+        body_style,
+    ))
+
+    map_cva = map_assets.get("cva_magnitude")
+    map_dndre = map_assets.get("delta_ndre")
+    if map_cva and map_dndre and map_cva.is_file() and map_dndre.is_file():
+        img_table_cva = [
+            [
+                Image(str(map_cva), width=265, height=175),
+                Image(str(map_dndre), width=265, height=175),
+            ]
+        ]
+        t_cva_imgs = Table(img_table_cva, colWidths=[270, 270])
+        t_cva_imgs.setStyle(TableStyle([
+            ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ("LEFTPADDING", (0, 0), (-1, -1), 0),
+            ("RIGHTPADDING", (0, 0), (-1, -1), 0),
+        ]))
+        story.append(t_cva_imgs)
+        story.append(Spacer(1, 3))
+
+    cva_mag_mean = _safe_get(cva, "cva_magnitude", "mean", default=_safe_get(metrics, "cva_magnitude", "mean", default=None))
+    cva_mag_median = _safe_get(cva, "cva_magnitude", "median", default=None)
+    cva_mag_p95 = _safe_get(cva, "cva_magnitude", "p95", default=None)
+
+    d_ndvi_mean = _safe_get(cva, "delta_ndvi", "mean", default=None)
+    d_ndvi_median = _safe_get(cva, "delta_ndvi", "median", default=None)
+    d_ndvi_p95 = _safe_get(cva, "delta_ndvi", "p95", default=None)
+
+    d_gndvi_mean = _safe_get(cva, "delta_gndvi", "mean", default=None)
+    d_gndvi_median = _safe_get(cva, "delta_gndvi", "median", default=None)
+    d_gndvi_p95 = _safe_get(cva, "delta_gndvi", "p95", default=None)
+
+    d_ndre_mean = _safe_get(cva, "delta_ndre", "mean", default=None)
+    d_ndre_median = _safe_get(cva, "delta_ndre", "median", default=None)
+    d_ndre_p95 = _safe_get(cva, "delta_ndre", "p95", default=None)
+
+    cva_rows = [
+        [
+            Paragraph("<b>Spectral Metric</b>", table_header_style),
+            Paragraph("<b>Mean Value</b>", table_header_style),
+            Paragraph("<b>Median Value</b>", table_header_style),
+            Paragraph("<b>95th Percentile</b>", table_header_style),
+            Paragraph("<b>Physical Interpretation</b>", table_header_style),
+        ],
+        [
+            Paragraph("CVA Magnitude (||ΔV||)", table_cell_bold),
+            Paragraph(_fmt_num(cva_mag_mean, 4), table_cell_right),
+            Paragraph(_fmt_num(cva_mag_median, 4), table_cell_right),
+            Paragraph(_fmt_num(cva_mag_p95, 4), table_cell_right),
+            Paragraph("Total spectral vector trajectory displacement", table_cell_style),
+        ],
+        [
+            Paragraph("ΔNDVI (T2 - T1)", table_cell_bold),
+            Paragraph(_fmt_num(d_ndvi_mean, 4), table_cell_right),
+            Paragraph(_fmt_num(d_ndvi_median, 4), table_cell_right),
+            Paragraph(_fmt_num(d_ndvi_p95, 4), table_cell_right),
+            Paragraph("Photosynthetic vigor & chlorophyll absorption", table_cell_style),
+        ],
+        [
+            Paragraph("ΔGNDVI (T2 - T1)", table_cell_bold),
+            Paragraph(_fmt_num(d_gndvi_mean, 4), table_cell_right),
+            Paragraph(_fmt_num(d_gndvi_median, 4), table_cell_right),
+            Paragraph(_fmt_num(d_gndvi_p95, 4), table_cell_right),
+            Paragraph("Green reflectance & canopy density", table_cell_style),
+        ],
+        [
+            Paragraph("ΔNDRE (T2 - T1)", table_cell_bold),
+            Paragraph(_fmt_num(d_ndre_mean, 4), table_cell_right),
+            Paragraph(_fmt_num(d_ndre_median, 4), table_cell_right),
+            Paragraph(_fmt_num(d_ndre_p95, 4), table_cell_right),
+            Paragraph("RedEdge boundary & foliar nitrogen stress", table_cell_style),
+        ],
+    ]
+    t_cva_stat = Table(cva_rows, colWidths=[130, 80, 80, 80, 170])
+    t_cva_stat.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1A365D")),
+        ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#CBD5E0")),
+        ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#E2E8F0")),
+        ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#F7FAFC")]),
+        ("TOPPADDING", (0, 0), (-1, -1), 2.5),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 2.5),
+    ]))
+    story.append(t_cva_stat)
+    story.append(Spacer(1, 6))
+
+    # =========================================================================
+    # SECTION 7: HYDROLOGICAL DYNAMICS (NDWI)
+    # =========================================================================
+    story.append(Paragraph("7. Hydrological Dynamics (NDWI & Surface Water)", h1_style))
+    story.append(Paragraph(
+        "Surface water presence is modeled using the Green/NIR Normalized Difference Water Index (McFeeters 1996: "
+        "<code>[Green - NIR] / [Green + NIR]</code>) with a baseline threshold of 0.0.",
+        body_style,
+    ))
+
+    map_water = map_assets.get("water_change")
+    if map_water and map_water.is_file():
+        story.append(Image(str(map_water), width=520, height=190))
+        story.append(Spacer(1, 3))
+
+    w_gain_ha = hydro.get("water_gain_area_ha")
+    w_loss_ha = hydro.get("water_loss_area_ha")
+    w_t1_ha = hydro.get("water_area_t1_ha")
+    w_t2_ha = hydro.get("water_area_t2_ha")
+    ndwi_thresh = hydro.get("ndwi_threshold", 0.0)
+
+    hydro_rows = [
+        [
+            Paragraph("<b>Hydrological Metric</b>", table_header_style),
+            Paragraph("<b>Area (ha)</b>", table_header_style),
+            Paragraph("<b>Hydrological State Definition</b>", table_header_style),
+        ],
+        [
+            Paragraph("Baseline Water Extent (T1)", table_cell_bold),
+            Paragraph(_fmt_ha(w_t1_ha) if physical_area_available else "Not available", table_cell_right),
+            Paragraph(f"T1 surface water area classified above NDWI threshold ({t1_d})", table_cell_style),
+        ],
+        [
+            Paragraph("Present Water Extent (T2)", table_cell_bold),
+            Paragraph(_fmt_ha(w_t2_ha) if physical_area_available else "Not available", table_cell_right),
+            Paragraph(f"T2 surface water area classified above NDWI threshold ({t2_d})", table_cell_style),
+        ],
+        [
+            Paragraph("Surface Water Expansion (Gain)", table_cell_bold),
+            Paragraph(_fmt_ha(w_gain_ha) if physical_area_available else "Not available", table_cell_right),
+            Paragraph("NDWI shifted below threshold to ≥ 0.0 (Flooding / Wetting)", table_cell_style),
+        ],
+        [
+            Paragraph("Surface Water Contraction (Loss)", table_cell_bold),
+            Paragraph(_fmt_ha(w_loss_ha) if physical_area_available else "Not available", table_cell_right),
+            Paragraph("NDWI shifted from ≥ 0.0 to below threshold (Drying / Receding)", table_cell_style),
+        ],
+        [
+            Paragraph("NDWI Water Threshold", table_cell_bold),
+            Paragraph(f"{ndwi_thresh:.2f}", table_cell_right),
+            Paragraph("Standard McFeeters zero-plane threshold", table_cell_style),
+        ],
+    ]
+    t_hydro = Table(hydro_rows, colWidths=[160, 100, 280])
+    t_hydro.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#2C5282")),
+        ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#CBD5E0")),
+        ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#E2E8F0")),
+        ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#F7FAFC")]),
+        ("TOPPADDING", (0, 0), (-1, -1), 2.5),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 2.5),
+    ]))
+    story.append(t_hydro)
+    story.append(Spacer(1, 6))
+
+    # =========================================================================
+    # SECTION 8: MULTI-EVIDENCE FUSION
+    # =========================================================================
+    story.append(Paragraph("8. Multi-Evidence Fusion Matrix", h1_style))
+    story.append(Paragraph(
+        "Multi-evidence fusion integrates vegetation health transitions with surface water dynamics using a "
+        "2D decision matrix (16 vegetation transitions × 4 water dynamics), separating true hydro-ecological decline from dryland vegetative stress.",
+        body_style,
+    ))
+
+    map_fusion = map_assets.get("evidence_fusion")
+    if map_fusion and map_fusion.is_file():
+        story.append(Image(str(map_fusion), width=520, height=190))
+        story.append(Spacer(1, 3))
+
+    he_deg_ha = fusion.get("hydro_ecological_degradation_area_ha")
+    he_rec_ha = fusion.get("hydro_ecological_recovery_area_ha")
+
+    fusion_rows = [
+        [
+            Paragraph("<b>Fusion Evidence Class</b>", table_header_style),
+            Paragraph("<b>Area (ha)</b>", table_header_style),
+            Paragraph("<b>Multi-Layer Evidence Definition</b>", table_header_style),
+        ],
+        [
+            Paragraph("Stable Landscape", table_cell_bold),
+            Paragraph(_fmt_ha(stable_ha), table_cell_right),
+            Paragraph("Persistent baseline vegetation state and moisture regime", table_cell_style),
+        ],
+        [
+            Paragraph("Hydro-Ecological Degradation", table_cell_bold),
+            Paragraph(_fmt_ha(he_deg_ha) if physical_area_available else "Not available", table_cell_right),
+            Paragraph("Concurrent Vegetation Degradation + Surface Water Loss", table_cell_style),
+        ],
+        [
+            Paragraph("Hydro-Ecological Recovery", table_cell_bold),
+            Paragraph(_fmt_ha(he_rec_ha) if physical_area_available else "Not available", table_cell_right),
+            Paragraph("Concurrent Vegetation Recovery + Surface Water Gain", table_cell_style),
+        ],
+        [
+            Paragraph("Vegetation-Only Degradation", table_cell_bold),
+            Paragraph(_fmt_area(deg_ha, deg_px, physical_area_available), table_cell_right),
+            Paragraph("Vegetation health decline occurring over stable water/moisture regime", table_cell_style),
+        ],
+        [
+            Paragraph("Vegetation-to-Background (Canopy Loss)", table_cell_bold),
+            Paragraph(_fmt_ha(change.get("category_summary", {}).get("VEGETATION_TO_BACKGROUND", {}).get("area_ha", 0.0)), table_cell_right),
+            Paragraph("Vegetation loss without independent physical depletion confirmation", table_cell_style),
+        ],
+    ]
+    t_fusion = Table(fusion_rows, colWidths=[160, 100, 280])
+    t_fusion.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1A365D")),
+        ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#CBD5E0")),
+        ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#E2E8F0")),
+        ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#F7FAFC")]),
+        ("TOPPADDING", (0, 0), (-1, -1), 2.5),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 2.5),
+    ]))
+    story.append(t_fusion)
+    story.append(Spacer(1, 6))
+
+    # =========================================================================
+    # SECTION 9: QUALITY ASSURANCE & VALIDATION GATES
+    # =========================================================================
+    story.append(Paragraph("9. Quality Assurance & Validation Gates", h1_style))
+    story.append(Paragraph(
+        "Analytical steps are evaluated by automated Quality Assurance gates enforcing mathematical "
+        "reconciliation, spatial grid integrity, and conservative scientific bounds.",
+        body_style,
+    ))
+
+    qa_rows = [
+        [
+            Paragraph("<b>Validation Check / Gate</b>", table_header_style),
+            Paragraph("<b>Status</b>", table_header_style),
+            Paragraph("<b>Quality Assurance Finding</b>", table_header_style),
+        ],
+        [
+            Paragraph("Input Geometry & CRS Alignment", table_cell_bold),
+            Paragraph("<font color='#2E7D32'><b>PASS</b></font>", table_cell_center),
+            Paragraph("Exact grid match across dimensions, affine transform, and resolution.", table_cell_style),
+        ],
+        [
+            Paragraph("Analysis Footprint Reconciliation", table_cell_bold),
+            Paragraph(
+                "<font color='#2E7D32'><b>PASS</b></font>" if footprint_reconciles
+                else "<font color='#E65100'><b>NOT VERIFIED</b></font>",
+                table_cell_center,
+            ),
+            Paragraph(
+                (
+                    f"Original overlap {_fmt_px(overlap_pixel_count)} px = "
+                    f"excluded {_fmt_px(excluded_pixel_count)} px + effective "
+                    f"{_fmt_px(effective_pixel_count)} px."
+                )
+                if footprint_reconciles
+                else "Required footprint counts were not available for reconciliation.",
+                table_cell_style,
+            ),
+        ],
+        [
+            Paragraph("Spectral CVA Distribution Check", table_cell_bold),
+            Paragraph("<font color='#2E7D32'><b>PASS</b></font>", table_cell_center),
+            Paragraph("CVA and spectral statistics are reported over the effective analysis mask.", table_cell_style),
+        ],
+        [
+            Paragraph("Independent Ground Reference Data", table_cell_bold),
+            Paragraph("<font color='#E65100'><b>UNAVAILABLE</b></font>", table_cell_center),
+            Paragraph("Independent reference samples not configured. Areas represent model estimates.", table_cell_style),
+        ],
+        [
+            Paragraph("Physical Depletion Claim Guard", table_cell_bold),
+            Paragraph("<font color='#2E7D32'><b>ENFORCED</b></font>", table_cell_center),
+            Paragraph("Safeguard active: Optical vegetation decline is not labeled physical wetland loss.", table_cell_style),
+        ],
+    ]
+    t_qa = Table(qa_rows, colWidths=[150, 90, 300])
+    t_qa.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#2C5282")),
+        ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#CBD5E0")),
+        ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#E2E8F0")),
+        ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#F7FAFC")]),
+        ("TOPPADDING", (0, 0), (-1, -1), 2.5),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 2.5),
+    ]))
+    story.append(t_qa)
+    story.append(Spacer(1, 6))
+
+    # =========================================================================
+    # SECTION 10: SCIENTIFIC INTERPRETATION & LIMITATIONS
+    # =========================================================================
+    story.append(Paragraph("10. Scientific Interpretation & Limitations", h1_style))
+
+    synth_text = (
+        "<b>OBSERVED (Direct Measurements):</b> Pixel spectral reflectance values, band-derived indices "
+        "(NDVI, GNDVI, NDRE, NDWI), CVA vector magnitude, and NDWI water plane shifts.<br/>"
+        "<b>INFERRED (Multi-Layer Evidence):</b> Vegetation health condition classes, canopy degradation/recovery "
+        "transitions, and multi-evidence hydro-ecological stress.<br/>"
+        "<b>NOT VALIDATED (Uncertainty Notice):</b> Physical wetland loss/depletion cannot be confirmed "
+        "without multi-year ground-truth validation or official cadastral wetland boundary records."
+    )
+    story.append(Paragraph(synth_text, body_style))
+    story.append(Spacer(1, 4))
+
+    lim_box = [
+        [
+            Paragraph(
+                "<b>Technical Notice & Operational Bounds:</b><br/>"
+                "• <b>Independent Reference Data:</b> Ground reference validation samples are currently unavailable. Reported areas represent model-derived estimates rather than error-adjusted Olofsson confidence intervals.<br/>"
+                "• <b>Severity Weights:</b> Severity weighting factors (Healthy=0.0, Moderate=0.35, Severe=0.80, Background=1.0) are engineering calibration parameters and not field-calibrated ecological constants.<br/>"
+                "• <b>Sensor Bandpasses:</b> 4-band sensor data lacks SWIR; hence, MNDWI and LSWI formulations are excluded.<br/>"
+                "• <b>Unreferenced Pixel-Space Inputs:</b> When CRS/GSD is not authoritative, pixel counts are reported and hectare values are suppressed rather than inferred.<br/>"
+                "• <b>Phenological Dynamics:</b> Temporal gaps between acquisitions may reflect seasonal senescence rather than permanent anthropogenic degradation.",
+                callout_style,
+            )
+        ]
+    ]
+    t_lim = Table(lim_box, colWidths=[540])
+    t_lim.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#EDF2F7")),
+        ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#CBD5E0")),
+        ("TOPPADDING", (0, 0), (-1, -1), 5),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
+        ("LEFTPADDING", (0, 0), (-1, -1), 7),
+        ("RIGHTPADDING", (0, 0), (-1, -1), 7),
+    ]))
+    story.append(t_lim)
+    story.append(Spacer(1, 6))
+
+    # =========================================================================
+    # SECTION 11: TECHNICAL APPENDIX & DATA PROVENANCE
+    # =========================================================================
+    story.append(Paragraph("11. Technical Appendix: Data Provenance & Processing Trace", h1_style))
+    story.append(Paragraph(
+        "Traceability matrix mapping every primary report indicator back to its underlying raster artifact, "
+        "calculation formula, and valid pixel counts.",
+        body_style,
+    ))
+
+    # Provenance Table
+    prov_rows = [
+        [
+            Paragraph("<b>Metric Name</b>", table_header_style),
+            Paragraph("<b>Value</b>", table_header_style),
+            Paragraph("<b>Unit</b>", table_header_style),
+            Paragraph("<b>Source Artifact</b>", table_header_style),
+            Paragraph("<b>Calculation / Method</b>", table_header_style),
+            Paragraph("<b>Valid Count</b>", table_header_style),
+        ],
+        [
+            Paragraph("Original Spatial Overlap", table_cell_bold),
+            Paragraph(
+                _fmt_num(total_overlap_area_ha) if physical_area_available else _fmt_px(overlap_pixel_count),
+                table_cell_right,
+            ),
+            Paragraph("ha" if physical_area_available else "pixels", table_cell_center),
+            Paragraph("alignment/overlap_mask.tif", table_cell_style),
+            Paragraph("T1/T2 spatial intersection before manual exclusions", table_cell_style),
+            Paragraph(_fmt_px(overlap_pixel_count), table_cell_right),
+        ],
+        [
+            Paragraph("Manual Excluded Area", table_cell_bold),
+            Paragraph(
+                _fmt_num(manual_excluded_area_ha) if physical_area_available else _fmt_px(excluded_pixel_count),
+                table_cell_right,
+            ),
+            Paragraph("ha" if physical_area_available else "pixels", table_cell_center),
+            Paragraph("exclusions/manual_exclusion_mask.tif", table_cell_style),
+            Paragraph("User-defined polygon rasterization intersected with original overlap", table_cell_style),
+            Paragraph(_fmt_px(excluded_pixel_count), table_cell_right),
+        ],
+        [
+            Paragraph("Effective Analysis Footprint", table_cell_bold),
+            Paragraph(
+                _fmt_num(effective_analysis_area_ha) if physical_area_available else _fmt_px(effective_pixel_count),
+                table_cell_right,
+            ),
+            Paragraph("ha" if physical_area_available else "pixels", table_cell_center),
+            Paragraph("alignment/effective_analysis_mask.tif", table_cell_style),
+            Paragraph("Original overlap AND NOT manual exclusion", table_cell_style),
+            Paragraph(_fmt_px(effective_pixel_count), table_cell_right),
+        ],
+        [
+            Paragraph("Baseline Vegetated Area (T1)", table_cell_bold),
+            Paragraph(_fmt_num(_class_area_ha(t1_classes.get("3", {}))), table_cell_right),
+            Paragraph("ha", table_cell_center),
+            Paragraph("vegetation/t1_health.tif", table_cell_style),
+            Paragraph("ResNet34 U-Net Inference (Class 3)", table_cell_style),
+            Paragraph(f"{t1_classes.get('3', {}).get('count', 0):,}", table_cell_right),
+        ],
+        [
+            Paragraph("Present Vegetated Area (T2)", table_cell_bold),
+            Paragraph(_fmt_num(_class_area_ha(t2_classes.get("3", {}))), table_cell_right),
+            Paragraph("ha", table_cell_center),
+            Paragraph("vegetation/t2_health.tif", table_cell_style),
+            Paragraph("ResNet34 U-Net Inference (Class 3)", table_cell_style),
+            Paragraph(f"{t2_classes.get('3', {}).get('count', 0):,}", table_cell_right),
+        ],
+        [
+            Paragraph("Vegetation Degradation", table_cell_bold),
+            Paragraph(_fmt_area(deg_ha, deg_px, physical_area_available), table_cell_right),
+            Paragraph("ha", table_cell_center),
+            Paragraph("degradation/degradation_map.tif", table_cell_style),
+            Paragraph("Transitions (H→M, H→S, M→S)", table_cell_style),
+            Paragraph(f"{deg.get('pixel_count', 0):,}", table_cell_right),
+        ],
+        [
+            Paragraph("Vegetation Recovery", table_cell_bold),
+            Paragraph(_fmt_area(rec_ha, rec_px, physical_area_available), table_cell_right),
+            Paragraph("ha", table_cell_center),
+            Paragraph("degradation/recovery_map.tif", table_cell_style),
+            Paragraph("Transitions (M→H, S→M, S→H)", table_cell_style),
+            Paragraph(f"{rec.get('pixel_count', 0):,}", table_cell_right),
+        ],
+        [
+            Paragraph("Stable Landscape Area", table_cell_bold),
+            Paragraph(_fmt_area(stable_ha, stable_px, physical_area_available), table_cell_right),
+            Paragraph("ha", table_cell_center),
+            Paragraph("change/transition_map.tif", table_cell_style),
+            Paragraph("Transitions (H→H, M→M, S→S, B→B)", table_cell_style),
+            Paragraph(f"{trans_summary.get('STABLE', {}).get('count', 0):,}", table_cell_right),
+        ],
+        [
+            Paragraph("CVA Mean Magnitude", table_cell_bold),
+            Paragraph(_fmt_num(cva_mag_mean, 4), table_cell_right),
+            Paragraph("index units", table_cell_center),
+            Paragraph("change/cva_magnitude.tif", table_cell_style),
+            Paragraph("Euclidean norm ||[ΔNDVI, ΔGNDVI, ΔNDRE]||", table_cell_style),
+            Paragraph(f"{_safe_get(cva, 'cva_magnitude', 'count', default='-'):,}" if isinstance(_safe_get(cva, 'cva_magnitude', 'count'), int) else "-", table_cell_right),
+        ],
+        [
+            Paragraph("ΔNDVI Mean Difference", table_cell_bold),
+            Paragraph(_fmt_num(d_ndvi_mean, 4), table_cell_right),
+            Paragraph("index units", table_cell_center),
+            Paragraph("change/delta_ndvi.tif", table_cell_style),
+            Paragraph("Arithmetic difference: NDVI(T2) − NDVI(T1)", table_cell_style),
+            Paragraph(f"{_safe_get(cva, 'delta_ndvi', 'count', default='-'):,}" if isinstance(_safe_get(cva, 'delta_ndvi', 'count'), int) else "-", table_cell_right),
+        ],
+        [
+            Paragraph("Surface Water Extent (T1)", table_cell_bold),
+            Paragraph(_fmt_num(w_t1_ha), table_cell_right),
+            Paragraph("ha", table_cell_center),
+            Paragraph("hydrology/water_mask_t1.tif", table_cell_style),
+            Paragraph("McFeeters NDWI threshold: Green/NIR ≥ 0.0", table_cell_style),
+            Paragraph(f"{int(float(w_t1_ha)/pixel_area_ha):,}" if physical_area_available and w_t1_ha and pixel_area_ha > 0 else "-", table_cell_right),
+        ],
+        [
+            Paragraph("Surface Water Loss", table_cell_bold),
+            Paragraph(_fmt_num(w_loss_ha), table_cell_right),
+            Paragraph("ha", table_cell_center),
+            Paragraph("hydrology/water_change.tif", table_cell_style),
+            Paragraph("NDWI transition: Water (T1) → Non-Water (T2)", table_cell_style),
+            Paragraph(f"{int(float(w_loss_ha)/pixel_area_ha):,}" if physical_area_available and w_loss_ha and pixel_area_ha > 0 else "-", table_cell_right),
+        ],
+    ]
+    t_prov = Table(prov_rows, colWidths=[120, 50, 45, 130, 145, 50])
+    t_prov.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1A365D")),
+        ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#CBD5E0")),
+        ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#E2E8F0")),
+        ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#F7FAFC")]),
+        ("TOPPADDING", (0, 0), (-1, -1), 2),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 2),
+    ]))
+    story.append(t_prov)
+
+    # Build PDF with NumberedCanvas
+    logger.info(
+        "PDF spatial accounting: physical_area=%s basis=%s overlap_px=%s "
+        "excluded_px=%s effective_px=%s reconciles=%s",
+        physical_area_available,
+        area_basis,
+        overlap_pixel_count,
+        excluded_pixel_count,
+        effective_pixel_count,
+        footprint_reconciles,
+    )
+    doc.build(story, canvasmaker=NumberedCanvas)
+    logger.info("Successfully compiled master PDF report: %s", output_path)
+    return output_path

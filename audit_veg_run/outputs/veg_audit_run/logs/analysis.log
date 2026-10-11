@@ -1,0 +1,12 @@
+[INFO] [veg_audit_run] gis_engine.pipeline — Phase 13 — Production pipeline START. run_id=veg_audit_run
+[INFO] [veg_audit_run] gis_engine.pipeline — Step 1 — Loading configuration: audit_veg_run\config.json
+[INFO] [veg_audit_run] gis_engine.pipeline — Analysis mode: vegetation
+[INFO] [veg_audit_run] gis_engine.pipeline — Step 1 — Configuration loaded. hash=ec4dc7d5dc3655e3…
+[INFO] [veg_audit_run] gis_engine.pipeline — Step 2 — Validating inputs
+[INFO] [veg_audit_run] gis_engine.pipeline — Step 2 — Vegetation mode: single scene=audit_veg_run\t1
+[INFO] [veg_audit_run] gis_engine.pipeline — Step 3 — Vegetation mode: single-date execution (bypassing temporal alignment)
+[INFO] [veg_audit_run] gis_engine.pipeline — Steps 4–7 — Vegetation analysis (single-date)
+[INFO] [veg_audit_run] gis_engine.pipeline — Vegetation analysis — single-date inference
+[INFO] [veg_audit_run] gis_engine.pipeline — Vegetation analysis — single-date inference complete
+[INFO] [veg_audit_run] gis_engine.pipeline — Step 14 — Generating vegetation analysis reports
+[INFO] [veg_audit_run] gis_engine.pipeline — Phase 13 — Vegetation Pipeline COMPLETE. status=SUCCESS run_id=veg_audit_run runtime=2.7s

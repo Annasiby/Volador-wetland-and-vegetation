@@ -1,0 +1,156 @@
+{
+    "pair_name": "2023-08-14_2023-08-28",
+    "t1_source": "C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\backend\\storage\\projects\\prj_1787996381\\datasets\\t1",
+    "t2_source": "C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\backend\\storage\\projects\\prj_1787996381\\datasets\\t2",
+    "feature_vector": [
+        "NDVI",
+        "GNDVI",
+        "NDRE"
+    ],
+    "delta_definition": "T2 - T1 (increase is positive, decrease is negative)",
+    "cva_formula": "sqrt(delta_ndvi^2 + delta_gndvi^2 + delta_ndre^2)",
+    "standardization": {
+        "method": "z-score divide by index standard deviation",
+        "scales": {
+            "std_ndvi": 0.0,
+            "std_gndvi": 0.0,
+            "std_ndre": 0.0
+        }
+    },
+    "mathematical_reconciliation": {
+        "max_absolute_error_cva_squared": 0.0,
+        "mean_absolute_error_cva_squared": 0.0
+    },
+    "spatial_metadata": {
+        "crs": null,
+        "transform": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+        ],
+        "width": 2592,
+        "height": 1944,
+        "resolution": [
+            1.0,
+            1.0
+        ],
+        "bounds": [
+            0.0,
+            1944.0,
+            2592.0,
+            0.0
+        ]
+    },
+    "overlap_information": {
+        "valid_pixel_count": 5038848,
+        "nodata_pixel_count": 0,
+        "nodata_value": -9999.0
+    },
+    "statistics": {
+        "delta_ndvi": {
+            "count": 5038848,
+            "min": 0.0,
+            "max": 0.0,
+            "mean": 0.0,
+            "median": 0.0,
+            "std": 0.0,
+            "p95": 0.0,
+            "pct_positive": 0.0,
+            "pct_negative": 0.0,
+            "pct_zero": 100.0
+        },
+        "delta_gndvi": {
+            "count": 5038848,
+            "min": 0.0,
+            "max": 0.0,
+            "mean": 0.0,
+            "median": 0.0,
+            "std": 0.0,
+            "p95": 0.0,
+            "pct_positive": 0.0,
+            "pct_negative": 0.0,
+            "pct_zero": 100.0
+        },
+        "delta_ndre": {
+            "count": 5038848,
+            "min": 0.0,
+            "max": 0.0,
+            "mean": 0.0,
+            "median": 0.0,
+            "std": 0.0,
+            "p95": 0.0,
+            "pct_positive": 0.0,
+            "pct_negative": 0.0,
+            "pct_zero": 100.0
+        },
+        "cva_magnitude": {
+            "count": 5038848,
+            "min": 0.0,
+            "max": 0.0,
+            "mean": 0.0,
+            "median": 0.0,
+            "std": 0.0,
+            "p95": 0.0
+        },
+        "cva_standardized": {
+            "count": 5038848,
+            "min": 0.0,
+            "max": 0.0,
+            "mean": 0.0,
+            "median": 0.0,
+            "std": 0.0,
+            "p95": 0.0
+        }
+    },
+    "software_version": "1.0.0",
+    "transition_map_statistics": {
+        "DEGRADATION": {
+            "pixel_count": 0,
+            "min": 0.0,
+            "max": 0.0,
+            "mean": 0.0,
+            "median": 0.0,
+            "std": 0.0,
+            "p95": 0.0
+        },
+        "RECOVERY": {
+            "pixel_count": 0,
+            "min": 0.0,
+            "max": 0.0,
+            "mean": 0.0,
+            "median": 0.0,
+            "std": 0.0,
+            "p95": 0.0
+        },
+        "VEGETATION_TO_BACKGROUND": {
+            "pixel_count": 0,
+            "min": 0.0,
+            "max": 0.0,
+            "mean": 0.0,
+            "median": 0.0,
+            "std": 0.0,
+            "p95": 0.0
+        },
+        "BACKGROUND_TO_VEGETATION": {
+            "pixel_count": 0,
+            "min": 0.0,
+            "max": 0.0,
+            "mean": 0.0,
+            "median": 0.0,
+            "std": 0.0,
+            "p95": 0.0
+        },
+        "STABLE": {
+            "pixel_count": 5038848,
+            "min": 0.0,
+            "max": 0.0,
+            "mean": 0.0,
+            "median": 0.0,
+            "std": 0.0,
+            "p95": 0.0
+        }
+    }
+}

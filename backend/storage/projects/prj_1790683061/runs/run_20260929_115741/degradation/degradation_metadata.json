@@ -1,0 +1,160 @@
+{
+    "transition_definitions": {
+        "0": {
+            "from": 0,
+            "to": 0,
+            "name": "B_to_B",
+            "category": "STABLE"
+        },
+        "1": {
+            "from": 0,
+            "to": 1,
+            "name": "B_to_S",
+            "category": "BACKGROUND_TO_VEGETATION"
+        },
+        "2": {
+            "from": 0,
+            "to": 2,
+            "name": "B_to_M",
+            "category": "BACKGROUND_TO_VEGETATION"
+        },
+        "3": {
+            "from": 0,
+            "to": 3,
+            "name": "B_to_H",
+            "category": "BACKGROUND_TO_VEGETATION"
+        },
+        "4": {
+            "from": 1,
+            "to": 0,
+            "name": "S_to_B",
+            "category": "VEGETATION_TO_BACKGROUND"
+        },
+        "5": {
+            "from": 1,
+            "to": 1,
+            "name": "S_to_S",
+            "category": "STABLE"
+        },
+        "6": {
+            "from": 1,
+            "to": 2,
+            "name": "S_to_M",
+            "category": "RECOVERY"
+        },
+        "7": {
+            "from": 1,
+            "to": 3,
+            "name": "S_to_H",
+            "category": "RECOVERY"
+        },
+        "8": {
+            "from": 2,
+            "to": 0,
+            "name": "M_to_B",
+            "category": "VEGETATION_TO_BACKGROUND"
+        },
+        "9": {
+            "from": 2,
+            "to": 1,
+            "name": "M_to_S",
+            "category": "DEGRADATION"
+        },
+        "10": {
+            "from": 2,
+            "to": 2,
+            "name": "M_to_M",
+            "category": "STABLE"
+        },
+        "11": {
+            "from": 2,
+            "to": 3,
+            "name": "M_to_H",
+            "category": "RECOVERY"
+        },
+        "12": {
+            "from": 3,
+            "to": 0,
+            "name": "H_to_B",
+            "category": "VEGETATION_TO_BACKGROUND"
+        },
+        "13": {
+            "from": 3,
+            "to": 1,
+            "name": "H_to_S",
+            "category": "DEGRADATION"
+        },
+        "14": {
+            "from": 3,
+            "to": 2,
+            "name": "H_to_M",
+            "category": "DEGRADATION"
+        },
+        "15": {
+            "from": 3,
+            "to": 3,
+            "name": "H_to_H",
+            "category": "STABLE"
+        }
+    },
+    "degradation_transition_ids": [
+        9,
+        13,
+        14
+    ],
+    "recovery_transition_ids": [
+        11,
+        6,
+        7
+    ],
+    "canopy_loss_transition_ids": [
+        8,
+        4,
+        12
+    ],
+    "residual_stress_rule": {
+        "enabled": true,
+        "threshold_method": "percentile",
+        "threshold_configured_value": 95.0,
+        "threshold_value": 0.0,
+        "directional_rule": null
+    },
+    "spatial_grid": {
+        "crs": "EPSG:32633",
+        "transform": [
+            10.0,
+            0.0,
+            500000.0,
+            0.0,
+            -10.0,
+            5000000.0
+        ],
+        "width": 100,
+        "height": 100,
+        "resolution": [
+            10.0,
+            10.0
+        ],
+        "bounds": [
+            500000.0,
+            4999000.0,
+            501000.0,
+            5000000.0
+        ]
+    },
+    "nodata_policy": {
+        "input_transition_nodata": 255,
+        "input_cva_nodata": -9999.0,
+        "output_nodata": 255
+    },
+    "disclaimer": "Vegetation-to-background transitions are not interpreted as physical wetland depletion in Phase 6.",
+    "software_version": "1.0.0",
+    "inputs": {
+        "transition_map": "ndarray",
+        "cva_magnitude": "ndarray",
+        "delta_ndvi": "ndarray",
+        "delta_gndvi": "ndarray",
+        "delta_ndre": "ndarray",
+        "valid_mask": "ndarray"
+    }
+}

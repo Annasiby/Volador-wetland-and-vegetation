@@ -1,0 +1,241 @@
+{
+    "pair_name": "vegetation",
+    "t1_date_dir": "C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\backend\\storage\\projects\\prj_1787997571\\runs\\run_20260829_095932\\alignment\\t1_aligned",
+    "t2_date_dir": "C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\backend\\storage\\projects\\prj_1787997571\\runs\\run_20260829_095932\\alignment\\t2_aligned",
+    "model_path": "C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\backend\\Engine_module\\models\\best_finetuned_model.onnx",
+    "model_hash": "27c1e54b561367c2c21e852aab7ca1eb130494a4eb15ab929032654ac6c467c9",
+    "model_input_shape": [
+        1,
+        5,
+        1944,
+        2592
+    ],
+    "model_output_shape": [
+        1,
+        4,
+        1944,
+        2592
+    ],
+    "channel_order": [
+        "ndvi",
+        "gndvi",
+        "ndre",
+        "nir",
+        "rededge"
+    ],
+    "class_mapping": {
+        "0": "Background / Bare Soil",
+        "1": "Severe Stress",
+        "2": "Moderate Stress",
+        "3": "Healthy Vegetation"
+    },
+    "preprocessing_configuration": {
+        "mode": "inference",
+        "band_scaling_factor": 10000.0,
+        "require_crs": false,
+        "epsilon": 1e-06,
+        "min_denominator": 0.05,
+        "min_band_value": 0.01,
+        "gaussian_sigma": 1.0,
+        "normalize": true
+    },
+    "t1_spatial_metadata": {
+        "crs": "None",
+        "transform": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+        ],
+        "dimensions": [
+            1944,
+            2592
+        ],
+        "resolution": [
+            1.0,
+            1.0
+        ],
+        "extent": [
+            0.0,
+            1944.0,
+            2592.0,
+            0.0
+        ]
+    },
+    "t2_spatial_metadata": {
+        "crs": "None",
+        "transform": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+        ],
+        "dimensions": [
+            1944,
+            2592
+        ],
+        "resolution": [
+            1.0,
+            1.0
+        ],
+        "extent": [
+            0.0,
+            1944.0,
+            2592.0,
+            0.0
+        ]
+    },
+    "reference_grid": {
+        "crs": null,
+        "transform": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+        ],
+        "width": 2592,
+        "height": 1944,
+        "resolution": [
+            1.0,
+            1.0
+        ],
+        "bounds": [
+            0.0,
+            1944.0,
+            2592.0,
+            0.0
+        ]
+    },
+    "overlap_information": {
+        "overlap_pixel_count": 5038848,
+        "overlap_percentage": 100.0
+    },
+    "performance": {
+        "t1": {
+            "preprocessing_time_ms": 2157.552399999531,
+            "inference_time_ms": 647.4541000002318,
+            "inference_provider": "CPUExecutionProvider"
+        },
+        "t2": {
+            "preprocessing_time_ms": 3024.171099999876,
+            "inference_time_ms": 341.87169999995604,
+            "inference_provider": "CPUExecutionProvider"
+        },
+        "total_pair_processing_time_ms": 6171.287099999972
+    },
+    "probabilities_generated": true,
+    "confidence_generated": true,
+    "class_statistics": {
+        "t1": {
+            "date_valid": {
+                "total_valid_pixels": 5038848,
+                "classes": {
+                    "0": {
+                        "name": "Background",
+                        "count": 0,
+                        "percentage": 0.0
+                    },
+                    "1": {
+                        "name": "Severe",
+                        "count": 0,
+                        "percentage": 0.0
+                    },
+                    "2": {
+                        "name": "Moderate",
+                        "count": 0,
+                        "percentage": 0.0
+                    },
+                    "3": {
+                        "name": "Healthy",
+                        "count": 5038848,
+                        "percentage": 100.0
+                    }
+                }
+            },
+            "common_overlap": {
+                "total_valid_pixels": 5038848,
+                "classes": {
+                    "0": {
+                        "name": "Background",
+                        "count": 0,
+                        "percentage": 0.0
+                    },
+                    "1": {
+                        "name": "Severe",
+                        "count": 0,
+                        "percentage": 0.0
+                    },
+                    "2": {
+                        "name": "Moderate",
+                        "count": 0,
+                        "percentage": 0.0
+                    },
+                    "3": {
+                        "name": "Healthy",
+                        "count": 5038848,
+                        "percentage": 100.0
+                    }
+                }
+            }
+        },
+        "t2": {
+            "date_valid": {
+                "total_valid_pixels": 5038848,
+                "classes": {
+                    "0": {
+                        "name": "Background",
+                        "count": 0,
+                        "percentage": 0.0
+                    },
+                    "1": {
+                        "name": "Severe",
+                        "count": 0,
+                        "percentage": 0.0
+                    },
+                    "2": {
+                        "name": "Moderate",
+                        "count": 0,
+                        "percentage": 0.0
+                    },
+                    "3": {
+                        "name": "Healthy",
+                        "count": 5038848,
+                        "percentage": 100.0
+                    }
+                }
+            },
+            "common_overlap": {
+                "total_valid_pixels": 5038848,
+                "classes": {
+                    "0": {
+                        "name": "Background",
+                        "count": 0,
+                        "percentage": 0.0
+                    },
+                    "1": {
+                        "name": "Severe",
+                        "count": 0,
+                        "percentage": 0.0
+                    },
+                    "2": {
+                        "name": "Moderate",
+                        "count": 0,
+                        "percentage": 0.0
+                    },
+                    "3": {
+                        "name": "Healthy",
+                        "count": 5038848,
+                        "percentage": 100.0
+                    }
+                }
+            }
+        }
+    },
+    "software_version": "1.0.0"
+}

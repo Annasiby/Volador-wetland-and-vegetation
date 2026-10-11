@@ -1,0 +1,68 @@
+{
+    "input_scene_directory": "C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\backend\\storage\\projects\\prj_1787984720\\runs\\run_20260829_062520\\run_20260829_062520\\alignment\\t2_aligned",
+    "model_path": "C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\backend\\Engine_module\\models\\best_finetuned_model.onnx",
+    "model_input_shape": [
+        1,
+        5,
+        100,
+        100
+    ],
+    "model_output_shape": [
+        1,
+        4,
+        100,
+        100
+    ],
+    "class_mapping": {
+        "0": "Background / Bare Soil",
+        "1": "Severe Stress",
+        "2": "Moderate Stress",
+        "3": "Healthy Vegetation"
+    },
+    "channel_order": [
+        "ndvi",
+        "gndvi",
+        "ndre",
+        "nir",
+        "rededge"
+    ],
+    "preprocessing_configuration": {
+        "mode": "inference",
+        "band_scaling_factor": 10000.0,
+        "require_crs": false,
+        "epsilon": 1e-06,
+        "min_denominator": 0.05,
+        "min_band_value": 0.01,
+        "gaussian_sigma": 1.0,
+        "normalize": true
+    },
+    "spatial_metadata": {
+        "crs": "EPSG:32633",
+        "transform": [
+            10.0,
+            0.0,
+            500000.0,
+            0.0,
+            -10.0,
+            5000000.0
+        ],
+        "dimensions": [
+            100,
+            100
+        ],
+        "resolution": [
+            10.0,
+            10.0
+        ],
+        "extent": [
+            500000.0,
+            4999000.0,
+            501000.0,
+            5000000.0
+        ]
+    },
+    "performance": {
+        "inference_provider": "CPUExecutionProvider",
+        "inference_time_ms": 0.603899999987334
+    }
+}

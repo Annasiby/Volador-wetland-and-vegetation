@@ -1,0 +1,77 @@
+{
+    "valid_pixel_count": 3500,
+    "nodata_pixel_count": 6500,
+    "degradation_pixel_count": 0,
+    "degradation_percentage": 0.0,
+    "recovery_pixel_count": 0,
+    "recovery_percentage": 0.0,
+    "residual_stress_pixel_count": 0,
+    "residual_stress_percentage": 0.0,
+    "canopy_loss_pixel_count": 0,
+    "canopy_loss_percentage": 0.0,
+    "background_to_vegetation_count": 0,
+    "background_to_vegetation_percentage": 0.0,
+    "stable_count": 3500,
+    "stable_vegetation_count": 0,
+    "stable_background_count": 3500,
+    "transition_counts": {
+        "B_to_B": 3500,
+        "B_to_S": 0,
+        "B_to_M": 0,
+        "B_to_H": 0,
+        "S_to_B": 0,
+        "S_to_S": 0,
+        "S_to_M": 0,
+        "S_to_H": 0,
+        "M_to_B": 0,
+        "M_to_S": 0,
+        "M_to_M": 0,
+        "M_to_H": 0,
+        "H_to_B": 0,
+        "H_to_S": 0,
+        "H_to_M": 0,
+        "H_to_H": 0
+    },
+    "cva_statistics_by_category": {
+        "degradation": {
+            "mean": null,
+            "median": null,
+            "p95": null,
+            "min": null,
+            "max": null,
+            "std": null
+        },
+        "recovery": {
+            "mean": null,
+            "median": null,
+            "p95": null,
+            "min": null,
+            "max": null,
+            "std": null
+        },
+        "canopy_loss": {
+            "mean": null,
+            "median": null,
+            "p95": null,
+            "min": null,
+            "max": null,
+            "std": null
+        },
+        "stable_vegetation": {
+            "mean": null,
+            "median": null,
+            "p95": null,
+            "min": null,
+            "max": null,
+            "std": null
+        },
+        "background_to_vegetation": {
+            "mean": null,
+            "median": null,
+            "p95": null,
+            "min": null,
+            "max": null,
+            "std": null
+        }
+    }
+}

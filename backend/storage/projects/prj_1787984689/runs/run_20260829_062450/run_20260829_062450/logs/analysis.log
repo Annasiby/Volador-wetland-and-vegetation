@@ -1,0 +1,12 @@
+[INFO] [run_20260829_062450] gis_engine.pipeline — Phase 13 — Production pipeline START. run_id=run_20260829_062450
+[INFO] [run_20260829_062450] gis_engine.pipeline — Step 1 — Loading configuration: C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\Engine_module\configs\config.json
+[INFO] [run_20260829_062450] gis_engine.pipeline — Step 1 — Configuration loaded. hash=f055de6ec85144ca…
+[INFO] [run_20260829_062450] gis_engine.pipeline — Step 2 — Validating inputs
+[INFO] [run_20260829_062450] gis_engine.pipeline — Step 2 — Inputs valid. T1=2023-08-14 T2=2023-08-28 interval=14 days
+[INFO] [run_20260829_062450] gis_engine.pipeline — Step 3 — Spatial/temporal alignment
+[INFO] [run_20260829_062450] gis_engine.pipeline — Step 3 — Alignment complete. overlap=100.00%
+[INFO] [run_20260829_062450] gis_engine.pipeline — Step 4 — Vegetation inference
+[INFO] [run_20260829_062450] gis_engine.inference.onnx — [onnx] GPU provider (CUDA) unavailable. Using CPUExecutionProvider.
+[INFO] [run_20260829_062450] gis_engine.pipeline — Step 4 — Inference complete
+[INFO] [run_20260829_062450] gis_engine.pipeline — Step 5 — Transition analysis
+[ERROR] [run_20260829_062450] gis_engine.pipeline — Phase 13 — Pipeline FAILED: Transition analysis failed: No module named 'src'

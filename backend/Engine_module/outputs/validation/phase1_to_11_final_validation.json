@@ -1,0 +1,777 @@
+{
+    "validation_version": "1.0",
+    "overall_status": "FAIL",
+    "phases": {
+        "phase_1": {},
+        "phase_2": {
+            "aligned_dirs": {
+                "status": "PASS"
+            },
+            "overlap_mask": {
+                "status": "FAIL"
+            },
+            "reference_grid": {
+                "status": "FAIL"
+            },
+            "temporal_order": {
+                "status": "PASS",
+                "t1": "2023-08-14",
+                "t2": "2023-08-28",
+                "date_diff_days": 14
+            },
+            "runtime_ms": 0.21410000044852495,
+            "status": "FAIL"
+        },
+        "phase_3": {
+            "status": "FAIL",
+            "runtime_ms": 0.05099998088553548
+        },
+        "phase_4": {
+            "formula": {
+                "status": "PASS"
+            },
+            "all_16": {
+                "status": "PASS"
+            },
+            "degradation_set": {
+                "status": "PASS",
+                "ids": [
+                    9,
+                    13,
+                    14
+                ]
+            },
+            "recovery_set": {
+                "status": "PASS",
+                "ids": [
+                    6,
+                    7,
+                    11
+                ]
+            },
+            "v2b_set": {
+                "status": "PASS",
+                "ids": [
+                    4,
+                    8,
+                    12
+                ]
+            },
+            "stable_set": {
+                "status": "PASS",
+                "ids": [
+                    0,
+                    5,
+                    10,
+                    15
+                ]
+            },
+            "nodata_not_bgbg": {
+                "status": "PASS",
+                "note": "NoData pixels mapped to 255 in transition raster"
+            },
+            "reconciliation": {
+                "status": "NOT_AVAILABLE"
+            },
+            "runtime_ms": 0.06530003156512976,
+            "status": "PASS"
+        },
+        "phase_5": {
+            "cva_1p2p2": {
+                "status": "PASS",
+                "computed": 3.0,
+                "expected": 3.0
+            },
+            "cva_-1p-2p-2": {
+                "status": "PASS",
+                "computed": 3.0,
+                "expected": 3.0
+            },
+            "cva_0p0p0": {
+                "status": "PASS",
+                "computed": 0.0,
+                "expected": 0.0
+            },
+            "cva_squared_identity": {
+                "status": "NOT_AVAILABLE"
+            },
+            "runtime_ms": 0.44329999946057796,
+            "status": "PASS"
+        },
+        "phase_6": {
+            "degradation_pixels": {
+                "status": "PASS"
+            },
+            "recovery_pixels": {
+                "status": "PASS"
+            },
+            "canopy_loss_pixels": {
+                "status": "PASS"
+            },
+            "runtime_ms": 20.661599992308766,
+            "status": "PASS"
+        },
+        "phase_7": {
+            "wetland_mask": {
+                "status": "NOT_AVAILABLE"
+            },
+            "status": "WARN",
+            "runtime_ms": 0.07189996540546417
+        },
+        "phase_8": {
+            "status": "NOT_AVAILABLE",
+            "note": "No metrics JSON found in outputs/metrics/",
+            "runtime_ms": 0.6461000302806497
+        },
+        "phase_9": {
+            "status": "NOT_AVAILABLE",
+            "runtime_ms": 0.0926000066101551
+        },
+        "phase_10": {
+            "ndwi_formula": {
+                "status": "PASS",
+                "computed": 0.5000000596046448,
+                "expected": 0.49999999999999994
+            },
+            "ndwi_nodata_propagation": {
+                "status": "PASS"
+            },
+            "water_state_encoding": {
+                "status": "PASS"
+            },
+            "threshold": {
+                "status": "WARN",
+                "value": 0.0,
+                "source": "config.json water.ndwi_threshold",
+                "validated": false,
+                "note": "Provisional engineering threshold \u2013 not yet validated against ground-truth water extent"
+            },
+            "water_area_balance": {
+                "status": "NOT_AVAILABLE"
+            },
+            "runtime_ms": 0.9193000150844455,
+            "status": "WARN"
+        },
+        "phase_11": {
+            "category_definitions": {
+                "status": "PASS",
+                "categories": {
+                    "0": "nodata",
+                    "1": "stable",
+                    "2": "vegetation_degradation",
+                    "3": "vegetation_recovery",
+                    "4": "surface_water_gain",
+                    "5": "surface_water_loss",
+                    "6": "hydro_ecological_degradation",
+                    "7": "hydro_ecological_recovery",
+                    "8": "vegetation_to_background",
+                    "9": "ambiguous_mixed_evidence"
+                }
+            },
+            "lut_tests": {
+                "status": "PASS",
+                "details": [
+                    {
+                        "v": 13,
+                        "w": 3,
+                        "expected": 6,
+                        "got": 6,
+                        "ok": true,
+                        "desc": "H\u2192S + water_loss = hydro_eco_degradation"
+                    },
+                    {
+                        "v": 9,
+                        "w": 3,
+                        "expected": 6,
+                        "got": 6,
+                        "ok": true,
+                        "desc": "M\u2192S + water_loss = hydro_eco_degradation"
+                    },
+                    {
+                        "v": 11,
+                        "w": 2,
+                        "expected": 7,
+                        "got": 7,
+                        "ok": true,
+                        "desc": "M\u2192H + water_gain = hydro_eco_recovery"
+                    },
+                    {
+                        "v": 7,
+                        "w": 2,
+                        "expected": 7,
+                        "got": 7,
+                        "ok": true,
+                        "desc": "S\u2192H + water_gain = hydro_eco_recovery"
+                    },
+                    {
+                        "v": 13,
+                        "w": 0,
+                        "expected": 2,
+                        "got": 2,
+                        "ok": true,
+                        "desc": "H\u2192S + stable_water = veg_degradation"
+                    },
+                    {
+                        "v": 15,
+                        "w": 3,
+                        "expected": 5,
+                        "got": 5,
+                        "ok": true,
+                        "desc": "H\u2192H + water_loss = surface_water_loss"
+                    },
+                    {
+                        "v": 15,
+                        "w": 0,
+                        "expected": 1,
+                        "got": 1,
+                        "ok": true,
+                        "desc": "H\u2192H + stable_water = stable"
+                    },
+                    {
+                        "v": 13,
+                        "w": 2,
+                        "expected": 9,
+                        "got": 9,
+                        "ok": true,
+                        "desc": "veg_deg + water_gain = ambiguous"
+                    },
+                    {
+                        "v": 11,
+                        "w": 3,
+                        "expected": 9,
+                        "got": 9,
+                        "ok": true,
+                        "desc": "veg_rec + water_loss = ambiguous"
+                    }
+                ]
+            },
+            "ambiguous_cases": {
+                "status": "PASS",
+                "veg_deg+water_gain": 9,
+                "veg_rec+water_loss": 9
+            },
+            "area_invariants": {
+                "status": "NOT_AVAILABLE"
+            },
+            "nodata_in_fusion": {
+                "status": "PASS"
+            },
+            "runtime_ms": 43.08959998888895,
+            "status": "PASS"
+        }
+    },
+    "tests": {
+        "unit": {
+            "status": "PASS",
+            "passed": 258,
+            "failed": 0,
+            "skipped": 0,
+            "errors": 0,
+            "coverage_pct": 77.0,
+            "exit_code": 0,
+            "runtime_ms": 10428.376100026071
+        },
+        "integration": {
+            "status": "NOT_AVAILABLE"
+        },
+        "synthetic_e2e": {
+            "spec_30_cases": {
+                "status": "PASS",
+                "expected": [
+                    [
+                        6,
+                        6,
+                        7,
+                        7,
+                        2,
+                        5,
+                        1
+                    ]
+                ],
+                "got": [
+                    [
+                        6,
+                        6,
+                        7,
+                        7,
+                        2,
+                        5,
+                        1
+                    ]
+                ],
+                "cases": [
+                    "H\u2192S+water_loss=hydro_deg(6)",
+                    "M\u2192S+water_loss=hydro_deg(6)",
+                    "M\u2192H+water_gain=hydro_rec(7)",
+                    "S\u2192H+water_gain=hydro_rec(7)",
+                    "H\u2192S+stable=veg_deg(2)",
+                    "H\u2192H+water_loss=sw_loss(5)",
+                    "H\u2192H+stable=stable(1)"
+                ]
+            },
+            "transition_map": {
+                "status": "PASS"
+            },
+            "degradation": {
+                "status": "PASS"
+            },
+            "recovery": {
+                "status": "PASS"
+            },
+            "canopy_loss": {
+                "status": "PASS"
+            },
+            "water_transitions": {
+                "status": "PASS",
+                "expected": [
+                    1,
+                    2,
+                    3,
+                    0
+                ],
+                "got": [
+                    1,
+                    2,
+                    3,
+                    0
+                ]
+            },
+            "runtime_ms": 4.2696999735198915,
+            "status": "PASS"
+        },
+        "real_e2e": {},
+        "reproducibility": {}
+    },
+    "spatial": {
+        "status": "NOT_AVAILABLE",
+        "note": "transition_map.tif missing; cannot validate spatial consistency",
+        "runtime_ms": 0.07110001752153039
+    },
+    "temporal": {
+        "status": "PASS",
+        "t1_date": "2023-08-14",
+        "t2_date": "2023-08-28",
+        "date_difference_days": 14,
+        "phenology_warning": true,
+        "phenology_note": "14-day gap (Aug 14 \u2192 Aug 28). Same month, same growing season. Short temporal baseline: phenological differences may contribute to observed vegetation and water changes. This is a known V1 limitation.",
+        "runtime_ms": 0.020499981474131346
+    },
+    "nodata": {
+        "transition_nodata": {
+            "status": "PASS"
+        },
+        "cva_nodata": {
+            "status": "PASS"
+        },
+        "nodata_not_bgbg": {
+            "status": "PASS"
+        },
+        "ndwi_nodata": {
+            "status": "PASS"
+        },
+        "fusion_nodata": {
+            "status": "PASS"
+        },
+        "status": "PASS",
+        "runtime_ms": 21.87009999761358
+    },
+    "numerical": {
+        "identity_1_transitions": {
+            "status": "NOT_AVAILABLE"
+        },
+        "identity_2_cva": {
+            "status": "NOT_AVAILABLE"
+        },
+        "identity_3_delta_ndwi": {
+            "status": "NOT_AVAILABLE"
+        },
+        "identity_4_fusion_invariants": {
+            "status": "NOT_AVAILABLE"
+        },
+        "runtime_ms": 0.22869999520480633,
+        "status": "PASS"
+    },
+    "scientific": {
+        "forbidden_claims": {
+            "wetland depleted": {
+                "status": "FAIL",
+                "found_in": [
+                    "scripts\\generate_final_reports.py",
+                    "scripts\\run_phase12_final_validation.py",
+                    "scripts\\run_phase7.py",
+                    "scripts\\run_phase9_validation.py",
+                    "tests\\test_metrics.py",
+                    "tests\\test_wetland.py",
+                    "src\\gis_engine\\api\\service.py",
+                    "src\\gis_engine\\change\\degradation.py",
+                    "src\\gis_engine\\core\\pipeline.py",
+                    "src\\gis_engine\\metrics\\degradation.py",
+                    "src\\gis_engine\\output\\report.py",
+                    "src\\gis_engine\\validation\\quality.py",
+                    "src\\gis_engine\\wetland\\mask.py",
+                    "outputs\\validation\\phase10_validation.json",
+                    "walkthrough.md",
+                    "docs\\user_guide.md",
+                    "outputs\\validation\\phase10_validation.md",
+                    "brain\\d00e9f53-5746-41d5-a1aa-97e1e7261d5f\\walkthrough.md"
+                ]
+            },
+            "wetland destroyed": {
+                "status": "FAIL",
+                "found_in": [
+                    "scripts\\run_phase12_final_validation.py"
+                ]
+            },
+            "wetland lost": {
+                "status": "FAIL",
+                "found_in": [
+                    "scripts\\run_phase12_final_validation.py"
+                ]
+            },
+            "groundwater depleted": {
+                "status": "FAIL",
+                "found_in": [
+                    "scripts\\run_phase12_final_validation.py"
+                ]
+            },
+            "soil moisture depleted": {
+                "status": "FAIL",
+                "found_in": [
+                    "scripts\\run_phase12_final_validation.py"
+                ]
+            }
+        },
+        "physical_depletion_assessment_valid": {
+            "status": "PASS"
+        },
+        "water_not_equated_to_wetland": {
+            "status": "PASS",
+            "note": "NDWI = surface-water indicator, not wetland boundary"
+        },
+        "vegetation_loss_not_depletion": {
+            "status": "PASS",
+            "note": "Vegetation change \u2260 physical wetland depletion"
+        },
+        "status": "FAIL",
+        "runtime_ms": 360.2571000228636
+    },
+    "configuration": {
+        "class_mapping_source": "src/gis_engine/change/transition.py::CLASS_DESCRIPTIONS",
+        "transition_formula_source": "src/gis_engine/change/transition.py::TRANSITIONS",
+        "ndwi_threshold_source": "configs/config.json::water.ndwi_threshold",
+        "ndwi_threshold_value": 0.0,
+        "model_channel_order": [
+            "ndvi",
+            "gndvi",
+            "ndre",
+            "nir",
+            "rededge"
+        ],
+        "nodata_value_transition": 255,
+        "nodata_value_cva": -9999.0,
+        "nodata_value_ndwi": -9999.0,
+        "nodata_value_water": 255,
+        "fusion_category_ids_source": "src/gis_engine/change/fusion.py::FUSION_CATEGORIES",
+        "pattern_scan": {
+            "hardcoded_path_T1": {
+                "status": "PASS",
+                "found_in": [
+                    "src\\gis_engine\\api\\service.py",
+                    "src\\gis_engine\\core\\pipeline.py",
+                    "src\\gis_engine\\wetland\\mask.py"
+                ]
+            },
+            "hardcoded_path_T2": {
+                "status": "PASS",
+                "found_in": [
+                    "src\\gis_engine\\api\\service.py",
+                    "src\\gis_engine\\core\\pipeline.py"
+                ]
+            },
+            "MNDWI_in_src": {
+                "status": "FAIL",
+                "found_in": [
+                    "src\\gis_engine\\output\\report.py"
+                ]
+            },
+            "LSWI_in_src": {
+                "status": "FAIL",
+                "found_in": [
+                    "src\\gis_engine\\output\\report.py"
+                ]
+            },
+            "SWIR_code_in_src": {
+                "status": "PASS",
+                "found_in": []
+            }
+        },
+        "status": "FAIL",
+        "runtime_ms": 71.13529997877777
+    },
+    "hydrology": {
+        "ndwi": {
+            "status": "PASS",
+            "computed": 0.5000000596046448,
+            "expected": 0.49999999999999994
+        },
+        "water_change": {
+            "status": "PASS"
+        },
+        "threshold": {
+            "status": "WARN",
+            "value": 0.0,
+            "source": "config.json water.ndwi_threshold",
+            "validated": false,
+            "note": "Provisional engineering threshold \u2013 not yet validated against ground-truth water extent"
+        }
+    },
+    "fusion": {
+        "categories": {
+            "status": "PASS",
+            "categories": {
+                "0": "nodata",
+                "1": "stable",
+                "2": "vegetation_degradation",
+                "3": "vegetation_recovery",
+                "4": "surface_water_gain",
+                "5": "surface_water_loss",
+                "6": "hydro_ecological_degradation",
+                "7": "hydro_ecological_recovery",
+                "8": "vegetation_to_background",
+                "9": "ambiguous_mixed_evidence"
+            }
+        },
+        "overlap": {
+            "status": "NOT_AVAILABLE"
+        },
+        "metrics": {
+            "status": "PASS",
+            "details": [
+                {
+                    "v": 13,
+                    "w": 3,
+                    "expected": 6,
+                    "got": 6,
+                    "ok": true,
+                    "desc": "H\u2192S + water_loss = hydro_eco_degradation"
+                },
+                {
+                    "v": 9,
+                    "w": 3,
+                    "expected": 6,
+                    "got": 6,
+                    "ok": true,
+                    "desc": "M\u2192S + water_loss = hydro_eco_degradation"
+                },
+                {
+                    "v": 11,
+                    "w": 2,
+                    "expected": 7,
+                    "got": 7,
+                    "ok": true,
+                    "desc": "M\u2192H + water_gain = hydro_eco_recovery"
+                },
+                {
+                    "v": 7,
+                    "w": 2,
+                    "expected": 7,
+                    "got": 7,
+                    "ok": true,
+                    "desc": "S\u2192H + water_gain = hydro_eco_recovery"
+                },
+                {
+                    "v": 13,
+                    "w": 0,
+                    "expected": 2,
+                    "got": 2,
+                    "ok": true,
+                    "desc": "H\u2192S + stable_water = veg_degradation"
+                },
+                {
+                    "v": 15,
+                    "w": 3,
+                    "expected": 5,
+                    "got": 5,
+                    "ok": true,
+                    "desc": "H\u2192H + water_loss = surface_water_loss"
+                },
+                {
+                    "v": 15,
+                    "w": 0,
+                    "expected": 1,
+                    "got": 1,
+                    "ok": true,
+                    "desc": "H\u2192H + stable_water = stable"
+                },
+                {
+                    "v": 13,
+                    "w": 2,
+                    "expected": 9,
+                    "got": 9,
+                    "ok": true,
+                    "desc": "veg_deg + water_gain = ambiguous"
+                },
+                {
+                    "v": 11,
+                    "w": 3,
+                    "expected": 9,
+                    "got": 9,
+                    "ok": true,
+                    "desc": "veg_rec + water_loss = ambiguous"
+                }
+            ]
+        }
+    },
+    "uncertainty": {
+        "model_uncertainty": {
+            "status": "NOT_AVAILABLE",
+            "note": "Probability calibration deferred to V2; no held-out dataset."
+        },
+        "classification_uncertainty": {
+            "status": "NOT_AVAILABLE",
+            "note": "Softmax probabilities reported but not calibrated."
+        },
+        "temporal_phenological_uncertainty": {
+            "status": "WARN",
+            "note": "14-day gap (Aug 14\u201328 2023). Same growing season. Phenological variability may contribute to apparent changes. Final report explicitly documents this limitation."
+        },
+        "water_threshold_uncertainty": {
+            "status": "WARN",
+            "threshold": 0.0,
+            "note": "Provisional NDWI threshold=0.0. Not validated against ground truth."
+        },
+        "wetland_boundary_uncertainty": {
+            "status": "NOT_AVAILABLE",
+            "note": "Authoritative wetland boundary not configured in config.json."
+        },
+        "area_estimation_uncertainty": {
+            "status": "NOT_AVAILABLE",
+            "note": "Olofsson area-error correction unavailable; no independent reference samples."
+        }
+    },
+    "physical_depletion_assessment": {
+        "status": "NOT_ASSESSED",
+        "basis": [
+            "NDWI measures optical surface-water spectral response only.",
+            "Vegetation health classification does not establish hydrological depletion.",
+            "Physical wetland depletion requires independent temporal hydrological or wetland dataset.",
+            "No such dataset has been integrated in V1."
+        ]
+    },
+    "critical_failures": [
+        "[Phase 12] Step 'Phase 1 regression' raised exception: ONNX model file not found at: C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\models\\best_finetuned_model.onnx",
+        "[Phase 12] Step 'Real-data E2E + spot check' raised exception: Missing required band file for 'green' in C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\data\\real_georeferenced\\2023-08-14 with matching patterns: ['*_G.TIF', '*_G.tif', '*green.tif', '*green.TIF']",
+        "[Phase 12] Step 'Reproducibility master test' raised exception: Missing required band file for 'green' in C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\data\\real_georeferenced\\2023-08-14 with matching patterns: ['*_G.TIF', '*_G.tif', '*green.tif', '*green.TIF']",
+        "[Configuration] Search: MNDWI: ",
+        "[Configuration] Search: LSWI: "
+    ],
+    "high_failures": [
+        "[Phase 2] Reference grid: Output missing",
+        "[Phase 3] Health maps present: t1/t2 health maps missing",
+        "[Output Contract] t1_health.tif: ",
+        "[Output Contract] t2_health.tif: ",
+        "[Output Contract] transition_map.tif: ",
+        "[Output Contract] transition_matrix.csv: ",
+        "[Output Contract] transition_statistics.json: ",
+        "[Output Contract] cva_magnitude.tif: ",
+        "[Output Contract] delta_ndvi.tif: ",
+        "[Output Contract] delta_gndvi.tif: ",
+        "[Output Contract] delta_ndre.tif: ",
+        "[Output Contract] degradation_map.tif: ",
+        "[Output Contract] recovery_map.tif: ",
+        "[Output Contract] canopy_loss_map.tif: ",
+        "[Output Contract] residual_stress.tif: ",
+        "[Output Contract] degradation_statistics.json: ",
+        "[Output Contract] ndwi_t1.tif: ",
+        "[Output Contract] ndwi_t2.tif: ",
+        "[Output Contract] delta_ndwi.tif: ",
+        "[Output Contract] water_mask_t1.tif: ",
+        "[Output Contract] water_mask_t2.tif: ",
+        "[Output Contract] water_change.tif: ",
+        "[Output Contract] water_metrics.json: ",
+        "[Output Contract] evidence_fusion.tif: ",
+        "[Output Contract] evidence_matrix.csv: ",
+        "[Output Contract] fusion_metrics.json: ",
+        "[Output Contract] phase1_to_11_validation_matrix.csv: ",
+        "[Output Contract] phase1_to_11_final_validation.json: ",
+        "[Output Contract] phase1_to_11_final_validation.md: ",
+        "[Scientific] Forbidden claim: wetland depleted: Claim 'wetland depleted' found in sources",
+        "[Scientific] Forbidden claim: wetland destroyed: Claim 'wetland destroyed' found in sources",
+        "[Scientific] Forbidden claim: wetland lost: Claim 'wetland lost' found in sources",
+        "[Scientific] Forbidden claim: groundwater depleted: Claim 'groundwater depleted' found in sources",
+        "[Scientific] Forbidden claim: soil moisture depleted: Claim 'soil moisture depleted' found in sources",
+        "[Scientific] No forbidden physical depletion claims: "
+    ],
+    "warnings": [
+        "[Phase 7] Wetland mask present: No authoritative wetland boundary dataset configured",
+        "[Phase 7] Wetland mask file not found.",
+        "[Phase 10] NDWI threshold: Provisional threshold \u2013 WARN retained",
+        "[Phase 10] Provisional NDWI threshold=0.0 not validated against ground-truth water extent.",
+        "[Temporal] Phenology warning: 14-day gap within same season",
+        "[Temporal] 14-day temporal baseline may introduce phenological noise."
+    ],
+    "production_ready": false,
+    "phase_13_status": "BLOCKED",
+    "scorecard": {
+        "PHASE_1": "NOT_AVAILABLE",
+        "PHASE_2": "FAIL",
+        "PHASE_3": "FAIL",
+        "PHASE_4": "PASS",
+        "PHASE_5": "PASS",
+        "PHASE_6": "PASS",
+        "PHASE_7": "WARN",
+        "PHASE_8": "NOT_AVAILABLE",
+        "PHASE_9": "NOT_AVAILABLE",
+        "PHASE_10": "WARN",
+        "PHASE_11": "PASS",
+        "UNIT_TESTS": "PASS",
+        "INTEGRATION": "NOT_AVAILABLE",
+        "SYNTHETIC_E2E": "PASS",
+        "REAL_E2E": "NOT_AVAILABLE",
+        "SPATIAL": "NOT_AVAILABLE",
+        "TEMPORAL": "PASS",
+        "NODATA": "PASS",
+        "MATHEMATICAL": "PASS",
+        "REPRODUCIBILITY": "NOT_AVAILABLE",
+        "SCIENTIFIC": "FAIL",
+        "CONFIGURATION": "FAIL",
+        "OUTPUT_CONTRACT": "FAIL"
+    },
+    "performance": {
+        "os": "Windows",
+        "python_version": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+        "cpu": "AMD64 Family 25 Model 117 Stepping 2, AuthenticAMD",
+        "ram_gb": 15.233589172363281,
+        "onnxruntime_provider": "CPUExecutionProvider",
+        "phase_runtimes_ms": {
+            "pytest": 10428.376100026071,
+            "phase_2": 0.21410000044852495,
+            "phase_3": 0.05099998088553548,
+            "phase_4": 0.06530003156512976,
+            "phase_5": 0.44329999946057796,
+            "phase_6": 20.661599992308766,
+            "phase_7": 0.07189996540546417,
+            "phase_8": 0.6461000302806497,
+            "phase_9": 0.0926000066101551,
+            "phase_10": 0.9193000150844455,
+            "phase_11": 43.08959998888895,
+            "nodata": 21.87009999761358,
+            "spatial": 0.07110001752153039,
+            "temporal": 0.020499981474131346,
+            "synthetic_e2e": 4.2696999735198915,
+            "mathematical": 0.22869999520480633,
+            "output_contract": 2.0269000087864697,
+            "configuration": 71.13529997877777,
+            "scientific": 360.2571000228636
+        },
+        "dependencies": {
+            "numpy": "2.4.0",
+            "rasterio": "1.5.0",
+            "onnxruntime": "1.24.4",
+            "scipy": "1.16.3",
+            "pyyaml": "6.0.2",
+            "pytest": "9.0.2"
+        }
+    },
+    "pixel_spot_check": []
+}

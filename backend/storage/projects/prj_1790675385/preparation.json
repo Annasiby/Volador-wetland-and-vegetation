@@ -1,0 +1,46 @@
+{
+  "project_id": "prj_1790675385",
+  "status": "COMMITTED",
+  "is_locked": true,
+  "committed_at": "2026-09-29T09:49:45Z",
+  "updated_at": "2026-09-29T09:49:45Z",
+  "inclusion": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          10.0,
+          10.0
+        ],
+        [
+          70.0,
+          10.0
+        ],
+        [
+          70.0,
+          70.0
+        ],
+        [
+          10.0,
+          70.0
+        ],
+        [
+          10.0,
+          10.0
+        ]
+      ]
+    ]
+  },
+  "manual_exclusions": [],
+  "metrics": {
+    "source_pixels": 10000,
+    "inclusion_pixels": 3600,
+    "excluded_pixels": 0,
+    "effective_pixels": 3600,
+    "source_ha": 100.0,
+    "inclusion_ha": 36.0,
+    "excluded_ha": 0.0,
+    "effective_ha": 36.0,
+    "area_basis": "RASTER_CRS_AND_TRANSFORM"
+  }
+}

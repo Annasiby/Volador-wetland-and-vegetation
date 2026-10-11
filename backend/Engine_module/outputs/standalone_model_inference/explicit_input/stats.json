@@ -1,0 +1,56 @@
+{
+  "total_pixels": 5038848,
+  "dimensions": [
+    1944,
+    2592
+  ],
+  "mean_inference_confidence": 0.9332879185676575,
+  "min_inference_confidence": 0.2852964401245117,
+  "max_inference_confidence": 1.0,
+  "class_distribution": {
+    "0": {
+      "label": "Bare Soil / Background",
+      "count": 2039551,
+      "percentage": 40.4765335251232,
+      "mean_confidence": 0.9646111130714417
+    },
+    "1": {
+      "label": "Severe Stress",
+      "count": 672081,
+      "percentage": 13.337989159426916,
+      "mean_confidence": 0.854762852191925
+    },
+    "2": {
+      "label": "Moderate Stress",
+      "count": 751656,
+      "percentage": 14.917219173906417,
+      "mean_confidence": 0.8611657023429871
+    },
+    "3": {
+      "label": "Healthy Vegetation",
+      "count": 1575560,
+      "percentage": 31.268258141543466,
+      "mean_confidence": 0.9606441259384155
+    }
+  },
+  "indices_summary": {
+    "ndvi": {
+      "min": -0.978357195854187,
+      "max": 0.9794473648071289,
+      "mean": 0.45794177055358887,
+      "std": 0.4263049364089966
+    },
+    "gndvi": {
+      "min": -0.9792554378509521,
+      "max": 0.9791262745857239,
+      "mean": 0.1220102310180664,
+      "std": 0.3613862991333008
+    },
+    "ndre": {
+      "min": -0.9794489741325378,
+      "max": 0.97950279712677,
+      "mean": 0.08994390070438385,
+      "std": 0.33391278982162476
+    }
+  }
+}

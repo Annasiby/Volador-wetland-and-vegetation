@@ -1,0 +1,47 @@
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Phase 13 — Production pipeline START. run_id=20260829T080756Z_00e31ea9
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 1 — Loading configuration: configs\config.json
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 1 — Configuration loaded. hash=88a78406dd312b83…
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 2 — Validating inputs
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 2 — Inputs valid. T1=2023-08-14 T2=2023-08-28 interval=14 days
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 3 — Spatial/temporal alignment
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 3 — Alignment complete. overlap=100.00%
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 4 — Vegetation inference
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 4 — Inference complete
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 5 — Transition analysis
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 5 — Transitions complete
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 6 — Change Vector Analysis (CVA)
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 6 — CVA complete
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 7 — Degradation & Recovery analysis
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 7 — Degradation complete
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 8 — Wetland context
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 8 — Wetland context: WETLAND_BOUNDARY_UNAVAILABLE
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 9 — NDWI hydrology
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 9 — Hydrology complete
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 10 — Multi-evidence fusion
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 10 — Fusion complete
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 11 — Metrics calculation
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 11 — Metrics complete
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 12 — Quality assurance
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 12 — QA: WARN
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 13 — Assembling result package
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 14 — Generating analysis reports
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.output.report — [report] Analysis report written: scratch\test_5_debug\out\20260829T080756Z_00e31ea9\reports\analysis_report.md
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.output.cartography — Rendered categorical map: scratch\test_5_debug\out\20260829T080756Z_00e31ea9\reports\figures\health_t1.png
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.output.cartography — Rendered categorical map: scratch\test_5_debug\out\20260829T080756Z_00e31ea9\reports\figures\health_t2.png
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.output.cartography — Rendered categorical map: scratch\test_5_debug\out\20260829T080756Z_00e31ea9\reports\figures\transition.png
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.output.cartography — Rendered categorical map: scratch\test_5_debug\out\20260829T080756Z_00e31ea9\reports\figures\degradation.png
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.output.cartography — Rendered categorical map: scratch\test_5_debug\out\20260829T080756Z_00e31ea9\reports\figures\recovery.png
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.output.cartography — Rendered categorical map: scratch\test_5_debug\out\20260829T080756Z_00e31ea9\reports\figures\canopy_loss.png
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.output.cartography — Rendered continuous map: scratch\test_5_debug\out\20260829T080756Z_00e31ea9\reports\figures\cva_magnitude.png
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.output.cartography — Rendered continuous map: scratch\test_5_debug\out\20260829T080756Z_00e31ea9\reports\figures\delta_ndvi.png
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.output.cartography — Rendered continuous map: scratch\test_5_debug\out\20260829T080756Z_00e31ea9\reports\figures\delta_gndvi.png
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.output.cartography — Rendered continuous map: scratch\test_5_debug\out\20260829T080756Z_00e31ea9\reports\figures\delta_ndre.png
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.output.cartography — Rendered continuous map: scratch\test_5_debug\out\20260829T080756Z_00e31ea9\reports\figures\ndwi_t1.png
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.output.cartography — Rendered continuous map: scratch\test_5_debug\out\20260829T080756Z_00e31ea9\reports\figures\ndwi_t2.png
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.output.cartography — Rendered categorical map: scratch\test_5_debug\out\20260829T080756Z_00e31ea9\reports\figures\water_change.png
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.output.cartography — Rendered categorical map: scratch\test_5_debug\out\20260829T080756Z_00e31ea9\reports\figures\evidence_fusion.png
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.output.cartography — Generated 14 cartographic map plates in scratch\test_5_debug\out\20260829T080756Z_00e31ea9\reports\figures
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.output.pdf — Successfully compiled master PDF report: scratch\test_5_debug\out\20260829T080756Z_00e31ea9\reports\FINAL_ANALYSIS_REPORT.pdf
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 15 — Writing provenance metadata
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Step 16 — Writing output manifest
+[INFO] [20260829T080756Z_00e31ea9] gis_engine.pipeline — Phase 13 — Pipeline COMPLETE. status=SUCCESS run_id=20260829T080756Z_00e31ea9 runtime=9.5s

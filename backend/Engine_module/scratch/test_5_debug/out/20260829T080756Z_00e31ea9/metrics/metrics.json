@@ -1,0 +1,387 @@
+{
+    "baseline_area": {
+        "pixel_count": 0,
+        "area_m2": 0.0,
+        "area_ha": 0.0
+    },
+    "impact_area": {
+        "impact_area_m2": 0.0,
+        "impact_area_ha": 0.0,
+        "severity_weighted_area_m2": 0.0,
+        "severity_weighted_area_ha_deg": 0.0,
+        "ndr": null,
+        "ndr_percent": null
+    },
+    "severity_weighted_area": {
+        "impact_area_m2": 0.0,
+        "impact_area_ha": 0.0,
+        "severity_weighted_area_m2": 0.0,
+        "severity_weighted_area_ha_deg": 0.0,
+        "ndr": null,
+        "ndr_percent": null
+    },
+    "normalized_degradation_ratio": null,
+    "recovery_area": {
+        "area_m2": 0.0,
+        "area_ha": 0.0,
+        "ratio": null,
+        "details_m2": {
+            "M_to_H": 0.0,
+            "S_to_M": 0.0,
+            "S_to_H": 0.0
+        }
+    },
+    "residual_stress_area": {
+        "area_m2": 0.0,
+        "area_ha": 0.0,
+        "ratio": null
+    },
+    "canopy_loss_area": {
+        "area_m2": 0.0,
+        "area_ha": 0.0,
+        "ratio": null,
+        "percentage": null
+    },
+    "transition_metrics": {
+        "B_to_B": {
+            "pixel_count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage_of_valid_wetland_analysis_area": 0.0
+        },
+        "B_to_S": {
+            "pixel_count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage_of_valid_wetland_analysis_area": 0.0
+        },
+        "B_to_M": {
+            "pixel_count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage_of_valid_wetland_analysis_area": 0.0
+        },
+        "B_to_H": {
+            "pixel_count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage_of_valid_wetland_analysis_area": 0.0
+        },
+        "S_to_B": {
+            "pixel_count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage_of_valid_wetland_analysis_area": 0.0
+        },
+        "S_to_S": {
+            "pixel_count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage_of_valid_wetland_analysis_area": 0.0
+        },
+        "S_to_M": {
+            "pixel_count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage_of_valid_wetland_analysis_area": 0.0
+        },
+        "S_to_H": {
+            "pixel_count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage_of_valid_wetland_analysis_area": 0.0
+        },
+        "M_to_B": {
+            "pixel_count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage_of_valid_wetland_analysis_area": 0.0
+        },
+        "M_to_S": {
+            "pixel_count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage_of_valid_wetland_analysis_area": 0.0
+        },
+        "M_to_M": {
+            "pixel_count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage_of_valid_wetland_analysis_area": 0.0
+        },
+        "M_to_H": {
+            "pixel_count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage_of_valid_wetland_analysis_area": 0.0
+        },
+        "H_to_B": {
+            "pixel_count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage_of_valid_wetland_analysis_area": 0.0
+        },
+        "H_to_S": {
+            "pixel_count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage_of_valid_wetland_analysis_area": 0.0
+        },
+        "H_to_M": {
+            "pixel_count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage_of_valid_wetland_analysis_area": 0.0
+        },
+        "H_to_H": {
+            "pixel_count": 0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "percentage_of_valid_wetland_analysis_area": 0.0
+        }
+    },
+    "class_area_metrics": {
+        "T1": {
+            "background": {
+                "pixel_count": 0,
+                "area_m2": 0.0,
+                "area_ha": 0.0,
+                "percentage": 0.0
+            },
+            "severe": {
+                "pixel_count": 0,
+                "area_m2": 0.0,
+                "area_ha": 0.0,
+                "percentage": 0.0
+            },
+            "moderate": {
+                "pixel_count": 0,
+                "area_m2": 0.0,
+                "area_ha": 0.0,
+                "percentage": 0.0
+            },
+            "healthy": {
+                "pixel_count": 0,
+                "area_m2": 0.0,
+                "area_ha": 0.0,
+                "percentage": 0.0
+            }
+        },
+        "T2": {
+            "background": {
+                "pixel_count": 0,
+                "area_m2": 0.0,
+                "area_ha": 0.0,
+                "percentage": 0.0
+            },
+            "severe": {
+                "pixel_count": 0,
+                "area_m2": 0.0,
+                "area_ha": 0.0,
+                "percentage": 0.0
+            },
+            "moderate": {
+                "pixel_count": 0,
+                "area_m2": 0.0,
+                "area_ha": 0.0,
+                "percentage": 0.0
+            },
+            "healthy": {
+                "pixel_count": 0,
+                "area_m2": 0.0,
+                "area_ha": 0.0,
+                "percentage": 0.0
+            }
+        },
+        "changes": {
+            "background": {
+                "area_change_m2": 0.0,
+                "area_change_ha": 0.0
+            },
+            "severe": {
+                "area_change_m2": 0.0,
+                "area_change_ha": 0.0
+            },
+            "moderate": {
+                "area_change_m2": 0.0,
+                "area_change_ha": 0.0
+            },
+            "healthy": {
+                "area_change_m2": 0.0,
+                "area_change_ha": 0.0,
+                "loss_m2": 0.0,
+                "loss_ha": 0.0
+            }
+        }
+    },
+    "cva_statistics": {
+        "all_valid_wetland": {
+            "mean": null,
+            "median": null,
+            "min": null,
+            "max": null,
+            "std": null,
+            "p95": null
+        },
+        "degradation": {
+            "mean": null,
+            "median": null,
+            "min": null,
+            "max": null,
+            "std": null,
+            "p95": null
+        },
+        "recovery": {
+            "mean": null,
+            "median": null,
+            "min": null,
+            "max": null,
+            "std": null,
+            "p95": null
+        },
+        "stable_vegetation": {
+            "mean": null,
+            "median": null,
+            "min": null,
+            "max": null,
+            "std": null,
+            "p95": null
+        },
+        "canopy_loss": {
+            "mean": null,
+            "median": null,
+            "min": null,
+            "max": null,
+            "std": null,
+            "p95": null
+        },
+        "background_to_vegetation": {
+            "mean": null,
+            "median": null,
+            "min": null,
+            "max": null,
+            "std": null,
+            "p95": null
+        }
+    },
+    "delta_statistics": {
+        "ndvi": {
+            "all_valid_wetland": {
+                "mean": null,
+                "median": null,
+                "min": null,
+                "max": null,
+                "std": null,
+                "p5": null,
+                "p95": null
+            },
+            "degradation": {
+                "mean": null,
+                "median": null,
+                "min": null,
+                "max": null,
+                "std": null,
+                "p5": null,
+                "p95": null
+            }
+        },
+        "gndvi": {
+            "all_valid_wetland": {
+                "mean": null,
+                "median": null,
+                "min": null,
+                "max": null,
+                "std": null,
+                "p5": null,
+                "p95": null
+            },
+            "degradation": {
+                "mean": null,
+                "median": null,
+                "min": null,
+                "max": null,
+                "std": null,
+                "p5": null,
+                "p95": null
+            }
+        },
+        "ndre": {
+            "all_valid_wetland": {
+                "mean": null,
+                "median": null,
+                "min": null,
+                "max": null,
+                "std": null,
+                "p5": null,
+                "p95": null
+            },
+            "degradation": {
+                "mean": null,
+                "median": null,
+                "min": null,
+                "max": null,
+                "std": null,
+                "p5": null,
+                "p95": null
+            }
+        }
+    },
+    "wetland_extent_metrics": {
+        "status": "NOT_AVAILABLE",
+        "extent_T1_ha": null,
+        "extent_T2_ha": null,
+        "extent_change_ha": null,
+        "physical_wetland_depletion": "NOT_AVAILABLE"
+    },
+    "qa_flags": {
+        "warnings": [
+            "Baseline area is zero. Normalized Degradation Ratio (NDR) is set to None.",
+            "Baseline area is zero. Recovery ratio is set to None.",
+            "Stable vegetation area is zero. Residual stress ratio is set to None.",
+            "Wetland-specific physical depletion cannot be quantified."
+        ],
+        "flags": {
+            "input_validation": "PASS",
+            "spatial_alignment": "PASS",
+            "model_inference": "PASS",
+            "phenology_warning": "NO",
+            "independent_validation": "NO",
+            "reconciliation_transition_passes": true,
+            "reconciliation_class_passes": true
+        }
+    },
+    "metadata": {
+        "summary": {
+            "baseline_area_ha": 0.0,
+            "affected_area_ha": 0.0,
+            "severity_weighted_area_ha_deg": 0.0,
+            "normalized_degradation_ratio": null,
+            "recovery_area_ha": 0.0,
+            "residual_stress_area_ha": 0.0,
+            "canopy_loss_area_ha": 0.0,
+            "mean_cva": null,
+            "median_cva": null,
+            "p95_cva": null,
+            "wetland_extent_status": "NOT_AVAILABLE"
+        },
+        "disclaimer": "Vegetation degradation metrics do not constitute physical wetland depletion.",
+        "metrics_metadata": {
+            "severity_weights": {
+                "healthy": 0.0,
+                "moderate": 0.35,
+                "severe": 0.8,
+                "background": 1.0
+            },
+            "provisional_severity_weights_disclaimer": "Severity-weighted area uses provisional engineering parameters.",
+            "include_canopy_loss_in_swd": false,
+            "minimum_change_area": {
+                "enabled": false,
+                "value_m2": 0
+            },
+            "minimum_change_area_applied": false,
+            "baseline_definition": "valid wetland analysis area (restricted to valid overlap and non-NoData)",
+            "depletion_disclaimer": "Vegetation degradation metrics do not constitute physical wetland depletion.",
+            "olofsson_status": "Model-derived estimate; no independent area-error correction applied."
+        }
+    }
+}

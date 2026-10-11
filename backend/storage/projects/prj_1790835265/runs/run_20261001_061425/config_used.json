@@ -1,0 +1,181 @@
+{
+    "model": {
+        "path": "C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\backend\\Engine_module\\models\\best_finetuned_model.onnx",
+        "in_channels": 5,
+        "num_classes": 4,
+        "channel_order": [
+            "ndvi",
+            "gndvi",
+            "ndre",
+            "nir",
+            "rededge"
+        ]
+    },
+    "preprocessing": {
+        "mode": "inference",
+        "band_scaling_factor": 10000.0,
+        "require_crs": false,
+        "epsilon": 1e-06,
+        "min_denominator": 0.05,
+        "min_band_value": 0.01,
+        "gaussian_sigma": 1.0,
+        "normalize": true
+    },
+    "water": {
+        "ndwi_threshold": 0.0,
+        "epsilon": 1e-06
+    },
+    "ingestion": {
+        "band_mapping": {
+            "green": [
+                "*_G.TIF",
+                "*_G.tif",
+                "*green.tif",
+                "*green.TIF"
+            ],
+            "red": [
+                "*_R.TIF",
+                "*_R.tif",
+                "*red.tif",
+                "*red.TIF"
+            ],
+            "rededge": [
+                "*_RE.TIF",
+                "*_RE.tif",
+                "*rededge.tif",
+                "*rededge.TIF"
+            ],
+            "nir": [
+                "*_NIR.TIF",
+                "*_NIR.tif",
+                "*nir.tif",
+                "*nir.TIF"
+            ]
+        }
+    },
+    "output": {
+        "colormap": {
+            "0": [
+                128,
+                128,
+                128,
+                255
+            ],
+            "1": [
+                255,
+                0,
+                0,
+                255
+            ],
+            "2": [
+                255,
+                165,
+                0,
+                255
+            ],
+            "3": [
+                0,
+                170,
+                0,
+                255
+            ]
+        }
+    },
+    "change": {
+        "residual_stress": {
+            "enabled": true,
+            "threshold": {
+                "method": "percentile",
+                "value": 95.0
+            },
+            "directional_rule": null
+        },
+        "background_to_vegetation": {
+            "enabled": true
+        }
+    },
+    "wetland": {
+        "source": "auto",
+        "boundary": {
+            "path": null
+        },
+        "official_dataset": {
+            "path": null,
+            "classes": [],
+            "class_field": null
+        },
+        "jrc": {
+            "enabled": false,
+            "path": null
+        },
+        "optical": {
+            "enabled": false,
+            "threshold": 0.1
+        },
+        "sar": {
+            "enabled": false,
+            "path": null
+        },
+        "rasterization": {
+            "all_touched": false
+        },
+        "depletion_claims": {
+            "enabled": false
+        }
+    },
+    "metrics": {
+        "severity_weights": {
+            "healthy": 0.0,
+            "moderate": 0.35,
+            "severe": 0.8,
+            "background": 1.0
+        },
+        "include_canopy_loss_in_swd": false,
+        "minimum_change_area": {
+            "enabled": false,
+            "value_m2": 0
+        },
+        "ndr": {
+            "enabled": true
+        },
+        "area": {
+            "output_units": [
+                "m2",
+                "ha"
+            ]
+        }
+    },
+    "fusion": {
+        "vegetation_degradation_transitions": [
+            9,
+            13,
+            14
+        ],
+        "vegetation_recovery_transitions": [
+            6,
+            7,
+            11
+        ],
+        "water_gain_class": 2,
+        "water_loss_class": 3,
+        "fusion_category_ids": {
+            "nodata": 0,
+            "stable": 1,
+            "vegetation_degradation": 2,
+            "vegetation_recovery": 3,
+            "surface_water_gain": 4,
+            "surface_water_loss": 5,
+            "hydro_ecological_degradation": 6,
+            "hydro_ecological_recovery": 7,
+            "vegetation_to_background": 8,
+            "ambiguous_mixed_evidence": 9
+        },
+        "independent_hydrological_source_accepted": false,
+        "cva_consistency_check": true
+    },
+    "analysis_mode": "vegetation",
+    "cva": {
+        "threshold_method": "percentile",
+        "percentile": 95.0
+    }
+}

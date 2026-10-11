@@ -1,0 +1,1 @@
+{"type": "FeatureCollection", "features": [{"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [[[500010.0, 4999810.0], [500190.0, 4999810.0], [500190.0, 4999990.0], [500010.0, 4999990.0], [500010.0, 4999810.0]]]}, "properties": {"name": "Test Wetland"}}]}

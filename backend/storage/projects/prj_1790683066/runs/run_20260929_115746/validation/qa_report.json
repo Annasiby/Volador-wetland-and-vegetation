@@ -1,0 +1,39 @@
+{
+    "overall_status": "WARN",
+    "categories": {
+        "input": "PASS",
+        "model": "PASS",
+        "spatial": "PASS",
+        "temporal": "PASS",
+        "change": "PASS",
+        "wetland": "WARN",
+        "metrics": "PASS",
+        "uncertainty": "PASS"
+    },
+    "flags": [
+        {
+            "code": "QA-011",
+            "severity": "LOW",
+            "message": "Wetland boundary is inferred or unavailable",
+            "phase": "Uncertainty QA",
+            "status": "WARN",
+            "recommended_action": "Use authoritative datasets to reduce wetland boundary uncertainty."
+        },
+        {
+            "code": "QA-012",
+            "severity": "INFO",
+            "message": "Independent reference samples unavailable. Area-estimation uncertainty unavailable.",
+            "phase": "Uncertainty QA",
+            "status": "NOT_AVAILABLE",
+            "recommended_action": "Collect reference validation samples for V2."
+        },
+        {
+            "code": "QA-014",
+            "severity": "INFO",
+            "message": "Olofsson area-error correction unavailable.",
+            "phase": "Uncertainty QA",
+            "status": "NOT_AVAILABLE",
+            "recommended_action": "Olofsson validation requires independent reference data."
+        }
+    ]
+}

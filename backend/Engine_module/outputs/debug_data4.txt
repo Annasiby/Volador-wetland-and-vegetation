@@ -1,0 +1,77 @@
+﻿=== class_area_metrics T1 background px ===
+T1 background px: 2400
+Note: effective_pixel_count = 3500, inclusion = 3600, but wetland analysis = 2400
+
+=== transition_metrics B_to_B ===
+B_to_B: 2400
+
+spatial.effective_pixel_count: 3500
+spatial.inclusion_pixel_count: 3600
+spatial.excluded_pixel_count: 100
+
+vegetation.t1.date_valid.total_valid_pixels: 10000
+vegetation.t1.date_valid.classes.0.count: 10000
+
+=== CORRECT DENOMINATORS ===
+For vegetation class %: use the class data total_valid_pixels within effective mask
+But the data does not provide effective-mask-clipped counts...
+
+Best approach: use percentage from class data as-is (relative to full raster)
+OR use metrics.class_area_metrics which gives 2400 px wetland-area counts
+
+=== WETLAND METADATA ===
+{
+  "source_type": "PROJECT_BOUNDARY",
+  "source_name": "wetland_boundary.geojson",
+  "source_version": "1.0",
+  "source_date": "2023-08-14",
+  "source_authority": "None",
+  "original_crs": "EPSG:32633",
+  "target_crs": "EPSG:32633",
+  "rasterization_method": "rasterio.features.rasterize",
+  "all_touched_setting": false,
+  "feature_selection_rule": [],
+  "aoi_information": {
+    "has_aoi": false,
+    "aoi_source": null
+  },
+  "reference_grid": {
+    "crs": "EPSG:32633",
+    "transform": [
+      10.0,
+      0.0,
+      500000.0,
+      0.0,
+      -10.0,
+      5000000.0
+    ],
+    "width": 100,
+    "height": 100,
+    "resolution": [
+      10.0,
+      10.0
+    ],
+    "bounds": [
+      500000.0,
+      4999000.0,
+      501000.0,
+      5000000.0
+    ]
+  },
+  "wetland_pixel_count": 3600,
+  "wetland_area_m2": 360000.0,
+  "wetland_area_ha": 36.0,
+  "valid_wetland_analysis_pixel_count": 2400,
+  "valid_wetland_analysis_area_m2": 240000.0,
+  "valid_wetland_analysis_area_ha": 24.0,
+  "physical_area_available": true,
+  "area_basis": "physical",
+  "confidence_status": "WETLAND_BOUNDARY_AVAILABLE",
+  "physical_wetland_depletion_enabled": false,
+  "source_metadata": {
+    "source_name": "wetland_boundary.geojson",
+    "source_path": "C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\backend\\Engine_module\\data\\sample_scene\\wetland_boundary.geojson",
+    "original_crs": "EPSG:32633",
+    "feature_count": 1
+  }
+}

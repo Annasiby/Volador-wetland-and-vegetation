@@ -1,0 +1,20 @@
+{
+  "project_id": "prj_1790832712",
+  "status": "COMMITTED",
+  "is_locked": true,
+  "committed_at": "2026-10-01T05:31:52Z",
+  "updated_at": "2026-10-01T05:31:52Z",
+  "inclusion": null,
+  "manual_exclusions": [],
+  "metrics": {
+    "source_pixels": 400,
+    "inclusion_pixels": 400,
+    "excluded_pixels": 0,
+    "effective_pixels": 400,
+    "source_ha": 4.0,
+    "inclusion_ha": 4.0,
+    "excluded_ha": 0.0,
+    "effective_ha": 4.0,
+    "area_basis": "RASTER_CRS_AND_TRANSFORM"
+  }
+}

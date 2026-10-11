@@ -1,0 +1,52 @@
+{
+  "analysis_type": "single_date_vegetation",
+  "class_statistics": {
+    "total_valid_pixels": 10000,
+    "classes": {
+      "0": {
+        "name": "Background",
+        "count": 100,
+        "percentage": 1.0
+      },
+      "1": {
+        "name": "Severe",
+        "count": 100,
+        "percentage": 1.0
+      },
+      "2": {
+        "name": "Moderate",
+        "count": 400,
+        "percentage": 4.0
+      },
+      "3": {
+        "name": "Healthy",
+        "count": 9400,
+        "percentage": 94.0
+      }
+    }
+  },
+  "performance": {
+    "inference_time_ms": 0.030199997127056122,
+    "tensor_creation_time_ms": 0.6658000056631863,
+    "model_loading_time_ms": 0.0,
+    "execution_provider": null
+  },
+  "model_input_shape": [
+    1,
+    5,
+    100,
+    100
+  ],
+  "model_output_shape": [
+    1,
+    4,
+    100,
+    100
+  ],
+  "class_mapping": {
+    "0": "Background / Bare Soil",
+    "1": "Severe Stress",
+    "2": "Moderate Stress",
+    "3": "Healthy Vegetation"
+  }
+}

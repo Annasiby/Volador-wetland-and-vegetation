@@ -1,0 +1,153 @@
+{
+    "pair_name": "2023-08-14_2023-08-28",
+    "t1_health_map": "ndarray",
+    "t2_health_map": "ndarray",
+    "reference_grid": {
+        "crs": "EPSG:32632",
+        "transform": [
+            10.0,
+            0.0,
+            500000.0,
+            0.0,
+            -10.0,
+            4000000.0
+        ],
+        "width": 32,
+        "height": 32,
+        "resolution": [
+            10.0,
+            10.0
+        ],
+        "bounds": [
+            500000.0,
+            3999680.0,
+            500320.0,
+            4000000.0
+        ]
+    },
+    "overlap_information": {
+        "valid_pixel_count": 1024,
+        "nodata_pixel_count": 0,
+        "overlap_area_m2": 102400.0,
+        "overlap_area_ha": 10.24
+    },
+    "class_mapping": {
+        "0": "Background",
+        "1": "Severe",
+        "2": "Moderate",
+        "3": "Healthy"
+    },
+    "transition_mapping": {
+        "0": {
+            "name": "B_to_B",
+            "from": "Background",
+            "to": "Background"
+        },
+        "1": {
+            "name": "B_to_S",
+            "from": "Background",
+            "to": "Severe"
+        },
+        "2": {
+            "name": "B_to_M",
+            "from": "Background",
+            "to": "Moderate"
+        },
+        "3": {
+            "name": "B_to_H",
+            "from": "Background",
+            "to": "Healthy"
+        },
+        "4": {
+            "name": "S_to_B",
+            "from": "Severe",
+            "to": "Background"
+        },
+        "5": {
+            "name": "S_to_S",
+            "from": "Severe",
+            "to": "Severe"
+        },
+        "6": {
+            "name": "S_to_M",
+            "from": "Severe",
+            "to": "Moderate"
+        },
+        "7": {
+            "name": "S_to_H",
+            "from": "Severe",
+            "to": "Healthy"
+        },
+        "8": {
+            "name": "M_to_B",
+            "from": "Moderate",
+            "to": "Background"
+        },
+        "9": {
+            "name": "M_to_S",
+            "from": "Moderate",
+            "to": "Severe"
+        },
+        "10": {
+            "name": "M_to_M",
+            "from": "Moderate",
+            "to": "Moderate"
+        },
+        "11": {
+            "name": "M_to_H",
+            "from": "Moderate",
+            "to": "Healthy"
+        },
+        "12": {
+            "name": "H_to_B",
+            "from": "Healthy",
+            "to": "Background"
+        },
+        "13": {
+            "name": "H_to_S",
+            "from": "Healthy",
+            "to": "Severe"
+        },
+        "14": {
+            "name": "H_to_M",
+            "from": "Healthy",
+            "to": "Moderate"
+        },
+        "15": {
+            "name": "H_to_H",
+            "from": "Healthy",
+            "to": "Healthy"
+        }
+    },
+    "transition_category_definitions": {
+        "DEGRADATION": [
+            "H_to_M",
+            "H_to_S",
+            "M_to_S"
+        ],
+        "RECOVERY": [
+            "M_to_H",
+            "S_to_M",
+            "S_to_H"
+        ],
+        "VEGETATION_TO_BACKGROUND": [
+            "H_to_B",
+            "M_to_B",
+            "S_to_B"
+        ],
+        "BACKGROUND_TO_VEGETATION": [
+            "B_to_H",
+            "B_to_M",
+            "B_to_S"
+        ],
+        "STABLE": [
+            "B_to_B",
+            "S_to_S",
+            "M_to_M",
+            "H_to_H"
+        ]
+    },
+    "area_calculation_method": "flat grid cell area",
+    "software_version": "1.0.0",
+    "configuration_version": "1.0.0"
+}

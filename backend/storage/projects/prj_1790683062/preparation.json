@@ -1,0 +1,20 @@
+{
+  "project_id": "prj_1790683062",
+  "status": "COMMITTED",
+  "is_locked": true,
+  "committed_at": "2026-09-29T11:57:45Z",
+  "updated_at": "2026-09-29T11:57:45Z",
+  "inclusion": null,
+  "manual_exclusions": [],
+  "metrics": {
+    "source_pixels": 5038848,
+    "inclusion_pixels": 5038848,
+    "excluded_pixels": 0,
+    "effective_pixels": 5038848,
+    "source_ha": null,
+    "inclusion_ha": null,
+    "excluded_ha": null,
+    "effective_ha": null,
+    "area_basis": "PIXEL_COUNT_ONLY"
+  }
+}

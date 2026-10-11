@@ -1,0 +1,111 @@
+﻿=== DEGRADATION ===
+{
+  "pixel_count": 0,
+  "area_ha": 0.0,
+  "percentage": 0.0
+}
+
+=== CHANGE/TRANSITION ===
+{
+  "category_summary": {
+    "DEGRADATION": {
+      "count": 0,
+      "area_ha": 0.0,
+      "percentage": 0.0
+    },
+    "RECOVERY": {
+      "count": 0,
+      "area_ha": 0.0,
+      "percentage": 0.0
+    },
+    "VEGETATION_TO_BACKGROUND": {
+      "count": 0,
+      "area_ha": 0.0,
+      "percentage": 0.0
+    },
+    "BACKGROUND_TO_VEGETATION": {
+      "count": 0,
+      "area_ha": 0.0,
+      "percentage": 0.0
+    },
+    "STABLE": {
+      "count": 3500,
+      "area_ha": 35.0,
+      "percentage": 100.0
+    }
+  }
+}
+
+=== HYDROLOGY ===
+{
+  "ndwi_threshold": 0.0,
+  "water_gain_area_ha": 3.78,
+  "water_loss_area_ha": 0.0,
+  "water_area_t1_ha": 0.27,
+  "water_area_t2_ha": 4.05
+}
+
+=== FUSION ===
+{
+  "evidence_level": "NOT_ASSESSED",
+  "hydro_ecological_degradation_area_ha": 0.0,
+  "hydro_ecological_recovery_area_ha": 0.0
+}
+
+=== CVA ===
+{
+  "delta_ndvi": {
+    "count": 3500,
+    "min": -1.610651969909668,
+    "max": 1.380190134048462,
+    "mean": 0.49444299936294556,
+    "median": 0.2950921654701233,
+    "std": 0.41622620820999146,
+    "p95": 1.0850002765655518,
+    "pct_positive": 87.11428571428571,
+    "pct_negative": 5.428571428571429,
+    "pct_zero": 7.457142857142856
+  },
+  "delta_gndvi": {
+    "count": 3500,
+    "min": -0.6174275875091553,
+    "max": 1.1153171062469482,
+    "mean": 0.2689082622528076,
+    "median": 0.005098062567412853,
+    "std": 0.35055652260780334,
+    "p95": 0.8085185289382935,
+    "pct_positive": 84.37142857142858,
+    "pct_negative": 7.8,
+    "pct_zero": 7.828571428571429
+  },
+  "delta_ndre": {
+    "count": 3500,
+    "min": -0.7541770339012146,
+    "max": 0.7691230773925781,
+    "mean": -0.03338579460978508,
+    "median": -0.004621836356818676,
+    "std": 0.2047417163848877,
+    "p95": 0.3493586778640747,
+    "pct_positive": 28.599999999999998,
+    "pct_negative": 68.14285714285714,
+    "pct_zero": 3.257142857142857
+  },
+  "cva_magnitude": {
+    "count": 3500,
+    "min": 0.0,
+    "max": 1.7328321933746338,
+    "mean": 0.6969130039215088,
+    "median": 0.6719367504119873,
+    "std": 0.41263261437416077,
+    "p95": 1.3386027812957764
+  },
+  "cva_standardized": {
+    "count": 3500,
+    "min": 0.0,
+    "max": 5.10407018661499,
+    "mean": 1.916892170906067,
+    "median": 2.0076744556427,
+    "std": 1.1626228094100952,
+    "p95": 3.725698471069336
+  }
+}

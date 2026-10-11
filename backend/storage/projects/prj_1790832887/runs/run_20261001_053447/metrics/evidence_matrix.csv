@@ -1,0 +1,4 @@
+vegetation_transition,water_change,pixel_count,area_m2,area_ha,interpretation
+B_to_B,stable_non_water,2095,209500.0,20.95,stable
+B_to_B,stable_water,27,2700.0,0.27,stable
+B_to_B,water_gain,378,37800.0,3.78,surface_water_gain

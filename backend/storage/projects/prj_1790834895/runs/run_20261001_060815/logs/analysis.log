@@ -1,0 +1,18 @@
+[INFO] [run_20261001_060815] gis_engine.pipeline — Phase 13 — Production pipeline START. run_id=run_20261001_060815
+[INFO] [run_20261001_060815] gis_engine.pipeline — Step 1 — Loading configuration: C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\storage\projects\prj_1790834895\runs\.run_20261001_060815_run_config.json
+[INFO] [run_20261001_060815] gis_engine.pipeline — Analysis mode: vegetation
+[INFO] [run_20261001_060815] gis_engine.pipeline — Step 1 — Configuration loaded. hash=13822337e7787ae9…
+[INFO] [run_20261001_060815] gis_engine.pipeline — Step 2 — Validating inputs
+[INFO] [run_20261001_060815] gis_engine.pipeline — Step 2 — Vegetation mode: single scene=C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\storage\projects\prj_1790834895\datasets\t1
+[INFO] [run_20261001_060815] gis_engine.pipeline — Step 3 — Vegetation mode: single-date execution (bypassing temporal alignment)
+[INFO] [run_20261001_060815] gis_engine.pipeline — Steps 4–7 — Vegetation analysis (single-date)
+[INFO] [run_20261001_060815] gis_engine.pipeline — Vegetation analysis — single-date inference
+[INFO] [run_20261001_060815] gis_engine.inference.onnx — [onnx] GPU provider (CUDA) unavailable. Using CPUExecutionProvider.
+[INFO] [run_20261001_060815] gis_engine.pipeline — Vegetation analysis — single-date inference complete
+[INFO] [run_20261001_060815] gis_engine.pipeline — Step 14 — Generating vegetation analysis reports
+[INFO] [run_20261001_060815] gis_engine.output.report — [report] Analysis report written: C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\storage\projects\prj_1790834895\runs\run_20261001_060815\reports\analysis_report.md
+[INFO] [run_20261001_060815] gis_engine.output.cartography — No effective analysis mask found — maps will show full extent
+[INFO] [run_20261001_060815] gis_engine.output.cartography — Rendered categorical map with source background: C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\storage\projects\prj_1790834895\runs\run_20261001_060815\reports\figures\health_t1.png
+[INFO] [run_20261001_060815] gis_engine.output.cartography — Rendered continuous map with source background: C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\storage\projects\prj_1790834895\runs\run_20261001_060815\reports\figures\confidence.png
+[INFO] [run_20261001_060815] gis_engine.output.cartography — Generated 3 cartographic map plates in C:\Users\HP\OneDrive\Desktop\wetLand_Depreciation\backend\storage\projects\prj_1790834895\runs\run_20261001_060815\reports\figures
+[INFO] [run_20261001_060815] gis_engine.pipeline — Phase 13 — Vegetation Pipeline COMPLETE. status=SUCCESS run_id=run_20261001_060815 runtime=2.5s

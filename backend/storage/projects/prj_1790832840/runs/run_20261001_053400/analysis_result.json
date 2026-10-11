@@ -1,0 +1,525 @@
+{
+    "run_id": "run_20261001_053400",
+    "software_version": "1.0.0",
+    "analysis_mode": "wetland",
+    "status": "SUCCESS",
+    "inputs": {
+        "t1_path": "C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\backend\\Engine_module\\data\\sample_scene\\t1",
+        "t2_path": "C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\backend\\Engine_module\\data\\sample_scene\\t2",
+        "model_path": "C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\backend\\Engine_module\\models\\best_finetuned_model.onnx",
+        "wetland_boundary": "C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\backend\\Engine_module\\data\\sample_scene\\wetland_boundary.geojson",
+        "band_statistics": {
+            "t1": {
+                "green": {
+                    "valid_count": 10000,
+                    "min": 868.3265380859375,
+                    "max": 1320.7747802734375,
+                    "mean": 1143.2724609375,
+                    "median": 1184.26123046875,
+                    "std": 94.55177307128906,
+                    "p95": 1244.1893310546875
+                },
+                "red": {
+                    "valid_count": 10000,
+                    "min": 483.3658752441406,
+                    "max": 924.5372314453125,
+                    "mean": 744.1906127929688,
+                    "median": 784.8748168945312,
+                    "std": 94.9661865234375,
+                    "p95": 845.0151977539062
+                },
+                "rededge": {
+                    "valid_count": 10000,
+                    "min": 926.7818603515625,
+                    "max": 2777.818115234375,
+                    "mean": 2177.571044921875,
+                    "median": 2574.71728515625,
+                    "std": 675.5164184570312,
+                    "p95": 2673.8974609375
+                },
+                "nir": {
+                    "valid_count": 10000,
+                    "min": 912.1895141601562,
+                    "max": 5146.15380859375,
+                    "mean": 3783.890869140625,
+                    "median": 4759.0478515625,
+                    "std": 1623.0447998046875,
+                    "p95": 4920.28271484375
+                }
+            },
+            "t2": {
+                "green": {
+                    "valid_count": 10000,
+                    "min": 868.3265380859375,
+                    "max": 1320.7747802734375,
+                    "mean": 1143.2724609375,
+                    "median": 1184.26123046875,
+                    "std": 94.55177307128906,
+                    "p95": 1244.1893310546875
+                },
+                "red": {
+                    "valid_count": 10000,
+                    "min": 502.2789611816406,
+                    "max": 1234.8699951171875,
+                    "mean": 776.5774536132812,
+                    "median": 792.798583984375,
+                    "std": 119.51736450195312,
+                    "p95": 1046.228271484375
+                },
+                "rededge": {
+                    "valid_count": 10000,
+                    "min": 573.3506469726562,
+                    "max": 2777.818115234375,
+                    "mean": 2147.74560546875,
+                    "median": 2574.71728515625,
+                    "std": 729.7326049804688,
+                    "p95": 2673.8974609375
+                },
+                "nir": {
+                    "valid_count": 10000,
+                    "min": 443.3450622558594,
+                    "max": 5146.15380859375,
+                    "mean": 3739.404052734375,
+                    "median": 4759.0478515625,
+                    "std": 1700.3931884765625,
+                    "p95": 4920.28271484375
+                }
+            }
+        }
+    },
+    "temporal": {
+        "t1_date": "2023-08-14",
+        "t2_date": "2023-08-28",
+        "interval_days": 14
+    },
+    "spectral_indices": {
+        "ndvi": {
+            "formula": "(NIR - Red) / (NIR + Red)",
+            "t1_mean": 0.6060835719108582,
+            "t1_median": 0.7088314294815063,
+            "t1_std": 0.1736004799604416,
+            "t1_p95": 0.729019284248352,
+            "t2_mean": 0.5611492991447449,
+            "t2_median": 0.7088314294815063,
+            "t2_std": 0.2875121235847473,
+            "t2_p95": 0.729019284248352,
+            "delta_mean": -0.04493427276611328,
+            "delta_median": 0.0,
+            "delta_std": 0.16701342165470123,
+            "delta_p95": 0.0
+        },
+        "gndvi": {
+            "formula": "(NIR - Green) / (NIR + Green)",
+            "t1_mean": 0.45590177178382874,
+            "t1_median": 0.5951647758483887,
+            "t1_std": 0.23101367056369781,
+            "t1_p95": 0.6141482591629028,
+            "t2_mean": 0.42963388562202454,
+            "t2_median": 0.5951647758483887,
+            "t2_std": 0.28649380803108215,
+            "t2_p95": 0.6141482591629028,
+            "delta_mean": -0.0262678824365139,
+            "delta_median": 0.0,
+            "delta_std": 0.09763610363006592,
+            "delta_p95": 0.0
+        },
+        "ndre": {
+            "formula": "(NIR - RedEdge) / (NIR + RedEdge)",
+            "t1_mean": 0.22489453852176666,
+            "t1_median": 0.29130256175994873,
+            "t1_std": 0.11788138002157211,
+            "t1_p95": 0.31469324231147766,
+            "t2_mean": 0.21522614359855652,
+            "t2_median": 0.29130256175994873,
+            "t2_std": 0.1369674801826477,
+            "t2_p95": 0.31469324231147766,
+            "delta_mean": -0.009668366983532906,
+            "delta_median": 0.0,
+            "delta_std": 0.03593586012721062,
+            "delta_p95": 0.0
+        },
+        "ndwi": {
+            "formula": "(Green - NIR) / (Green + NIR)",
+            "t1_mean": -0.45590177178382874,
+            "t1_median": -0.5951647758483887,
+            "t1_std": 0.23101367056369781,
+            "t1_p95": -0.05524454265832901,
+            "t2_mean": -0.42963388562202454,
+            "t2_median": -0.5951647758483887,
+            "t2_std": 0.28649380803108215,
+            "t2_p95": 0.2784270644187927,
+            "delta_mean": 0.0262678824365139,
+            "delta_median": 0.0,
+            "delta_std": 0.09763610363006592,
+            "delta_p95": 0.3878156244754791
+        }
+    },
+    "spatial": {
+        "crs": "EPSG:32633",
+        "dimensions": [
+            100,
+            100
+        ],
+        "resolution": [
+            10.0,
+            10.0
+        ],
+        "extent": [
+            500000.0,
+            4999000.0,
+            501000.0,
+            5000000.0
+        ],
+        "overlap_percentage": 100.0,
+        "total_overlap_area_ha": 100.0,
+        "inclusion_area_ha": 100.0,
+        "manual_excluded_area_ha": 0.0,
+        "effective_analysis_area_ha": 100.0,
+        "physical_area_available": true,
+        "area_basis": "RASTER_CRS_AND_TRANSFORM",
+        "overlap_pixel_count": 10000,
+        "inclusion_pixel_count": 10000,
+        "excluded_pixel_count": 0,
+        "effective_pixel_count": 10000
+    },
+    "vegetation": {
+        "t1": {
+            "total_valid_pixels": 10000,
+            "classes": {
+                "0": {
+                    "name": "Background",
+                    "count": 10000,
+                    "percentage": 100.0
+                },
+                "1": {
+                    "name": "Severe",
+                    "count": 0,
+                    "percentage": 0.0
+                },
+                "2": {
+                    "name": "Moderate",
+                    "count": 0,
+                    "percentage": 0.0
+                },
+                "3": {
+                    "name": "Healthy",
+                    "count": 0,
+                    "percentage": 0.0
+                }
+            }
+        },
+        "t2": {
+            "total_valid_pixels": 10000,
+            "classes": {
+                "0": {
+                    "name": "Background",
+                    "count": 10000,
+                    "percentage": 100.0
+                },
+                "1": {
+                    "name": "Severe",
+                    "count": 0,
+                    "percentage": 0.0
+                },
+                "2": {
+                    "name": "Moderate",
+                    "count": 0,
+                    "percentage": 0.0
+                },
+                "3": {
+                    "name": "Healthy",
+                    "count": 0,
+                    "percentage": 0.0
+                }
+            }
+        }
+    },
+    "change": {
+        "category_summary": {
+            "DEGRADATION": {
+                "count": 0,
+                "area_ha": 0.0,
+                "percentage": 0.0
+            },
+            "RECOVERY": {
+                "count": 0,
+                "area_ha": 0.0,
+                "percentage": 0.0
+            },
+            "VEGETATION_TO_BACKGROUND": {
+                "count": 0,
+                "area_ha": 0.0,
+                "percentage": 0.0
+            },
+            "BACKGROUND_TO_VEGETATION": {
+                "count": 0,
+                "area_ha": 0.0,
+                "percentage": 0.0
+            },
+            "STABLE": {
+                "count": 10000,
+                "area_ha": 100.0,
+                "percentage": 100.0
+            }
+        }
+    },
+    "cva": {
+        "delta_ndvi": {
+            "count": 10000,
+            "min": -1.610651969909668,
+            "max": 1.380190134048462,
+            "mean": 0.37072867155075073,
+            "median": 0.28861701488494873,
+            "std": 0.29598090052604675,
+            "p95": 0.9828312397003174,
+            "pct_positive": 93.71000000000001,
+            "pct_negative": 2.56,
+            "pct_zero": 3.73
+        },
+        "delta_gndvi": {
+            "count": 10000,
+            "min": -0.6359133720397949,
+            "max": 1.1153171062469482,
+            "mean": 0.11861056834459305,
+            "median": 0.0029358696192502975,
+            "std": 0.2688141167163849,
+            "p95": 0.7181797623634338,
+            "pct_positive": 90.94,
+            "pct_negative": 3.5999999999999996,
+            "pct_zero": 5.46
+        },
+        "delta_ndre": {
+            "count": 10000,
+            "min": -0.7541770339012146,
+            "max": 0.7768635153770447,
+            "mean": -0.013423568569123745,
+            "median": -0.003267538733780384,
+            "std": 0.13904638588428497,
+            "p95": 0.20539163053035736,
+            "pct_positive": 22.75,
+            "pct_negative": 75.01,
+            "pct_zero": 2.2399999999999998
+        },
+        "cva_magnitude": {
+            "count": 10000,
+            "min": 0.0,
+            "max": 1.7328321933746338,
+            "mean": 0.4641435146331787,
+            "median": 0.2902063727378845,
+            "std": 0.33979231119155884,
+            "p95": 1.2136120796203613
+        },
+        "cva_standardized": {
+            "count": 10000,
+            "min": 0.0,
+            "max": 7.221968173980713,
+            "mean": 1.708416223526001,
+            "median": 0.9814268350601196,
+            "std": 1.3616852760314941,
+            "p95": 4.701391220092773
+        }
+    },
+    "degradation": {
+        "pixel_count": 0,
+        "area_ha": 0.0,
+        "percentage": 0.0
+    },
+    "recovery": {
+        "pixel_count": 0,
+        "area_ha": 0.0,
+        "percentage": 0.0
+    },
+    "metrics": {
+        "normalized_degradation_ratio": 0.0,
+        "severity_weighted_degradation_area_ha": 0.0,
+        "impact_area": {
+            "degradation_ha": 0.0
+        },
+        "recovery_area": {
+            "recovery_ha": 0.0
+        },
+        "cva_magnitude": {
+            "mean": 0.7812274694442749
+        },
+        "analysis_extent": {
+            "valid_analysis_area_ha": 36.0
+        },
+        "transition_matrix": {
+            "matrix_m2": [
+                [
+                    1000000.0,
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            ],
+            "matrix_pixels": [
+                [
+                    10000,
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            ]
+        }
+    },
+    "validation": {
+        "overall_status": "WARN",
+        "categories": {
+            "input": "PASS",
+            "model": "PASS",
+            "spatial": "PASS",
+            "temporal": "PASS",
+            "change": "PASS",
+            "wetland": "WARN",
+            "metrics": "PASS",
+            "uncertainty": "PASS"
+        },
+        "flags": [
+            {
+                "code": "QA-011",
+                "severity": "LOW",
+                "message": "Wetland boundary is inferred or unavailable",
+                "phase": "Uncertainty QA",
+                "status": "WARN",
+                "recommended_action": "Use authoritative datasets to reduce wetland boundary uncertainty."
+            },
+            {
+                "code": "QA-012",
+                "severity": "INFO",
+                "message": "Independent reference samples unavailable. Area-estimation uncertainty unavailable.",
+                "phase": "Uncertainty QA",
+                "status": "NOT_AVAILABLE",
+                "recommended_action": "Collect reference validation samples for V2."
+            },
+            {
+                "code": "QA-014",
+                "severity": "INFO",
+                "message": "Olofsson area-error correction unavailable.",
+                "phase": "Uncertainty QA",
+                "status": "NOT_AVAILABLE",
+                "recommended_action": "Olofsson validation requires independent reference data."
+            }
+        ]
+    },
+    "uncertainty": {
+        "mean_confidence_t1": 0.9997483491897583
+    },
+    "warnings": [],
+    "errors": [],
+    "outputs": {
+        "alignment/t1_aligned/green.tif": "alignment/t1_aligned/green.tif",
+        "alignment/t1_aligned/red.tif": "alignment/t1_aligned/red.tif",
+        "alignment/t1_aligned/rededge.tif": "alignment/t1_aligned/rededge.tif",
+        "alignment/t1_aligned/nir.tif": "alignment/t1_aligned/nir.tif",
+        "alignment/t2_aligned/green.tif": "alignment/t2_aligned/green.tif",
+        "alignment/t2_aligned/red.tif": "alignment/t2_aligned/red.tif",
+        "alignment/t2_aligned/rededge.tif": "alignment/t2_aligned/rededge.tif",
+        "alignment/t2_aligned/nir.tif": "alignment/t2_aligned/nir.tif",
+        "alignment/overlap_mask.tif": "alignment/overlap_mask.tif",
+        "exclusions/inclusion_mask.tif": "exclusions/inclusion_mask.tif",
+        "exclusions/manual_exclusion_mask.tif": "exclusions/manual_exclusion_mask.tif",
+        "alignment/effective_analysis_mask.tif": "alignment/effective_analysis_mask.tif",
+        "vegetation/t1_health.tif": "vegetation/t1_health.tif",
+        "vegetation/t2_health.tif": "vegetation/t2_health.tif",
+        "vegetation/T1/confidence.tif": "vegetation/T1/confidence.tif",
+        "vegetation/T2/confidence.tif": "vegetation/T2/confidence.tif",
+        "vegetation/overlap_mask.tif": "vegetation/overlap_mask.tif",
+        "vegetation/pair_metadata.json": "vegetation/pair_metadata.json",
+        "change/transition_map.tif": "change/transition_map.tif",
+        "change/delta_ndvi.tif": "change/delta_ndvi.tif",
+        "change/delta_gndvi.tif": "change/delta_gndvi.tif",
+        "change/delta_ndre.tif": "change/delta_ndre.tif",
+        "change/cva_magnitude.tif": "change/cva_magnitude.tif",
+        "degradation/degradation_map.tif": "degradation/degradation_map.tif",
+        "degradation/recovery_map.tif": "degradation/recovery_map.tif",
+        "degradation/residual_stress.tif": "degradation/residual_stress.tif",
+        "degradation/canopy_loss_map.tif": "degradation/canopy_loss_map.tif",
+        "wetland/wetland_mask.tif": "wetland/wetland_mask.tif",
+        "hydrology/ndwi_t1.tif": "hydrology/ndwi_t1.tif",
+        "hydrology/ndwi_t2.tif": "hydrology/ndwi_t2.tif",
+        "hydrology/delta_ndwi.tif": "hydrology/delta_ndwi.tif",
+        "hydrology/water_mask_t1.tif": "hydrology/water_mask_t1.tif",
+        "hydrology/water_mask_t2.tif": "hydrology/water_mask_t2.tif",
+        "hydrology/water_change.tif": "hydrology/water_change.tif",
+        "metrics/fusion_metrics.json": "metrics/fusion_metrics.json",
+        "metrics/evidence_matrix.csv": "metrics/evidence_matrix.csv",
+        "fusion/evidence_fusion.tif": "fusion/evidence_fusion.tif",
+        "metrics/metrics.json": "metrics/metrics.json",
+        "metrics/transition_matrix.csv": "metrics/transition_matrix.csv",
+        "metrics/water_metrics.json": "metrics/water_metrics.json",
+        "validation/qa_report.json": "validation/qa_report.json"
+    },
+    "performance": {
+        "total_runtime_seconds": 1.7290811999992002,
+        "inference": {
+            "t1_inference": {
+                "inference_time_ms": 15.955800001393072,
+                "tensor_creation_time_ms": 0.5875999922864139,
+                "model_loading_time_ms": 567.1029000077397,
+                "execution_provider": "CPUExecutionProvider"
+            },
+            "t2_inference": {
+                "inference_time_ms": 15.452899999218062,
+                "tensor_creation_time_ms": 0.6811999919591472,
+                "model_loading_time_ms": 341.0176000033971,
+                "execution_provider": "CPUExecutionProvider"
+            }
+        }
+    },
+    "wetland": {
+        "status": "WETLAND_BOUNDARY_AVAILABLE",
+        "source_type": "PROJECT_BOUNDARY",
+        "area_ha": 36.0,
+        "physical_depletion_enabled": false
+    },
+    "hydrology": {
+        "ndwi_threshold": 0.0,
+        "water_gain_area_ha": 6.72,
+        "water_loss_area_ha": 0.0,
+        "water_area_t1_ha": 0.31,
+        "water_area_t2_ha": 7.03
+    },
+    "fusion": {
+        "evidence_level": "NOT_ASSESSED",
+        "hydro_ecological_degradation_area_ha": 0.0,
+        "hydro_ecological_recovery_area_ha": 0.0
+    },
+    "physical_depletion_assessment": "NOT_ASSESSED"
+}

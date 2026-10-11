@@ -1,0 +1,156 @@
+{
+    "pair_name": "2023-08-14_2023-08-28",
+    "t1_source": "C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\backend\\Engine_module\\data\\sample_scene\\t1",
+    "t2_source": "C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\backend\\Engine_module\\data\\sample_scene\\t2",
+    "feature_vector": [
+        "NDVI",
+        "GNDVI",
+        "NDRE"
+    ],
+    "delta_definition": "T2 - T1 (increase is positive, decrease is negative)",
+    "cva_formula": "sqrt(delta_ndvi^2 + delta_gndvi^2 + delta_ndre^2)",
+    "standardization": {
+        "method": "z-score divide by index standard deviation",
+        "scales": {
+            "std_ndvi": 0.16701342165470123,
+            "std_gndvi": 0.09763610363006592,
+            "std_ndre": 0.03593586012721062
+        }
+    },
+    "mathematical_reconciliation": {
+        "max_absolute_error_cva_squared": 5.960464477539063e-08,
+        "mean_absolute_error_cva_squared": 1.3828277412031298e-09
+    },
+    "spatial_metadata": {
+        "crs": "EPSG:32633",
+        "transform": [
+            10.0,
+            0.0,
+            500000.0,
+            0.0,
+            -10.0,
+            5000000.0
+        ],
+        "width": 100,
+        "height": 100,
+        "resolution": [
+            10.0,
+            10.0
+        ],
+        "bounds": [
+            500000.0,
+            4999000.0,
+            501000.0,
+            5000000.0
+        ]
+    },
+    "overlap_information": {
+        "valid_pixel_count": 10000,
+        "nodata_pixel_count": 0,
+        "nodata_value": -9999.0
+    },
+    "statistics": {
+        "delta_ndvi": {
+            "count": 10000,
+            "min": -0.6666666865348816,
+            "max": 0.0,
+            "mean": -0.04493427276611328,
+            "median": 0.0,
+            "std": 0.16701342165470123,
+            "p95": 0.0,
+            "pct_positive": 0.0,
+            "pct_negative": 6.75,
+            "pct_zero": 93.25
+        },
+        "delta_gndvi": {
+            "count": 10000,
+            "min": -0.3939862847328186,
+            "max": 0.0,
+            "mean": -0.0262678824365139,
+            "median": 0.0,
+            "std": 0.09763610363006592,
+            "p95": 0.0,
+            "pct_positive": 0.0,
+            "pct_negative": 6.75,
+            "pct_zero": 93.25
+        },
+        "delta_ndre": {
+            "count": 10000,
+            "min": -0.14359360933303833,
+            "max": 0.0,
+            "mean": -0.009668366983532906,
+            "median": 0.0,
+            "std": 0.03593586012721062,
+            "p95": 0.0,
+            "pct_positive": 0.0,
+            "pct_negative": 6.75,
+            "pct_zero": 93.25
+        },
+        "cva_magnitude": {
+            "count": 10000,
+            "min": 0.0,
+            "max": 0.7872634530067444,
+            "mean": 0.05293956771492958,
+            "median": 0.0,
+            "std": 0.19676801562309265,
+            "p95": 0.7837181687355042
+        },
+        "cva_standardized": {
+            "count": 10000,
+            "min": 0.0,
+            "max": 6.9359564781188965,
+            "mean": 0.4659992754459381,
+            "median": 0.0,
+            "std": 1.7320500612258911,
+            "p95": 6.894482612609863
+        }
+    },
+    "software_version": "1.0.0",
+    "transition_map_statistics": {
+        "DEGRADATION": {
+            "pixel_count": 0,
+            "min": 0.0,
+            "max": 0.0,
+            "mean": 0.0,
+            "median": 0.0,
+            "std": 0.0,
+            "p95": 0.0
+        },
+        "RECOVERY": {
+            "pixel_count": 0,
+            "min": 0.0,
+            "max": 0.0,
+            "mean": 0.0,
+            "median": 0.0,
+            "std": 0.0,
+            "p95": 0.0
+        },
+        "VEGETATION_TO_BACKGROUND": {
+            "pixel_count": 0,
+            "min": 0.0,
+            "max": 0.0,
+            "mean": 0.0,
+            "median": 0.0,
+            "std": 0.0,
+            "p95": 0.0
+        },
+        "BACKGROUND_TO_VEGETATION": {
+            "pixel_count": 0,
+            "min": 0.0,
+            "max": 0.0,
+            "mean": 0.0,
+            "median": 0.0,
+            "std": 0.0,
+            "p95": 0.0
+        },
+        "STABLE": {
+            "pixel_count": 10000,
+            "min": 0.0,
+            "max": 0.7872634530067444,
+            "mean": 0.05293956771492958,
+            "median": 0.0,
+            "std": 0.19676801562309265,
+            "p95": 0.7837181687355042
+        }
+    }
+}

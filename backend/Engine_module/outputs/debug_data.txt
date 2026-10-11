@@ -1,0 +1,137 @@
+﻿=== SPATIAL ===
+{
+  "crs": "EPSG:32633",
+  "dimensions": [
+    100,
+    100
+  ],
+  "resolution": [
+    10.0,
+    10.0
+  ],
+  "extent": [
+    500000.0,
+    4999000.0,
+    501000.0,
+    5000000.0
+  ],
+  "overlap_percentage": 100.0,
+  "total_overlap_area_ha": 100.0,
+  "inclusion_area_ha": 36.0,
+  "manual_excluded_area_ha": 1.0,
+  "effective_analysis_area_ha": 35.0,
+  "physical_area_available": true,
+  "area_basis": "RASTER_CRS_AND_TRANSFORM",
+  "overlap_pixel_count": 10000,
+  "inclusion_pixel_count": 3600,
+  "excluded_pixel_count": 100,
+  "effective_pixel_count": 3500
+}
+
+=== VEGETATION t1 classes ===
+{
+  "date_valid": {
+    "total_valid_pixels": 10000,
+    "classes": {
+      "0": {
+        "name": "Background",
+        "count": 10000,
+        "percentage": 100.0
+      },
+      "1": {
+        "name": "Severe",
+        "count": 0,
+        "percentage": 0.0
+      },
+      "2": {
+        "name": "Moderate",
+        "count": 0,
+        "percentage": 0.0
+      },
+      "3": {
+        "name": "Healthy",
+        "count": 0,
+        "percentage": 0.0
+      }
+    }
+  },
+  "common_overlap": {
+    "total_valid_pixels": 10000,
+    "classes": {
+      "0": {
+        "name": "Background",
+        "count": 10000,
+        "percentage": 100.0
+      },
+      "1": {
+        "name": "Severe",
+        "count": 0,
+        "percentage": 0.0
+      },
+      "2": {
+        "name": "Moderate",
+        "count": 0,
+        "percentage": 0.0
+      },
+      "3": {
+        "name": "Healthy",
+        "count": 0,
+        "percentage": 0.0
+      }
+    }
+  }
+}
+
+=== VEGETATION t2 classes ===
+{
+  "date_valid": {
+    "total_valid_pixels": 10000,
+    "classes": {
+      "0": {
+        "name": "Background",
+        "count": 10000,
+        "percentage": 100.0
+      },
+      "1": {
+        "name": "Severe",
+        "count": 0,
+        "percentage": 0.0
+      },
+      "2": {
+        "name": "Moderate",
+        "count": 0,
+        "percentage": 0.0
+      },
+      "3": {
+        "name": "Healthy",
+        "count": 0,
+        "percentage": 0.0
+      }
+    }
+  },
+  "common_overlap": {
+    "total_valid_pixels": 10000,
+    "classes": {
+      "0": {
+        "name": "Background",
+        "count": 10000,
+        "percentage": 100.0
+      },
+      "1": {
+        "name": "Severe",
+        "count": 0,
+        "percentage": 0.0
+      },
+      "2": {
+        "name": "Moderate",
+        "count": 0,
+        "percentage": 0.0
+      },
+      "3": {
+        "name": "Healthy",
+        "count": 0,
+        "percentage": 0.0
+      }
+    }
+  }
+}

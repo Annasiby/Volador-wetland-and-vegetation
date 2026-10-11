@@ -1,0 +1,17 @@
+from_class,to_class,transition_id,transition_name,category,count,area_m2,area_ha,percentage
+Background,Background,0,B_to_B,STABLE,0,0.0,0.0,0.0
+Background,Severe,1,B_to_S,BACKGROUND_TO_VEGETATION,0,0.0,0.0,0.0
+Background,Moderate,2,B_to_M,BACKGROUND_TO_VEGETATION,0,0.0,0.0,0.0
+Background,Healthy,3,B_to_H,BACKGROUND_TO_VEGETATION,0,0.0,0.0,0.0
+Severe,Background,4,S_to_B,VEGETATION_TO_BACKGROUND,0,0.0,0.0,0.0
+Severe,Severe,5,S_to_S,STABLE,0,0.0,0.0,0.0
+Severe,Moderate,6,S_to_M,RECOVERY,0,0.0,0.0,0.0
+Severe,Healthy,7,S_to_H,RECOVERY,0,0.0,0.0,0.0
+Moderate,Background,8,M_to_B,VEGETATION_TO_BACKGROUND,0,0.0,0.0,0.0
+Moderate,Severe,9,M_to_S,DEGRADATION,0,0.0,0.0,0.0
+Moderate,Moderate,10,M_to_M,STABLE,0,0.0,0.0,0.0
+Moderate,Healthy,11,M_to_H,RECOVERY,0,0.0,0.0,0.0
+Healthy,Background,12,H_to_B,VEGETATION_TO_BACKGROUND,0,0.0,0.0,0.0
+Healthy,Severe,13,H_to_S,DEGRADATION,0,0.0,0.0,0.0
+Healthy,Moderate,14,H_to_M,DEGRADATION,0,0.0,0.0,0.0
+Healthy,Healthy,15,H_to_H,STABLE,5038848,5038848.0,503.8848,100.0

@@ -1,0 +1,37 @@
+{
+    "run_id": "run_20261001_053447",
+    "software_version": "1.0.0",
+    "analysis_mode": "wetland",
+    "git_commit": "1a53f89c5096b23741f1212d98b1eac699b1bc49",
+    "execution_timestamp_utc": "2026-10-01T05:35:27.555313+00:00",
+    "python_version": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+    "os": "Windows-11-10.0.26300-SP0",
+    "model_path": "C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\backend\\Engine_module\\models\\best_finetuned_model.onnx",
+    "model_sha256": "ed4120343d8a5d92ba57c02c7a1fd2c7301a64f5d51e72c0b6b358caec3129fa",
+    "configuration_hash": "e7358e4c5ca3cc86358192187081342d8038e02af6040e9535d25366cb0df46e",
+    "config_snapshot": "C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\backend\\storage\\projects\\prj_1790832886\\runs\\run_20261001_053447\\config_used.json",
+    "input_t1": {
+        "path": "C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\backend\\Engine_module\\data\\sample_scene\\t1",
+        "exists": true,
+        "size_bytes": null,
+        "sha256": null
+    },
+    "input_t2": {
+        "path": "C:\\Users\\HP\\OneDrive\\Desktop\\wetLand_Depreciation\\backend\\Engine_module\\data\\sample_scene\\t2",
+        "exists": true,
+        "size_bytes": null,
+        "sha256": null
+    },
+    "t1_date": "2023-08-14",
+    "t2_date": "2023-08-28",
+    "crs": "EPSG:32633",
+    "resolution": [
+        10.0,
+        10.0
+    ],
+    "dimensions": [
+        100,
+        100
+    ],
+    "total_runtime_seconds": 39.38181189999159
+}

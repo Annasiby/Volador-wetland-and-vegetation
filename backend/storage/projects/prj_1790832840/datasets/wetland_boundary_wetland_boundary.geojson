@@ -1,0 +1,46 @@
+{
+  "type": "FeatureCollection",
+  "name": "Wetland_Boundary",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:EPSG::32633"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 1,
+        "name": "Central Wetland Reserve"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              500200.0,
+              4999200.0
+            ],
+            [
+              500800.0,
+              4999200.0
+            ],
+            [
+              500800.0,
+              4999800.0
+            ],
+            [
+              500200.0,
+              4999800.0
+            ],
+            [
+              500200.0,
+              4999200.0
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}
